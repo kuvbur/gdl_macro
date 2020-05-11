@@ -1,0 +1,5 @@
+	Revert ... Libraryflobals-as.gsm
+	Revert ... Libraryflobals-km.gsm
+	Revert ... Libraryflobals-kzh.gsm
+	Revert ... Libraryflobals-mep.gsm
+	Revert ... Libraryflobals-subpos.gsm
