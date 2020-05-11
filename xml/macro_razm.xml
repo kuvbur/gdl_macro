@@ -23,8 +23,9 @@
 
 <Script_2D SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
-accuare = 10*PAPER_TO_MODEL
+if abs(razm_l)<EPS then end
 
+accuare = 10*PAPER_TO_MODEL
 r = request ("View_Rotangle", "", _angleViewRot)
 _totalRotate	= (ang_razm+90) MOD 360
 
@@ -103,13 +104,28 @@ if razm_l<razm_f_l or abs(coord_razm[inx_razm][6])>accuare or abs(coord_razm[inx
 	line2 otstup+coord_razm[inx_razm][6], razm_l/2+coord_razm[inx_razm][7]-razm_f_l*sgn(coord_razm[inx_razm][7]), otstup, razm_l/2
 endif
 
-!Второй размер
-!HOTSPOT2 otstup, razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 1: unID=unID+1
-!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 2: unID=unID+1
-!HOTSPOT2 otstup-1, razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 3: unID=unID+1
-!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2, unID, coord_razm[inx_razm][9], 1+128: unID=unID+1
-!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][9], 2: unID=unID+1
-!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2-1, unID, coord_razm[inx_razm][9], 3: unID=unID+1
+if STRLEN(sstr_razm)>EPS then
+	!Второй размер
+	!HOTSPOT2 otstup, razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 1: unID=unID+1
+	!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 2: unID=unID+1
+	!HOTSPOT2 otstup-1, razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 3: unID=unID+1
+	!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2, unID, coord_razm[inx_razm][9], 1+128: unID=unID+1
+	!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][9], 2: unID=unID+1
+	!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2-1, unID, coord_razm[inx_razm][9], 3: unID=unID+1
+	
+	add2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9]
+	rot2 angle_txt
+	SET STYLE "razm_s"
+	text2 0,-height*0.1,sstr_razm
+	del 2
+	!Выносная линия
+	razm_s_l = 0.5*STW(sstr_razm)*PAPER_TO_MODEL
+	if razm_l<razm_s_l or abs(coord_razm[inx_razm][8])>accuare or abs(coord_razm[inx_razm][9])-razm_l/2>accuare then
+		line2 otstup+coord_razm[inx_razm][8]+height, razm_l/2+coord_razm[inx_razm][9]-razm_s_l, otstup+coord_razm[inx_razm][8]+height, razm_l/2+coord_razm[inx_razm][9]+razm_s_l
+		line2 otstup+coord_razm[inx_razm][8]+height, razm_l/2+coord_razm[inx_razm][9]-razm_s_l*sgn(coord_razm[inx_razm][9]), otstup, razm_l/2
+	endif
+endif
+end
 ]]>
 </Script_2D>
 
