@@ -7,6 +7,14 @@
 </Ancestry>
 
 <CalledMacros SectVersion="2" SectionFlags="0" SubIdent="0">
+	<Macro>
+		<MName><![CDATA["macro_replace_word"]]></MName>
+		<MainGUID>3F1A476B-44B6-4A9C-93AE-7816A0509FDD</MainGUID>
+	</Macro>
+	<Macro>
+		<MName><![CDATA["macro_trim_space"]]></MName>
+		<MainGUID>4B061C8B-6B86-4616-B17B-78D03ACACEC0</MainGUID>
+	</Macro>
 </CalledMacros>
 
 <!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
@@ -25,20 +33,45 @@
 
 <Script_1D SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
+! Формирование строки с параметрами или/или свойствами элемента по шаблону
+! mgp_in_str - шаблон строки, именя параметров или свойств должны быть обрамлены в знаки %
+! mgp_prim1...5 - свободные текстовые параметры, для замены вхождений %pr1%...%pr5%
+! mgp_qty - количество элементов, для замены выхождений "qty_v"
+! mgp_ld - формат единиц для параметров библ. элемента
+! Параметры на выходе
+! mgp_out_str - сформированная строка
+! =============================================================================
+!mgp_in_str = "%id% - размеры %razm%"
+!mgp_prim1="прим. 1" : mgp_prim2="" : mgp_prim3="" : mgp_prim4="" : mgp_prim5=""
+!mgp_qty=1 : mgp_ld="%.0mm"
+!call "macro_get_param" parameters mgp_in_str=mgp_in_str
+!									mgp_prim1=mgp_prim1,
+!									mgp_prim2=mgp_prim2,
+!									mgp_prim3=mgp_prim3,
+!									mgp_prim4=mgp_prim4,
+!									mgp_prim5=mgp_prim5,
+!									mgp_qty=mgp_qty,
+!									mgp_ld=mgp_ld, RETURNED_PARAMETERS mgp_out_str
+FILE_DEPENDENCE "macro_trim_space", "macro_replace_word"
 param_name_str = ""
 unit_name_str = ""
 unstr="%.0"
 EPS = 0.0001
 gl_id=""
+mgp_in_str_ = mgp_in_str
+
+if STRSTR(mgp_in_str_, "%", 1)<EPS then
+	mgp_out_str = mgp_in_str_
+	goto "m_end"
+endif
 
 dim	parentPropertiesArray[]
 n = request ("Properties_Of_Parent", "", parentPropertiesArray)
 
-mgp_in_str_t = mgp_in_str
 2:
-n_sh = STRSTR(mgp_in_str_t, "%", 1)
+n_sh = STRSTR(mgp_in_str_, "%", 1)
 if n_sh>0 then
-	in_str = mgp_in_str_t : gosub "get_param_name"
+	in_str = mgp_in_str_ : gosub "get_param_name"
 	if param_name_str <> "" then
 		var_param = ""
 		if STRSTR("%"+param_name_str+"%","%id%",0)>0 then var_param = gl_id
@@ -64,7 +97,7 @@ if n_sh>0 then
 					endif
 					if vartype(var_param)=1 then var_param = STR (unstr, var_param)
 				else
-					var_param = STRTOLOWER(var_param)
+					var_param = STRTOLOWER(param_name_str)
 					for i=1 to vardim1(parentPropertiesArray) step 4
 						if i+3<=vardim1(parentPropertiesArray) then
 							PropertyName = parentPropertiesArray[i+3]
@@ -80,12 +113,35 @@ if n_sh>0 then
 				endif
 			endif
 		endif
-		find_str = "%" + param_name_str + unit_name_str + "%"
-		replace_str = var_param
-		gosub "str_replace"
-		mgp_in_str_t = out_str
+		mrw_in_str = mgp_in_str_
+		mrw_wordToReplace = "%" + param_name_str + unit_name_str + "%"
+		mrw_newWord = var_param
+		call "macro_replace_word" parameters mrw_in_str=mrw_in_str,
+											mrw_newWord=mrw_newWord,
+											mrw_wordToReplace = mrw_wordToReplace,
+											RETURNED_PARAMETERS mrw_out_str
+		mgp_in_str_ = mrw_out_str
 		goto 2
 	endif
+endif
+
+!Удаляем двойные пробелы
+if STRSTR(mgp_in_str_, "  ")>EPS then
+	mrw_in_str = mgp_in_str_
+	mrw_wordToReplace = "  "
+	mrw_newWord = " "
+	call "macro_replace_word" parameters mrw_in_str=mrw_in_str,
+										mrw_newWord=mrw_newWord,
+										mrw_wordToReplace = mrw_wordToReplace,
+										RETURNED_PARAMETERS mrw_out_str
+	mgp_in_str_ = mrw_out_str
+endif
+!Удаляем пробелы в начале и конце
+if STRSTR(mgp_in_str_, " ")>EPS then
+	mts_in_str = mgp_in_str_
+	call "macro_trim_space" parameters mts_in_str=mts_in_str,
+										RETURNED_PARAMETERS mts_out_str
+	mgp_in_str_ = mts_out_str
 endif
 
 goto "m_end"
@@ -107,23 +163,6 @@ goto "m_end"
 		len_in_str = STRLEN(param_name_str)
 		unit_name_str = STRSUB(param_name_str, start_find, len_in_str)
 		param_name_str = STRSUB(param_name_str, 1, start_find-1)
-	endif
-return
-
-"str_replace":
-	if vartype(in_str) = 2 and vartype(find_str) = 2 and vartype(replace_str) = 2 then
-		out_str = ""
-		start_find = STRSTR(in_str, find_str, 1)
-		if start_find > 0 then
-			len_in_str = STRLEN (in_str)
-			len_find_str = STRLEN (find_str)
-			len_replace_str = STRLEN (replace_str)
-			chapt_1 = STRSUB(in_str, 1, start_find-1)
-			chapt_2 = STRSUB(in_str, start_find+len_find_str, len_in_str)
-			out_str = chapt_1 + replace_str + chapt_2
-		else
-			out_str = in_str
-		endif
 	endif
 return
 
@@ -158,7 +197,7 @@ return
 return
 
 "m_end":
-mgp_out_str = mgp_in_str_t
+mgp_out_str = mgp_in_str_
 parameters mgp_out_str=mgp_out_str
 EXIT mgp_out_str
 ]]>
@@ -258,7 +297,7 @@ EXIT mgp_out_str
 		</Title>
 		<String Name="mgp_in_str">
 			<Description><![CDATA["Шаблон строки"]]></Description>
-			<Value><![CDATA[""]]></Value>
+			<Value><![CDATA["%id% - размеры %razm%"]]></Value>
 		</String>
 		<String Name="mgp_prim1">
 			<Description><![CDATA["Примечание 1"]]></Description>
@@ -285,7 +324,7 @@ EXIT mgp_out_str
 			<Value>0</Value>
 		</Integer>
 		<String Name="mgp_ld">
-			<Description><![CDATA["Размернсть в формате %.unit"]]></Description>
+			<Description><![CDATA["Размерность в формате %.unit"]]></Description>
 			<Value><![CDATA[""]]></Value>
 		</String>
 
@@ -296,7 +335,7 @@ EXIT mgp_out_str
 		</Title>
 		<String Name="mgp_out_str">
 			<Description><![CDATA[""]]></Description>
-			<Value><![CDATA[""]]></Value>
+			<Value><![CDATA["id - размеры razm"]]></Value>
 		</String>
 	</Parameters>
 </ParamSection>
