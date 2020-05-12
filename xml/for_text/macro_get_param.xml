@@ -8,12 +8,12 @@
 
 <CalledMacros SectVersion="2" SectionFlags="0" SubIdent="0">
 	<Macro>
-		<MName><![CDATA["macro_replace_word"]]></MName>
-		<MainGUID>3F1A476B-44B6-4A9C-93AE-7816A0509FDD</MainGUID>
-	</Macro>
-	<Macro>
 		<MName><![CDATA["macro_trim_space"]]></MName>
 		<MainGUID>4B061C8B-6B86-4616-B17B-78D03ACACEC0</MainGUID>
+	</Macro>
+	<Macro>
+		<MName><![CDATA["macro_replace_word"]]></MName>
+		<MainGUID>3F1A476B-44B6-4A9C-93AE-7816A0509FDD</MainGUID>
 	</Macro>
 </CalledMacros>
 
@@ -38,6 +38,7 @@
 ! mgp_prim1...5 - свободные текстовые параметры, для замены вхождений %pr1%...%pr5%
 ! mgp_qty - количество элементов, для замены выхождений "qty_v"
 ! mgp_ld - формат единиц для параметров библ. элемента
+! mgp_error_char - На что знаменять значение параметров, если значение не найдено или пустое
 ! Параметры на выходе
 ! mgp_out_str - сформированная строка
 ! =============================================================================
@@ -51,7 +52,9 @@
 !									mgp_prim4=mgp_prim4,
 !									mgp_prim5=mgp_prim5,
 !									mgp_qty=mgp_qty,
-!									mgp_ld=mgp_ld, RETURNED_PARAMETERS mgp_out_str
+!									mgp_ld=mgp_ld,
+!									mgp_error_char=mgp_error_char,
+!									RETURNED_PARAMETERS mgp_out_str
 FILE_DEPENDENCE "macro_trim_space", "macro_replace_word"
 param_name_str = ""
 unit_name_str = ""
@@ -113,6 +116,13 @@ if n_sh>0 then
 				endif
 			endif
 		endif
+
+		mts_in_str = var_param
+		call "macro_trim_space" parameters mts_in_str=mts_in_str,
+											RETURNED_PARAMETERS mts_out_str
+		var_param = mts_out_str
+		if strlen(var_param)<EPS then var_param = mgp_error_char
+
 		mrw_in_str = mgp_in_str_
 		mrw_wordToReplace = "%" + param_name_str + unit_name_str + "%"
 		mrw_newWord = var_param
@@ -327,6 +337,10 @@ EXIT mgp_out_str
 			<Description><![CDATA["Размерность в формате %.unit"]]></Description>
 			<Value><![CDATA[""]]></Value>
 		</String>
+		<String Name="mgp_error_char">
+			<Description><![CDATA["Что вывести, если параметр не найден"]]></Description>
+			<Value><![CDATA[""]]></Value>
+		</String>
 
 		<!-- macro_get__A: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
 
@@ -341,7 +355,7 @@ EXIT mgp_out_str
 </ParamSection>
 
 <Copyright SectVersion="1" SectionFlags="0" SubIdent="0">
-	<Author></Author>
+	<Author>kuvbur</Author>
 	<License>
 		<Type>CC0</Type>
 		<Version>1.0</Version>
@@ -355,7 +369,8 @@ EXIT mgp_out_str
 <!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
 
 <Comment SectVersion="20" SectionFlags="0" SubIdent="0">
-<![CDATA[]]>
+<![CDATA[Формирование строки с параметрами или/или свойствами элемента по шаблону
+Используется только в выносных надлписях и маркерах]]>
 </Comment>
 
 </Symbol>

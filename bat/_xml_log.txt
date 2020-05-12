@@ -10,7 +10,6 @@
 	Revert ... Радиус_изгиба.gsm
 	Revert ... Сортамент_арматуры.gsm
 	Revert ... Список_диаметров.gsm
-	Copy ... desktop.ini
 	Revert ... macro_get_param.gsm
 	Revert ... macro_line_break.gsm
 	Revert ... macro_replace_char.gsm
