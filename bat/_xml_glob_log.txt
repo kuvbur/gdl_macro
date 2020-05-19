@@ -3,3 +3,4 @@
 	Revert ... Libraryflobals-kzh.gsm
 	Revert ... Libraryflobals-mep.gsm
 	Revert ... Libraryflobals-subpos.gsm
+	Revert ... LibraryGlobals_param_razm.gsm

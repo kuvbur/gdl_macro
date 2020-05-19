@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="41C370BC-1223-4C50-81BC-573B6EF24BCD" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="38">
+<Symbol IsArchivable="false" IsPlaceable="true" MainGUID="13FF491C-A806-4362-ADF9-FED3E95F2359" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="38">
 <Ancestry SectVersion="1" SectionFlags="0" SubIdent="0" Template="false">
 	<MainGUID>F938E33A-329D-4A36-BE3E-85E126820996</MainGUID>
 	<MainGUID>103E8D2C-8230-42E1-9597-46F84CCE28C0</MainGUID>
@@ -8,8 +8,8 @@
 
 <CalledMacros SectVersion="2" SectionFlags="0" SubIdent="0">
 	<Macro>
-		<MName><![CDATA["LibraryGlobals13"]]></MName>
-		<MainGUID>9137124A-DDF2-4A06-A532-5FC0CE873258</MainGUID>
+		<MName><![CDATA["LibraryGlobals_param_razm"]]></MName>
+		<MainGUID>A96D81EA-8A29-4739-924C-1B15080D01A1</MainGUID>
 	</Macro>
 </CalledMacros>
 
@@ -25,7 +25,8 @@
 <![CDATA[
 if abs(razm_l)<EPS then end
 
-accuare = 10*PAPER_TO_MODEL
+accuare = 5*PAPER_TO_MODEL
+
 r = request ("View_Rotangle", "", _angleViewRot)
 _totalRotate	= (ang_razm+90) MOD 360
 
@@ -46,34 +47,50 @@ razm_s_anc = 2
 DEFINE STYLE "razm_f" Shrift , Shrift_razm, razm_f_anc, Shrift_tip
 DEFINE STYLE "razm_s" Shrift , Shrift_razm, razm_s_anc, Shrift_tip
 n = REQUEST ("Height_of_style", "razm_f", height)
-height = height * PAPER_TO_MODEL*2
+height = height * PAPER_TO_MODEL * 2
 
 !Точки начала/конца
 !hotspot2 coord_razm[inx_razm][1],coord_razm[inx_razm][2],unID : unID=unID+1
 !hotspot2 coord_razm[inx_razm][3],coord_razm[inx_razm][4],unID : unID=unID+1
 
 !Редектирование начала/конца
-!HOTSPOT2 0, coord_razm[inx_razm][4], unID, coord_razm[inx_razm][3], 1+128: unID=unID+1
-!HOTSPOT2 coord_razm[inx_razm][3], coord_razm[inx_razm][4], unID, coord_razm[inx_razm][3], 2: unID=unID+1
-!HOTSPOT2 -1, coord_razm[inx_razm][4], unID, coord_razm[inx_razm][3], 3: unID=unID+1
-!HOTSPOT2 coord_razm[inx_razm][3], 0, unID, coord_razm[inx_razm][4], 1+128: unID=unID+1
-!HOTSPOT2 coord_razm[inx_razm][3], coord_razm[inx_razm][4], unID, coord_razm[inx_razm][4], 2: unID=unID+1
-!HOTSPOT2 coord_razm[inx_razm][3], -1, unID, coord_razm[inx_razm][4], 3: unID=unID+1
+if use_hotspot then
+	HOTSPOT2 0, coord_razm[inx_razm][2], unID, coord_razm[inx_razm][1], 1+128: unID=unID+1
+	HOTSPOT2 coord_razm[inx_razm][1], coord_razm[inx_razm][2], unID, coord_razm[inx_razm][1], 2: unID=unID+1
+	HOTSPOT2 -1, coord_razm[inx_razm][2], unID, coord_razm[inx_razm][1], 3: unID=unID+1
+	HOTSPOT2 coord_razm[inx_razm][1], 0, unID, coord_razm[inx_razm][2], 1+128: unID=unID+1
+	HOTSPOT2 coord_razm[inx_razm][1], coord_razm[inx_razm][2], unID, coord_razm[inx_razm][2], 2: unID=unID+1
+	HOTSPOT2 coord_razm[inx_razm][1], -1, unID, coord_razm[inx_razm][2], 3: unID=unID+1
+	HOTSPOT2 0, coord_razm[inx_razm][4], unID, coord_razm[inx_razm][3], 1+128: unID=unID+1
+	HOTSPOT2 coord_razm[inx_razm][3], coord_razm[inx_razm][4], unID, coord_razm[inx_razm][3], 2: unID=unID+1
+	HOTSPOT2 -1, coord_razm[inx_razm][4], unID, coord_razm[inx_razm][3], 3: unID=unID+1
+	HOTSPOT2 coord_razm[inx_razm][3], 0, unID, coord_razm[inx_razm][4], 1+128: unID=unID+1
+	HOTSPOT2 coord_razm[inx_razm][3], coord_razm[inx_razm][4], unID, coord_razm[inx_razm][4], 2: unID=unID+1
+	HOTSPOT2 coord_razm[inx_razm][3], -1, unID, coord_razm[inx_razm][4], 3: unID=unID+1
+endif
+if dbg then
+	text2 coord_razm[inx_razm][1], coord_razm[inx_razm][2],"1"
+	text2 coord_razm[inx_razm][3], coord_razm[inx_razm][4],"2"
+endif
 
 !Стали в начало, развернулись
 add2 coord_razm[inx_razm][1], coord_razm[inx_razm][2]
 rot2 ang_razm+90
 
-!Редиктирование отступа
-!HOTSPOT2 0, razm_l/3, unID, coord_razm[inx_razm][5], 1+128: unID=unID+1
-!HOTSPOT2 coord_razm[inx_razm][5], razm_l/3, unID, coord_razm[inx_razm][5], 2: unID=unID+1
-!HOTSPOT2 -1, razm_l/3, unID, coord_razm[inx_razm][5], 3: unID=unID+1
-
-!!Выносные линии
-line2 otstup_vinosnih*sgnx, 0, otstup + vistup*sgnx, 0
-line2 otstup_vinosnih*sgnx, razm_l, otstup + vistup*sgnx,razm_l
-
+!!Редактирование отступа
+!if use_hotspot then
+!	HOTSPOT2 0, razm_l/3, unID, coord_razm[inx_razm][5], 1+128: unID=unID+1
+!	HOTSPOT2 coord_razm[inx_razm][5], razm_l/3, unID, coord_razm[inx_razm][5], 2: unID=unID+1
+!	HOTSPOT2 -1, razm_l/3, unID, coord_razm[inx_razm][5], 3: unID=unID+1
+!	HOTSPOT2 0, razm_l/4, unID, coord_razm[inx_razm][10], 1+128: unID=unID+1
+!	HOTSPOT2 coord_razm[inx_razm][10], razm_l/4, unID, coord_razm[inx_razm][10], 2: unID=unID+1
+!	HOTSPOT2 -1, razm_l/4, unID, coord_razm[inx_razm][10], 3: unID=unID+1
+!endif
 line2 otstup, -vistup, otstup, razm_l + vistup
+!Выносная к первой точке
+line2 otstup_vinosnih*sgnx, 0, otstup + vistup*sgnx, 0
+!Выносная ко второй точке
+line2 otstup_vinosnih*sgnx, razm_l, otstup + vistup*sgnx, razm_l
 
 !Засечки
 add2 otstup, 0
@@ -85,13 +102,15 @@ rot2 angle_zas
 line2 -zasechka, 0, zasechka, 0
 del 2
 
-!Первый размер
-!HOTSPOT2 otstup, razm_l/2+coord_razm[inx_razm][7], unID, coord_razm[inx_razm][6], 1: unID=unID+1
-!HOTSPOT2 otstup+coord_razm[inx_razm][6], razm_l/2+coord_razm[inx_razm][7], unID, coord_razm[inx_razm][6], 2: unID=unID+1
-!HOTSPOT2 otstup-1, razm_l/2+coord_razm[inx_razm][7], unID, coord_razm[inx_razm][6], 3: unID=unID+1
-!HOTSPOT2 otstup+coord_razm[inx_razm][6], razm_l/2, unID, coord_razm[inx_razm][7], 1+128: unID=unID+1
-!HOTSPOT2 otstup+coord_razm[inx_razm][6], razm_l/2+coord_razm[inx_razm][7], unID, coord_razm[inx_razm][7], 2: unID=unID+1
-!HOTSPOT2 otstup+coord_razm[inx_razm][6], razm_l/2-1, unID, coord_razm[inx_razm][7], 3: unID=unID+1
+!!Первый размер
+!if use_hotspot then
+!	HOTSPOT2 otstup, razm_l/2+coord_razm[inx_razm][7], unID, coord_razm[inx_razm][6], 1: unID=unID+1
+!	HOTSPOT2 otstup+coord_razm[inx_razm][6], razm_l/2+coord_razm[inx_razm][7], unID, coord_razm[inx_razm][6], 2: unID=unID+1
+!	HOTSPOT2 otstup-1, razm_l/2+coord_razm[inx_razm][7], unID, coord_razm[inx_razm][6], 3: unID=unID+1
+!	HOTSPOT2 otstup+coord_razm[inx_razm][6], razm_l/2, unID, coord_razm[inx_razm][7], 1+128: unID=unID+1
+!	HOTSPOT2 otstup+coord_razm[inx_razm][6], razm_l/2+coord_razm[inx_razm][7], unID, coord_razm[inx_razm][7], 2: unID=unID+1
+!	HOTSPOT2 otstup+coord_razm[inx_razm][6], razm_l/2-1, unID, coord_razm[inx_razm][7], 3: unID=unID+1
+!endif
 add2 otstup+coord_razm[inx_razm][6], razm_l/2+coord_razm[inx_razm][7]
 rot2 angle_txt
 SET STYLE "razm_f"
@@ -106,13 +125,14 @@ endif
 
 if STRLEN(sstr_razm)>EPS then
 	!Второй размер
-	!HOTSPOT2 otstup, razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 1: unID=unID+1
-	!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 2: unID=unID+1
-	!HOTSPOT2 otstup-1, razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 3: unID=unID+1
-	!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2, unID, coord_razm[inx_razm][9], 1+128: unID=unID+1
-	!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][9], 2: unID=unID+1
-	!HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2-1, unID, coord_razm[inx_razm][9], 3: unID=unID+1
-	
+!	if use_hotspot then
+!		HOTSPOT2 otstup, razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 1: unID=unID+1
+!		HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 2: unID=unID+1
+!		HOTSPOT2 otstup-1, razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][8], 3: unID=unID+1
+!		HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2, unID, coord_razm[inx_razm][9], 1+128: unID=unID+1
+!		HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9], unID, coord_razm[inx_razm][9], 2: unID=unID+1
+!		HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2-1, unID, coord_razm[inx_razm][9], 3: unID=unID+1
+!	endif
 	add2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9]
 	rot2 angle_txt
 	SET STYLE "razm_s"
@@ -133,17 +153,54 @@ end
 
 <Script_1D SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
-PAPER_TO_MODEL = GLOB_SCALE / 1000
-EPS = 0.001
-unID = 700*inx_razm
+!   Параметры геометрии размера:
+! type_razm - Тип размера (0 - Параллельно линии между точками, 1 - Вериткальный размер, 2 - Горизонтальный размер)
+! inx_razm - индекс размера
+! fstr_razm - Первая строка размера. Если пусто - подставляется расстойние между точками
+! fstr_razm - Вторая строка размера
+! Для автоматического вычисления количества по заданному шагу строка должна иметь вид 'sШАГ', например 's200'
+! Для автоматического вычисления шага по заданному количеству строка должна иметь вид 'nКОЛ-ВО', например 'n10'
+!   Для редактирования положения всех размеров используется общий массив координат
+! coord_razm[inx_razm][1] - X начала, в мм модели
+! coord_razm[inx_razm][2] - Y начала, в мм модели
+! coord_razm[inx_razm][3] - X конца, в мм модели
+! coord_razm[inx_razm][4] - Y конца, в мм модели
+! coord_razm[inx_razm][5] - Отступ размерной линии от первой точки, в мм макета. Если пусто - читается из ПМВ
+! coord_razm[inx_razm][6] - X середины первого текста, в мм макета. По умолчанию - по центру размера
+! coord_razm[inx_razm][7] - Y середины первого текста, в мм макета. По умолчанию - над линией
+! coord_razm[inx_razm][8] - X середины второго текста, в мм макета. По умолчанию - под линией
+! coord_razm[inx_razm][9] - Y середины второго текста, в мм макета. По умолчанию - по центру размера
+! coord_razm[inx_razm][10] - Отступ выносных линий от точек начала/конца, в мм макета
+!   Настройки отображения размера:
+! zasechka - Размер засечки, в мм макета
+! vistup - Размер выступа выносной линии за линию размера, в мм макета
+! Shrift - Имя шрифта, если пусто - читается из ПМВ (LibraryGlobals_param_razm)
+! Shrift_razm - Размер шрифта, если пусто - читается из ПМВ (LibraryGlobals_param_razm) 
+! Shrift_tip - Тип написания шрифта - читается из ПМВ (LibraryGlobals_param_razm)
+! use_hotspot - показ точек редактирования
+! Использование:
+!inx_razm = 1
+!type_razm = 1
+!dim coord_razm[][]
+!coord_razm[inx_razm][1]=0 !Начало, X
+!coord_razm[inx_razm][2]=0 !Начало, Y
+!coord_razm[inx_razm][3]=0 !Конец, X
+!coord_razm[inx_razm][4]=1 !Конец, Y
+!coord_razm[inx_razm][5]=10 !Отступ размера от первой точки
+!coord_razm[inx_razm][10]=3 !Отступ выносных линий от первой точки
+!Shrift = "ISOCPEUR" : Shrift_razm = 3 : Shrift_razmr = 2.5 : Shrift_tip = 0 !Настройки шрифта
+!call 'macro_razm' parameters coord_razm=coord_razm,
+!							type_razm=type_razm,
+!							inx_razm=inx_razm,
+!							Shrift_tip=Shrift_tip,
+!							Shrift=Shrift,
+!							Shrift_razm=Shrift_razmr
 
-!Для редактирования положения всех размеров используется общий массив координат
-!inx_razm - индекс размера
-!coord_razm[inx_razm][1] - X начала
-!coord_razm[inx_razm][2] - Y начала
-!coord_razm[inx_razm][3] - X конца
-!coord_razm[inx_razm][4] - Y конца
-!coord_razm[inx_razm][5] - Отступ размерной линии
+dbg = 0 !Для отладки установить 1
+
+PAPER_TO_MODEL = GLOB_SCALE / 1000
+EPS = 0.0001
+unID = 700*inx_razm
 
 dim ttype_razm[]
 dim itype_razm[] : i=0
@@ -155,9 +212,9 @@ i=i+1 : itype_razm[i]=2 : ttype_razm[i] = "По У"
 
 !Если имя шрифта пустое, то читаем его из ПМВ
 if strlen(Shrift)<EPS then
-	Shrift_t = "" : success = LIBRARYGLOBAL ("LibraryGlobals13", "Shrift", Shrift_t)
-	Shrift_razm_t = 0 : success = LIBRARYGLOBAL ("LibraryGlobals13", "Shrift_razm", Shrift_razm_t)
-	Shrift_tip_t = 0 : success = LIBRARYGLOBAL ("LibraryGlobals13", "Shrift_tip", Shrift_tip_t)
+	Shrift_t = "" : success = LIBRARYGLOBAL ("LibraryGlobals_param_razm", "Shrift", Shrift_t)
+	Shrift_razm_t = 0 : success = LIBRARYGLOBAL ("LibraryGlobals_param_razm", "Shrift_razm", Shrift_razm_t)
+	Shrift_tip_t = 0 : success = LIBRARYGLOBAL ("LibraryGlobals_param_razm", "Shrift_tip", Shrift_tip_t)
 	!Если прочитать не удалось - применим значения по умолчанию
 	if strlen(Shrift_t)<EPS then Shrift_t = "ISOCPEUR"
 	if Shrift_razm_t<EPS then Shrift_razm_t = 2.5
@@ -166,22 +223,37 @@ if strlen(Shrift)<EPS then
 	Shrift_tip = Shrift_tip_t
 endif
 
-if abs(vistup) < EPS then vistup = Shrift_razm * PAPER_TO_MODEL / 2
-if abs(zasechka) < EPS then zasechka = vistup * 0.7
-
 if inx_razm=0 then inx_razm=1
 !Если прилетел массив, не соответсвующий по размеру индексу - обновим его размер
-n_param = 9
-if vardim2(coord_razm)<n_param or vardim1(coord_razm)<inx_razm then
+n_param = 10
+if vardim2(coord_razm)<n_param or vardim1(coord_razm)<inx_razm or vardim1(coord_razm_mm)<inx_razm then
 	dim coord_razm_t[][]
 	for i=1 to inx_razm
-		for j=1 to n_param
+		for j=1 to vardim2(coord_razm)
+			coord_razm_t[i][j]=coord_razm[i][j]
+		next j
+		for j=vardim2(coord_razm)+1 to n_param
 			coord_razm_t[i][j]=0.1*j
 		next j
 	next i
 	coord_razm=coord_razm_t
 	parameters coord_razm=coord_razm
 endif
+
+for i=5 to 10
+	coord_razm[inx_razm][i] = coord_razm[inx_razm][i] * PAPER_TO_MODEL
+next i
+
+otstup = coord_razm[inx_razm][5]
+otstup_vinosnih = coord_razm[inx_razm][10]
+
+if abs(vistup) < EPS then vistup = Shrift_razm * PAPER_TO_MODEL * 0.5
+if abs(zasechka) < EPS then zasechka = Shrift_razm * PAPER_TO_MODEL * 0.5
+if abs(otstup) < EPS then otstup = 5 * PAPER_TO_MODEL
+sgnx = SGN(otstup)
+if abs(otstup) < vistup then otstup = vistup*sgnx
+if otstup_vinosnih < EPS then otstup_vinosnih = vistup
+if abs(otstup)-otstup_vinosnih<vistup then otstup_vinosnih = abs(otstup)-vistup
 
 !Направление и расстояние между точками
 dx = coord_razm[inx_razm][1]-coord_razm[inx_razm][3]
@@ -195,17 +267,20 @@ razm_l = 0
 if type_razm = 0 then
 	dx = coord_razm[inx_razm][1]-coord_razm[inx_razm][3]
 	dy = coord_razm[inx_razm][2]-coord_razm[inx_razm][4]
+	dx_otstup_vinosnih = 0
 	gosub "torphi"
 	end_x = 0
 endif
 if type_razm = 1 then
 	dx = coord_razm[inx_razm][1]-coord_razm[inx_razm][3]
 	dy = 0
+	dx_otstup_vinosnih = coord_razm[inx_razm][2]-coord_razm[inx_razm][4]
 	gosub "torphi"
 endif
 if type_razm = 2 then
 	dx = 0
 	dy = coord_razm[inx_razm][2]-coord_razm[inx_razm][4]
+	dx_otstup_vinosnih = coord_razm[inx_razm][1]-coord_razm[inx_razm][3]
 	gosub "torphi"
 endif
 !Выступ последней линии
@@ -231,36 +306,31 @@ if STRSTR(fstr_razm,"n")=1 then
 	razm_n = nsh*shag
 	fstr_razm = str("%.0",nsh)+"x"+str("%.0mm",shag)+"="+str("%.0mm",razm_n)
 endif
-
-otstup = coord_razm[inx_razm][5]
-if abs(otstup) < EPS then otstup = 0.5
-sgnx = SGN(otstup)
-if abs(otstup_vinosnih) < EPS then otstup_vinosnih = vistup
 goto 2010
 
 "torphi":
 	razm_l = SQR(dx*dx+dy*dy)
-	if dx>0 and dy>=0 then 
+	if dx>EPS and (abs(dy)<EPS or dy>EPS) then 
 		ang_razm = atn(dy/dx)
 		angle_txt = -90
 	endif
-	if dx>0 and dy<0 then
+	if dx>EPS and dy<EPS and abs(dx)>EPS and abs(dy)>EPS then
 		ang_razm = atn(dy/dx)+360
 		angle_txt = -90
 	endif
-	if dx<0 then 
+	if dx<EPS and abs(dx)>EPS then 
 		ang_razm = atn(dy/dx)+180
 		angle_txt = 90
 	endif
-	if dx=0 and dy>0 then 
+	if abs(dx)<EPS and dy>EPS then 
 		ang_razm = 90
 		angle_txt = -90
 	endif
-	if dx=0 and dy<0 then 
+	if abs(dx)<EPS and dy<EPS and abs(dy)>EPS then 
 		ang_razm = 270
 		angle_txt = 90
 	endif
-	if dx=0 and dy=0 then
+	if abs(dx)<EPS and abs(dy)<EPS then
 		ang_razm = 0
 		angle_txt = 0
 	endif
@@ -287,6 +357,23 @@ return
 <Script_VL SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
 values{2} "type_razm" itype_razm, ttype_razm
+
+dim ttype_shrift_tip[]
+dim itype_shrift_tip[] : i=0
+i=i+1 : itype_shrift_tip[i]=0 : ttype_shrift_tip[i] = "Обычный"
+i=i+1 : itype_shrift_tip[i]=1 : ttype_shrift_tip[i] = "Жирный(Ж)"
+i=i+1 : itype_shrift_tip[i]=2 : ttype_shrift_tip[i] = "Курсив(К)"
+i=i+1 : itype_shrift_tip[i]=3 : ttype_shrift_tip[i] = "Ж+К"
+i=i+1 : itype_shrift_tip[i]=4 : ttype_shrift_tip[i] = "Подчеркнутый(П)"
+i=i+1 : itype_shrift_tip[i]=5 : ttype_shrift_tip[i] = "Ж+П"
+i=i+1 : itype_shrift_tip[i]=6 : ttype_shrift_tip[i] = "К+П"
+i=i+1 : itype_shrift_tip[i]=7 : ttype_shrift_tip[i] = "Ж+К+П"
+
+values{2} "Shrift_tip" itype_shrift_tip, ttype_shrift_tip
+
+dim fontnames[]
+n = REQUEST ("FONTNAMES_LIST", "", fontnames)
+values "Shrift" fontnames, CUSTOM
 ]]>
 </Script_VL>
 
@@ -327,17 +414,9 @@ values{2} "type_razm" itype_razm, ttype_razm
 			<Description><![CDATA["Выступ за размерную"]]></Description>
 			<Value>0</Value>
 		</Length>
-		<Length Name="macro_razm_A">
-			<Description><![CDATA[""]]></Description>
-			<Value>0</Value>
-		</Length>
-		<Length Name="otstup_vinosnih">
-			<Description><![CDATA[""]]></Description>
-			<Value>0</Value>
-		</Length>
 		<String Name="fstr_razm">
 			<Description><![CDATA["Первая строка"]]></Description>
-			<Value><![CDATA["0"]]></Value>
+			<Value><![CDATA[""]]></Value>
 		</String>
 		<String Name="sstr_razm">
 			<Description><![CDATA["Вторая строка"]]></Description>
@@ -345,7 +424,7 @@ values{2} "type_razm" itype_razm, ttype_razm
 		</String>
 		<Length Name="coord_razm">
 			<Description><![CDATA["Координаты"]]></Description>
-			<ArrayValues FirstDimension="1" SecondDimension="9">
+			<ArrayValues FirstDimension="1" SecondDimension="10">
 				<AVal Column="1" Row="1">0</AVal>
 				<AVal Column="2" Row="1">0</AVal>
 				<AVal Column="3" Row="1">0</AVal>
@@ -355,6 +434,7 @@ values{2} "type_razm" itype_razm, ttype_razm
 				<AVal Column="7" Row="1">0</AVal>
 				<AVal Column="8" Row="1">0</AVal>
 				<AVal Column="9" Row="1">0</AVal>
+				<AVal Column="10" Row="1">0</AVal>
 			</ArrayValues>
 		</Length>
 		<Integer Name="inx_razm">
@@ -366,22 +446,20 @@ values{2} "type_razm" itype_razm, ttype_razm
 			<Value>0</Value>
 		</Integer>
 		<String Name="Shrift">
-			<Description><![CDATA[""]]></Description>
-			<Value><![CDATA["ISOCPEUR"]]></Value>
+			<Description><![CDATA["Шрифт"]]></Description>
+			<Value><![CDATA[""]]></Value>
 		</String>
 		<RealNum Name="Shrift_razm">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Высота шрифта"]]></Description>
 			<Value>2.5</Value>
 		</RealNum>
 		<Integer Name="Shrift_tip">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Отображение шрифта"]]></Description>
 			<Value>0</Value>
 		</Integer>
-		<Boolean Name="vin">
-			<Description><![CDATA["Выноска с размером"]]></Description>
-			<ArrayValues FirstDimension="1" SecondDimension="0">
-				<AVal Row="1">0</AVal>
-			</ArrayValues>
+		<Boolean Name="use_hotspot">
+			<Description><![CDATA["Показывать точки редактирования"]]></Description>
+			<Value>0</Value>
 		</Boolean>
 		<Length Name="A">
 			<Description><![CDATA["Размер 1"]]></Description>
@@ -426,7 +504,7 @@ values{2} "type_razm" itype_razm, ttype_razm
 </ParamSection>
 
 <Copyright SectVersion="1" SectionFlags="0" SubIdent="0">
-	<Author></Author>
+	<Author>kuvbur</Author>
 	<License>
 		<Type>CC0</Type>
 		<Version>1.0</Version>
@@ -440,7 +518,7 @@ values{2} "type_razm" itype_razm, ttype_razm
 <!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
 
 <Comment SectVersion="20" SectionFlags="0" SubIdent="0">
-<![CDATA[]]>
+<![CDATA[Отрисовка размера по заданным координатам]]>
 </Comment>
 
 </Symbol>

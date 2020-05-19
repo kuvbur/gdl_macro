@@ -70,7 +70,7 @@ i=i+1 : unbreak[i] = "Серия"
 i=i+1 : unbreak[i] = "Серии"
 i=i+1 : unbreak[i] = "ОСТ"
 
-for inx = 1 to i
+for inx = 1 to vardim1(unbreak)
 	mrw_wordToReplace = unbreak[inx]+" "
 	mrw_in_str = aft
 	mrw_newWord = unbreak[inx]+"@"
@@ -131,11 +131,17 @@ for is=1 to rs
 	call "macro_trim_space" parameters mts_in_str=mts_in_str,
 										RETURNED_PARAMETERS mts_out_str
 	if vartype(mts_out_str)=2 then txt = mts_out_str
-	mrc_newChar = " " : mrc_charToReplace = "@" : mrc_in_str = txt
-	call "macro_replace_char" parameters mrc_in_str=mrc_in_str,
-								mrc_charToReplace=mrc_charToReplace,
-								mrc_newChar = mrc_newChar,
-								RETURNED_PARAMETERS mrc_out_str
+	for inx = 1 to vardim1(unbreak)
+		mrw_wordToReplace = unbreak[inx]+"@"
+		mrw_in_str = txt
+		mrw_newWord = unbreak[inx]+" "
+		mrw_out_str = ""
+		call "macro_replace_word" parameters mrw_in_str=mrw_in_str,
+											mrw_newWord=mrw_newWord,
+											mrw_wordToReplace = mrw_wordToReplace,
+											RETURNED_PARAMETERS mrw_out_str
+		if vartype(mrw_out_str)=2 then txt = mrw_out_str
+	next inx
 	if vartype(mrc_out_str)=2 then txt = mrc_out_str
 	text_r[is] = txt
 	mlb_out_str_ = mlb_out_str_ + text_r[is]+"\n"

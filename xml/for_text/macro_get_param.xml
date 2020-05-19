@@ -41,7 +41,7 @@
 ! mgp_error_char - На что знаменять значение параметров, если значение не найдено или пустое
 ! Параметры на выходе
 ! mgp_out_str - сформированная строка
-! =============================================================================
+! Использование:
 !mgp_in_str = "%id% - размеры %razm%"
 !mgp_prim1="прим. 1" : mgp_prim2="" : mgp_prim3="" : mgp_prim4="" : mgp_prim5=""
 !mgp_qty=1 : mgp_ld="%.0mm"
@@ -60,7 +60,35 @@ param_name_str = ""
 unit_name_str = ""
 unstr="%.0"
 EPS = 0.0001
-gl_id=""
+
+gl_id="" : full_id="" : master_id = ""
+n = REQUEST ("Full_ID_of_parent", "", master_id)
+!Удаляем пробелы в начале и конце
+if STRSTR(master_id, " ")>EPS then
+	mts_in_str = master_id
+	call "macro_trim_space" parameters mts_in_str=mts_in_str,
+										RETURNED_PARAMETERS mts_out_str
+	master_id = mts_out_str
+endif
+gl_id=GLOB_ID
+if vartype(gl_id)=1 then gl_id = str("%.0", gl_id)
+!Удаляем пробелы в начале и конце
+if STRSTR(gl_id, " ")>EPS then
+	mts_in_str = gl_id
+	call "macro_trim_space" parameters mts_in_str=mts_in_str,
+										RETURNED_PARAMETERS mts_out_str
+	gl_id = mts_out_str
+endif
+if master_id <> "" then
+	full_id = master_id + "." + gl_id
+else
+	full_id = gl_id
+endif
+if strlen(mgp_ignore_id)<EPS then mgp_ignore_id = "!"
+if STRSTR(gl_id, mgp_ignore_id)>0 then gl_id = "@"
+if STRSTR(full_id, mgp_ignore_id)>0 then full_id = "@"
+if STRSTR(master_id, mgp_ignore_id)>0 then master_id = "@"
+
 mgp_in_str_ = mgp_in_str
 
 if STRSTR(mgp_in_str_, "%", 1)<EPS then
@@ -78,6 +106,8 @@ if n_sh>0 then
 	if param_name_str <> "" then
 		var_param = ""
 		if STRSTR("%"+param_name_str+"%","%id%",0)>0 then var_param = gl_id
+		if STRSTR("%"+param_name_str+"%","%f_id%",0)>0 then var_param = full_id
+		if STRSTR("%"+param_name_str+"%","%m_id%",0)>0 then var_param = master_id
 		if STRSTR("%"+param_name_str+"%","%pr1%",0)>0 then var_param = mgp_prim1
 		if STRSTR("%"+param_name_str+"%","%pr2%",0)>0 then var_param = mgp_prim2
 		if STRSTR("%"+param_name_str+"%","%pr3%",0)>0 then var_param = mgp_prim3
@@ -85,8 +115,8 @@ if n_sh>0 then
 		if STRSTR("%"+param_name_str+"%","%pr5%",0)>0 then var_param = mgp_prim5
 		if var_param = "" then
 			if STRSTR(param_name_str,"qty_v",0)>0 then
-				if qty>EPS then
-					var_param = STR ("%.0", qty)+"шт."
+				if mgp_qty>EPS then
+					var_param = STR ("%.0", mgp_qty)+"шт."
 				else
 					var_param = ""
 				endif
@@ -116,7 +146,7 @@ if n_sh>0 then
 				endif
 			endif
 		endif
-
+		if var_param = "@" then var_param = "" 
 		mts_in_str = var_param
 		call "macro_trim_space" parameters mts_in_str=mts_in_str,
 											RETURNED_PARAMETERS mts_out_str
@@ -340,6 +370,10 @@ EXIT mgp_out_str
 		<String Name="mgp_error_char">
 			<Description><![CDATA["Что вывести, если параметр не найден"]]></Description>
 			<Value><![CDATA[""]]></Value>
+		</String>
+		<String Name="mgp_ignore_id">
+			<Description><![CDATA["Если ID содержит этот символ, то не выводим ID"]]></Description>
+			<Value><![CDATA["!"]]></Value>
 		</String>
 
 		<!-- macro_get__A: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
