@@ -82,7 +82,7 @@ for i=1 to inx
 		coord_out[inx_out][4] = i
 	endif
 next i
-end coord_out
+exit coord_out
 ]]>
 </Script_1D>
 

@@ -9,6 +9,8 @@
 	Revert ... Вес_Гост.gsm
 	Revert ... Радиус_изгиба.gsm
 	Revert ... Сортамент_арматуры.gsm
+error: LP_XMLConverter crashed.
+D:\Рогожин ДА\prog\mygdisk\Share\gdl_macro\gdl\for_reinforce\Сортамент_арматуры.txt(0) : error: Invalid encoding of source file.
 	Revert ... Список_диаметров.gsm
 	Revert ... macro_get_param.gsm
 	Revert ... macro_line_break.gsm

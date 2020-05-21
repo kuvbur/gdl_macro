@@ -63,13 +63,18 @@ i=i+1 : iRefStory[i]=REF_STORY_NAME3 : tRefStory[i] = name3
 i=i+1 : iRefStory[i]=REF_STORY_NAME4 : tRefStory[i] = name4
 
 _referenceHeightMod	= 0
-if mrh_ref_story = REF_STORY_HOME then _referenceHeightMod = GLOB_HSTORY_ELEV
-if mrh_ref_story = REF_STORY_CURR then _referenceHeightMod = GLOB_CSTORY_ELEV
+if GLOB_SCRIPT_TYPE<>5 then
+	if mrh_ref_story = REF_STORY_HOME then _referenceHeightMod = GLOB_HSTORY_ELEV
+	if mrh_ref_story = REF_STORY_CURR then _referenceHeightMod = GLOB_CSTORY_ELEV
+endif
 if mrh_ref_story = REF_STORY_NAME1 then _referenceHeightMod = elev1
 if mrh_ref_story = REF_STORY_NAME2 then _referenceHeightMod = elev2
 if mrh_ref_story = REF_STORY_NAME3 then _referenceHeightMod	= elev3
 if mrh_ref_story = REF_STORY_NAME4 then _referenceHeightMod	= elev4
 
+
+dim mrh_ref_story_text[7] : mrh_ref_story_text[1] = ""
+dim mrh_ref_story_val[7] : mrh_ref_story_val[1] = 0
 mrh_reference_heigh = _referenceHeightMod
 mrh_ref_story_text = tRefStory
 mrh_ref_story_val = iRefStory
