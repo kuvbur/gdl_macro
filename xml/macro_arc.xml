@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="DC715B6E-88C0-4517-9767-EB28506EA965" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="38">
+<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="DC715B6E-88C0-4517-9767-EB28506EA965" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="43">
 <Ancestry SectVersion="1" SectionFlags="0" SubIdent="0" Template="false">
 	<MainGUID>F938E33A-329D-4A36-BE3E-85E126820996</MainGUID>
 	<MainGUID>103E8D2C-8230-42E1-9597-46F84CCE28C0</MainGUID>
@@ -14,10 +14,6 @@
 	<Macro>
 		<MName><![CDATA["macro_dotbydr"]]></MName>
 		<MainGUID>C44894B0-4A96-4E45-9814-F75C5E40311D</MainGUID>
-	</Macro>
-	<Macro>
-		<MName><![CDATA["macro_cross2line"]]></MName>
-		<MainGUID>6818E5A7-6FDA-43D6-A6F0-9F0FA1EA709F</MainGUID>
 	</Macro>
 </CalledMacros>
 
@@ -63,8 +59,8 @@
 !l_arc - Длина дуги
 !dr - Величина уменьшения длины отрезка
 
-
-EPS = 0.0000001
+dbg = 0
+EPS = 0.0001
 out_txt = "-"
 ipx = 0 : ipy = 0
 px1 = 0 : py1 = 0
@@ -72,6 +68,31 @@ px2 = 0 : py2 = 0
 ang_arc = 0 : l_arc = 0
 dr = 0
 state_arc = -1
+
+if dbg then
+	unID=1
+	HOTSPOT2 x1, 0, unID, y1, 1+128: unID=unID+1
+	HOTSPOT2 x1, y1, unID, y1, 2: unID=unID+1
+	HOTSPOT2 x1, -1, unID, y1, 3: unID=unID+1
+	HOTSPOT2 0, y1, unID, x1, 1+128: unID=unID+1
+	HOTSPOT2 x1, y1, unID, x1, 2: unID=unID+1
+	HOTSPOT2 -1, y1, unID, x1, 3: unID=unID+1
+
+	HOTSPOT2 x2, 0, unID, y2, 1+128: unID=unID+1
+	HOTSPOT2 x2, y2, unID, y2, 2: unID=unID+1
+	HOTSPOT2 x2, -1, unID, y2, 3: unID=unID+1
+	HOTSPOT2 0, y2, unID, x2, 1+128: unID=unID+1
+	HOTSPOT2 x2, y2, unID, x2, 2: unID=unID+1
+	HOTSPOT2 -1, y2, unID, x2, 3: unID=unID+1
+
+	HOTSPOT2 x3, 0, unID, y3, 1+128: unID=unID+1
+	HOTSPOT2 x3, y3, unID, y3, 2: unID=unID+1
+	HOTSPOT2 x3, -1, unID, y3, 3: unID=unID+1
+	HOTSPOT2 0, y3, unID, x3, 1+128: unID=unID+1
+	HOTSPOT2 x3, y3, unID, x3, 2: unID=unID+1
+	HOTSPOT2 -1, y3, unID, x3, 3: unID=unID+1
+endif
+
 if type_arc = 1 then
 	gosub "arc_by_dot"
 endif
@@ -85,30 +106,29 @@ if type_arc = 3 then
 endif
 
 
-
 goto 20
 
 "arc_by_dot":
 	!Получаем координатцы направляющих векторов отрезков
 	call "BasicGeometricCalc_20" parameters 	iFunction 	= 1,
-						Point1x		= x2,
-						Point1y		= y2,
-						Point1z		= 0,
-						Point2x		= x1,
-						Point2y		= y1,
-						Point2z		= 0,
+						Point1x	= x2,
+						Point1y	= y2,
+						Point1z	= 0,
+						Point2x	= x1,
+						Point2y	= y1,
+						Point2z	= 0,
 			returned_parameters	DirectionVx,
 						DirectionVy,
 						DirectionVz,
 						Distance
 	vx1 = DirectionVx : vy1 = DirectionVy : dl1 = Distance
 	call "BasicGeometricCalc_20" parameters 	iFunction 	= 1,
-						Point1x		= x3,
-						Point1y		= y3,
-						Point1z		= 0,
-						Point2x		= x2,
-						Point2y		= y2,
-						Point2z		= 0,
+						Point1x	= x3,
+						Point1y	= y3,
+						Point1z	= 0,
+						Point2x	= x2,
+						Point2y	= y2,
+						Point2z	= 0,
 			returned_parameters	DirectionVx,
 						DirectionVy,
 						DirectionVz,
@@ -164,14 +184,14 @@ goto 20
 	vnx2 = vy2 : vny2 = -vx2
 	!Координаты центра окружности
 	call "BasicGeometricCalc_20" parameters	iFunction	= 4,
-						vx1		= vnx1,
-						vy1		= vny1,
-						px1		= px1,
-						py1		= py1,
-						vx2		= vnx2,
-						vy2		= vny2,
-						px2		= px2,
-						py2		= py2,
+						vx1	= vnx1,
+						vy1	= vny1,
+						px1	= px1,
+						py1	= py1,
+						vx2	= vnx2,
+						vy2	= vny2,
+						px2	= px2,
+						py2	= py2,
 			returned_parameters	ipx,ipy,state
 	state_arc = state
 	if state_arc<EPS then
@@ -194,7 +214,17 @@ goto 20
 	ang_arc = 180 - ang
 	l_arc = (3.1415926535 * r_arc * ang_arc)/180
 	out_txt = "ok"
-	end ipx,ipy,px1,py1,px2,py2,ang_arc,l_arc,dr,state
+20:
+	if dbg then
+		pen 6
+		line2 x1,y1, x2,y2
+		line2 x2,y2, x3,y3
+		pen 20
+		hotspot2 ipx,ipy
+		hotspot2 px1,py1
+		hotspot2 px2,py2
+	endif
+	exit ipx,ipy,px1,py1,px2,py2,ang_arc,l_arc,dr,state
 return
 
 "arc_by_vect":
@@ -203,50 +233,132 @@ return
 	px2 = x3 : py2 = y3
 	if abs((-vx1*vy2) - (-vy1*vx2))>EPS then
 		call "BasicGeometricCalc_20" parameters	iFunction	= 4,
-							vx1		= vx1,
-							vy1		= vy1,
-							px1		= px1,
-							py1		= py1,
-							vx2		= vx2,
-							vy2		= vy2,
-							px2		= px2,
-							py2		= py2,
+							vx1	= vx1,
+							vy1	= vy1,
+							px1	= px1,
+							py1	= py1,
+							vx2	= vx2,
+							vy2	= vy2,
+							px2	= px2,
+							py2	= py2,
 				returned_parameters	ipx,ipy,state
 		x2 = ipx : y2 = ipy
 		gosub "arc_by_dot"
 	else
 		state = -1
-		end ipx,ipy,px1,py1,px2,py2,ang_arc,l_arc,dr,state
+		exit ipx,ipy,px1,py1,px2,py2,ang_arc,l_arc,dr,state
 	endif
 return
 
 "dot_by_arc":
+	if dbg then
+		pen 6
+		line2 x1,y1, x2,y2
+		line2 x2,y2, x3,y3
+	endif
 	!Длины гипотенуз
 	lo_1 = sqr((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))
 	lo_2 = sqr((x2-x3)*(x2-x3)+(y2-y3)*(y2-y3))
 	!Углы поворота
 	ang_1 = asn(r_arc/lo_1)
 	ang_2 = asn(r_arc/lo_2)
+
+	sin_ang_1 = r_arc/lo_1
+	sin_ang_2 = r_arc/lo_2	
+	cos_ang_1 = cos(ang_1)
+	cos_ang_2 = cos(ang_2)
+
 	!Координаты конца
-	xo_1=x1+(x2-x1)*cos(ang_1)-(y2-y1)*sin(ang_1)
-	yo_1=y1+(x2-x1)*sin(ang_1)+(y2-y1)*cos(ang_1)
-	xo_2=x3+(x2-x3)*cos(ang_2)-(y2-y3)*sin(ang_2)
-	yo_2=y3+(x2-x3)*sin(ang_2)+(y2-y3)*cos(ang_2)
-	call "macro_dotbydr" parameters x1=x1, y1=y1, x2=xo_1, y2=yo_1, from_dot=2, dr=900, returned_parameters dx, dy
-	call "macro_cross2line" parameters x1=x1, y1=y1, x2=dx, y2=dy, x3=x2, y3=y2, x4=x3, y4=y3, returned_parameters dx, dy, state
-	!Если координаты конца лежат на одном из отрезков - меняем угол
-	if state>EPS then
-		xo_1=x1+(x2-x1)*cos(-ang_1)-(y2-y1)*sin(-ang_1)
-		yo_1=y1+(x2-x1)*sin(-ang_1)+(y2-y1)*cos(-ang_1)
+	xo_1=x1+(x2-x1)*cos_ang_1-(y2-y1)*sin_ang_1
+	yo_1=y1+(x2-x1)*sin_ang_1+(y2-y1)*cos_ang_1
+	xo_2=x3+(x2-x3)*cos_ang_2-(y2-y3)*sin_ang_2
+	yo_2=y3+(x2-x3)*sin_ang_2+(y2-y3)*cos_ang_2
+
+!	xo_1=x1+(x2-x1)*cos(ang_1)-(y2-y1)*sin(ang_1)
+!	yo_1=y1+(x2-x1)*sin(ang_1)+(y2-y1)*cos(ang_1)
+!	xo_2=x3+(x2-x3)*cos(ang_2)-(y2-y3)*sin(ang_2)
+!	yo_2=y3+(x2-x3)*sin(ang_2)+(y2-y3)*cos(ang_2)
+	call "BasicGeometricCalc_20" parameters iFunction 	= 13,
+						Point1x	= x1,
+						Point1y	= y1,
+						Point1z	= 0,
+						Point2x	= xo_1,
+						Point2y	= yo_1,
+						Point2z	= 0,
+						Point3x	= x2,
+						Point3y	= y2,
+						Point3z	= 0,
+						Point4x	= x3,
+						Point4y	= y3,
+						Point4z	= 0,
+			returned_parameters	dx, dy, state
+
+	if dbg and state<EPS then
+		pen 20
+		line2 x3,y3,x2,y2
+		line2 x1,y1,xo_1,yo_1
 	endif
-	call "macro_dotbydr" parameters x1=x3, y1=y3, x2=xo_2, y2=yo_2, from_dot=2, dr=900, returned_parameters dx, dy
-	call "macro_cross2line" parameters x1=x3, y1=y3, x2=dx, y2=dy, x3=x2, y3=y2, x4=x1, y4=y1, returned_parameters dx, dy, state
-	if state>EPS then
-		xo_2=x3+(x2-x3)*cos(-ang_2)-(y2-y3)*sin(-ang_2)
-		yo_2=y3+(x2-x3)*sin(-ang_2)+(y2-y3)*cos(-ang_2)
+
+	if abs(state-1)>EPS then
+		xo_1=x1+(x2-x1)*cos(-ang_1)+(y2-y1)*sin_ang_1
+		yo_1=y1-(x2-x1)*sin_ang_1+(y2-y1)*cos(-ang_1)
+
+!		xo_1=x1+(x2-x1)*cos(-ang_1)-(y2-y1)*sin(-ang_1)
+!		yo_1=y1+(x2-x1)*sin(-ang_1)+(y2-y1)*cos(-ang_1)
 	endif
+
+	call "BasicGeometricCalc_20" parameters iFunction 	= 13,
+						Point1x	= x2,
+						Point1y	= y2,
+						Point1z	= 0,
+						Point2x	= xo_2,
+						Point2y	= yo_2,
+						Point2z	= 0,
+						Point3x	= x2,
+						Point3y	= y2,
+						Point3z	= 0,
+						Point4x	= x1,
+						Point4y	= y1,
+						Point4z	= 0,
+			returned_parameters	dx, dy, state
+
+	if dbg and state<EPS then
+		pen 20
+		line2 x1,y1,x2,y2
+		line2 x2,y2,xo_2,yo_2
+	endif
+
+	if abs(state-1)>EPS then
+		xo_2=x3+(x2-x3)*cos(-ang_2)+(y2-y3)*sin_ang_2
+		yo_2=y3-(x2-x3)*sin_ang_2+(y2-y3)*cos(-ang_2)
+!		xo_2=x3+(x2-x3)*cos(-ang_2)-(y2-y3)*sin(-ang_2)
+!		yo_2=y3+(x2-x3)*sin(-ang_2)+(y2-y3)*cos(-ang_2)
+	endif
+
 	!Точка пересечения - и есть наша точка
-	call "macro_cross2line" parameters x1=x1, y1=y1, x2=xo_1, y2=yo_1, x3=x3, y3=y3, x4=xo_2, y4=yo_2, returned_parameters dx, dy, state
+	call "BasicGeometricCalc_20" parameters iFunction 	= 13,
+						Point1x	= x1,
+						Point1y	= y1,
+						Point1z	= 0,
+						Point2x	= xo_1,
+						Point2y	= yo_1,
+						Point2z	= 0,
+						Point3x	= x3,
+						Point3y	= y3,
+						Point3z	= 0,
+						Point4x	= xo_2,
+						Point4y	= yo_2,
+						Point4z	= 0,
+			returned_parameters	dx, dy, state
+
+	if dbg then
+		hotspot2 dx, dy
+		if state<EPS then
+			pen 3
+			line2 x1,y1,x2,y2
+			line2 x2,y2,xo_2,yo_2
+		endif
+	endif
 	ipx = dx : ipy = dy : state_arc = 1
 	end ipx,ipy,state_arc
 return
@@ -256,8 +368,6 @@ return
 	tt = vx*vx + vy*vy
 	if tt>EPS then l_vect = SQR(tt)
 return
-
-20:
 
 
 ]]>
@@ -278,23 +388,7 @@ return
 <!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
 
 <Script_VL SectVersion="20" SectionFlags="0" SubIdent="0">
-<![CDATA[
-values "type_arc" 1,2,3
-
-parameters ipx = ipx
-parameters ipy = ipy
-parameters state = state_arc
-
-if type_arc = 1 or type_arc = 2 then
-	parameters px1 = px1
-	parameters py1 = py1
-	parameters px2 = px2
-	parameters py2 = py2
-	parameters ang_arc = ang_arc
-	parameters l_arc = l_arc
-	parameters dr = dr
-endif
-]]>
+<![CDATA[]]>
 </Script_VL>
 
 <!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
@@ -311,7 +405,6 @@ endif
 
 <ParamSection SectVersion="26" SectionFlags="0" SubIdent="0">
 	<ParamSectHeader>
-		<Version>26</Version>
 		<AutoHotspots>false</AutoHotspots>
 		<StatBits>
 			<STBit_FixSize/>
@@ -323,7 +416,6 @@ endif
 		<LayFlags>65535</LayFlags>
 		<WDMirrorThickness>0</WDMirrorThickness>
 		<WDWallInset>0</WDWallInset>
-		<SymbolColor>0</SymbolColor>
 	</ParamSectHeader>
 	<Parameters>
 		<Length Name="A">
@@ -397,7 +489,7 @@ endif
 		</Length>
 		<Length Name="y3">
 			<Description><![CDATA["Начало отрезка 2 y"]]></Description>
-			<Value>0.3</Value>
+			<Value>0.6</Value>
 		</Length>
 		<Length Name="vx1">
 			<Description><![CDATA["Вектор 1 x"]]></Description>
@@ -417,7 +509,7 @@ endif
 		</Length>
 		<Length Name="r_arc">
 			<Description><![CDATA["Радиус скругления"]]></Description>
-			<Value>0</Value>
+			<Value>0.2</Value>
 		</Length>
 
 		<!-- _sp0_B: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
@@ -427,11 +519,11 @@ endif
 		</Title>
 		<Length Name="ipx">
 			<Description><![CDATA["Центр дуги x"]]></Description>
-			<Value>0</Value>
+			<Value>0.348599531650324</Value>
 		</Length>
 		<Length Name="ipy">
 			<Description><![CDATA["Центр дуги y"]]></Description>
-			<Value>0</Value>
+			<Value>0.556531257422089</Value>
 		</Length>
 		<Length Name="px1">
 			<Description><![CDATA["Начало дуги x"]]></Description>
@@ -463,7 +555,7 @@ endif
 		</Length>
 		<Integer Name="state">
 			<Description><![CDATA["Статус"]]></Description>
-			<Value>-1</Value>
+			<Value>1</Value>
 		</Integer>
 
 		<!-- macro_arc__A: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
@@ -473,17 +565,17 @@ endif
 		</Title>
 		<Length Name="dx">
 			<Description><![CDATA[""]]></Description>
-			<Value>636.496103068</Value>
+			<Value>636.696103067761</Value>
 		</Length>
 		<Length Name="dy">
 			<Description><![CDATA[""]]></Description>
-			<Value>636.496103068</Value>
+			<Value>636.696103067761</Value>
 		</Length>
 	</Parameters>
 </ParamSection>
 
 <Copyright SectVersion="1" SectionFlags="0" SubIdent="0">
-	<Author></Author>
+	<Author>kuvbur</Author>
 	<License>
 		<Type>CC0</Type>
 		<Version>1.0</Version>
@@ -493,8 +585,6 @@ endif
 <Keywords SectVersion="1" SectionFlags="0" SubIdent="0">
 <![CDATA[]]>
 </Keywords>
-
-<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
 
 <Comment SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[]]>

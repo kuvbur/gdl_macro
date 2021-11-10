@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="A92312CB-4BB0-4C60-AD15-6ADCA079C655" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="38">
+<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="A92312CB-4BB0-4C60-AD15-6ADCA079C655" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="43">
 <Ancestry SectVersion="1" SectionFlags="0" SubIdent="0" Template="false">
 	<MainGUID>F938E33A-329D-4A36-BE3E-85E126820996</MainGUID>
 	<MainGUID>B176ABF1-5813-478F-926B-28EE7C5DC1F7</MainGUID>
@@ -26,7 +26,7 @@
 
 <Script_1D SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
-dim show_zone_type_arr[12]
+dim show_zone_type_arr[13]
 	show_zone_type_arr[1]= "Номер в круге"
 	show_zone_type_arr[2]= "Название"
 	show_zone_type_arr[3]= "Только площадь"
@@ -39,7 +39,7 @@ dim show_zone_type_arr[12]
 	show_zone_type_arr[10]= "Категория пож."
 	show_zone_type_arr[11]= "Тип отделки"
 	show_zone_type_arr[12]= "Данные БТИ"
-
+	show_zone_type_arr[13]= "Вывод свойств"
 
 
 dim show_zone_num_arr[5]
@@ -75,19 +75,23 @@ nazn = nazn_arr
 
 <Script_UI SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
-ui_dialog `Параметры объектов АС`, 600, 410
+ui_dialog `Kuvbur_АС Общие параметры`, 550, 410
 ui_separator 280, 0, 280, 410
 sx = 5
 sy = 0
 sxe = 180
 
-sy = sy + 5: UI_OUTFIELD	`Отверстия`,	sx+20,	sy,	80,	20
-		  UI_INFIELD	"show_asotv",	sx,	sy-3, 20,	20
+sy = sy + 5: 
 
-UI_INFIELD	"show_asotv",	sx,	sy-3, 20,	20
 
-UI_INFIELD	"pen_eq",	sx+150,	sy-3, 20,	20
-UI_INFIELD	"pen_all",	sx+180,	sy-3, 40,	20
+	UI_OUTFIELD	`Операторы`,	sx+20,	sy,	70,	20
+	UI_INFIELD	"show_op_otv",	sx,	sy-3, 15,	20
+
+	UI_OUTFIELD	`Отверстия`,	sx+20+100,	sy,	60,	20
+	UI_INFIELD	"show_asotv",	sx+100,	sy-3, 15,	20
+
+UI_INFIELD	"pen_eq",	sx+150+40,	sy-3, 15,	20
+UI_INFIELD	"pen_all",	sx+180+40,	sy-3, 40,	20
 
 if show_asotv then
 	sy = sy + 25
@@ -141,24 +145,87 @@ sy = 250
 
 sx = 290
 sy = 0
-sy = sy + 5: UI_OUTFIELD	`Отображение информации о помещениях`,	sx,	sy,	sx,	20
+sy = sy + 5: UI_OUTFIELD	`Отображение информации о помещениях`,	sx,	sy,	sx,	18
 sy = sy + 20: UI_INFIELD	"show_zone_type",	sx,	sy-3, 180,	20
 
-sy = sy + 30: UI_OUTFIELD	`Размещение маркировки`,	sx,	sy,	sx,	20
+sy = sy + 25
+
+UI_GROUPBOX "Свойства в паспорте зоны", sx, sy, 250, 160
+	dim	parentPropertiesArray[]
+	n = request ("Properties_Of_Parent", "", parentPropertiesArray)
+
+	sy = sy + 23: UI_OUTFIELD	`В круге`,	sx+23,	sy,	45,	16
+					UI_INFIELD	"show_prop_circle",	sx+5,	sy, 15,	15
+					_stSelected	= ""
+					_stPropID	= prop_circle
+					gosub "getPropertyName"
+					ui_custom_popup_infield "prop_circle", sx+105, sy, 140, 20,
+						1, 3, 1, _stSelected,
+						parentPropertiesArray
+dy = 28
+	sy = sy + dy: UI_OUTFIELD	`В рамке`,	sx+23,	sy,	45,	16
+					UI_INFIELD	"show_prop_rect",	sx+5,	sy, 15,	15
+					_stSelected	= ""
+					_stPropID	= prop_rect
+					gosub "getPropertyName"
+					ui_custom_popup_infield "prop_rect", sx+105, sy, 140, 20,
+						1, 3, 1, _stSelected,
+						parentPropertiesArray
+
+	sy = sy + dy: UI_OUTFIELD	`Подчёркнут`,	sx+23,	sy,	65,	16
+					UI_INFIELD	"show_prop_line",	sx+5,	sy, 15,	15
+					_stSelected	= ""
+					_stPropID	= prop_line
+					gosub "getPropertyName"
+					ui_custom_popup_infield "prop_line", sx+105, sy, 140, 20,
+						1, 3, 1, _stSelected,
+						parentPropertiesArray
+
+	sy = sy + dy: UI_OUTFIELD	`В треугольнике`,	sx+23,	sy,	85,	16
+					UI_INFIELD	"show_prop_triang",	sx+5,	sy, 15,	15
+					_stSelected	= ""
+					_stPropID	= prop_triang
+					gosub "getPropertyName"
+					ui_custom_popup_infield "prop_triang", sx+105, sy, 140, 20,
+						1, 3, 1, _stSelected,
+						parentPropertiesArray
+
+	sy = sy + dy: UI_OUTFIELD	`Текст`,	sx+23,	sy,	65,	16
+					UI_INFIELD	"show_prop_text",	sx+5,	sy, 15,	15
+					_stSelected	= ""
+					_stPropID	= prop_text
+					gosub "getPropertyName"
+					ui_custom_popup_infield "prop_text", sx+105, sy, 140, 20,
+						1, 3, 1, _stSelected,
+						parentPropertiesArray
+
+sy = sy + 30: UI_OUTFIELD	`Размещение маркировки`,	sx,	sy,	sx,	18
 sy = sy + 20: UI_INFIELD	"show_zone_num",	sx,	sy-3, 180,	20
 
+
 sy = 250
-sy = sy + 25: UI_OUTFIELD	`Системное значение неполного показа конструкций`,	sx+20,	sy,	290,	20
+sy = sy + 25: UI_OUTFIELD	`Сист. значение неполного показа конст.`,	sx+20,	sy,	260,	20
 			  UI_INFIELD	"mark_type",	sx,	sy-3, 20,	20
 sy = sy + 25: UI_OUTFIELD	`Тип неполного показа`,	sx+90,	sy,	250,	20
 			  UI_INFIELD	"mark_num",	sx,	sy-3, 90,	20
 
-sy = sy + 25: UI_OUTFIELD	`Показать тип устройства проёма дверей/окон`,	sx+20,	sy,	250,	20
+sy = sy + 25: UI_OUTFIELD	`Тип устройства проёма дверей/окон`,	sx+20,	sy,	250,	20
 			  UI_INFIELD	"show_renov_winddoor",	sx,	sy-3, 20,	20
 sy = sy + 25: UI_OUTFIELD	`Только огнестойкость дверей/окон`,	sx+20,	sy,	250,	20
 			  UI_INFIELD	"show_firest_winddoor",	sx,	sy-3, 20,	20
 sy = sy + 25: UI_OUTFIELD	`Только размер прохода в свету дверей`,	sx+20,	sy,	250,	20
 			  UI_INFIELD	"show_egress_winddoor",	sx,	sy-3, 20,	20
+
+end
+
+"getPropertyName":
+	r = REQUEST ("Property_Name", _stPropID, _typeName, _groupName, _propertyName)
+	if r > 2 then
+		_stSelected = _propertyName
+	else
+		_stSelected = ""
+	endif
+return
 
 ]]>
 </Script_UI>
@@ -202,6 +269,15 @@ endif
 if pen_eq=0 then LOCK "pen_all"
 
 if mark_type then LOCK "mark_num"
+
+if show_zone_type <> show_zone_type_arr[13] then
+	LOCK "prop_circle", "show_prop_circle", "prop_rect", "show_prop_rect", "prop_line", "show_prop_line", "prop_triang", "show_prop_triang", "prop_text", "show_prop_text"
+endif
+if not(show_prop_circle) then LOCK "prop_circle"
+if not(show_prop_rect) then LOCK "prop_rect"
+if not(show_prop_line) then LOCK "prop_line"
+if not(show_prop_triang) then LOCK "prop_triang"
+if not(show_prop_text) then LOCK "prop_text"
 ]]>
 </Script_VL>
 
@@ -217,9 +293,8 @@ if mark_type then LOCK "mark_num"
 <![CDATA[]]>
 </Script_BWM>
 
-<ParamSection SectVersion="26" SectionFlags="0" SubIdent="0">
+<ParamSection SectVersion="27" SectionFlags="0" SubIdent="0">
 	<ParamSectHeader>
-		<Version>26</Version>
 		<AutoHotspots>false</AutoHotspots>
 		<StatBits>
 			<STBit_UIDefault/>
@@ -232,7 +307,6 @@ if mark_type then LOCK "mark_num"
 		<LayFlags>65535</LayFlags>
 		<WDMirrorThickness>0</WDMirrorThickness>
 		<WDWallInset>0</WDWallInset>
-		<SymbolColor>0</SymbolColor>
 	</ParamSectHeader>
 	<Parameters>
 		<Length Name="A">
@@ -264,6 +338,10 @@ if mark_type then LOCK "mark_num"
 		<Boolean Name="show_asotv">
 			<Description><![CDATA["Отображать отверстия"]]></Description>
 			<Value>1</Value>
+		</Boolean>
+		<Boolean Name="show_op_otv">
+			<Description><![CDATA["Отображать операторы отверстий"]]></Description>
+			<Value>0</Value>
 		</Boolean>
 		<String Name="show_wallline_door">
 			<Description><![CDATA["Отображать линию стены дверей"]]></Description>
@@ -327,8 +405,48 @@ if mark_type then LOCK "mark_num"
 		</Length>
 		<String Name="show_zone_type">
 			<Description><![CDATA["Отображение информации о помещениях"]]></Description>
-			<Value><![CDATA["Номер в круге"]]></Value>
+			<Value><![CDATA["Вывод свойств"]]></Value>
 		</String>
+		<String Name="prop_circle">
+			<Description><![CDATA[""]]></Description>
+			<Value><![CDATA["8D0222E8-E043-447D-BEEA-E22665FAAB11"]]></Value>
+		</String>
+		<Boolean Name="show_prop_circle">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Boolean>
+		<String Name="prop_rect">
+			<Description><![CDATA[""]]></Description>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<Boolean Name="show_prop_rect">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Boolean>
+		<String Name="prop_line">
+			<Description><![CDATA[""]]></Description>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<Boolean Name="show_prop_line">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Boolean>
+		<String Name="prop_triang">
+			<Description><![CDATA[""]]></Description>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<Boolean Name="show_prop_triang">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Boolean>
+		<String Name="prop_text">
+			<Description><![CDATA[""]]></Description>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<Boolean Name="show_prop_text">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Boolean>
 		<String Name="show_zone_num">
 			<Description><![CDATA["Размещение маркировки"]]></Description>
 			<Value><![CDATA["AC-1"]]></Value>
@@ -343,7 +461,7 @@ if mark_type then LOCK "mark_num"
 		</Integer>
 		<Integer Name="ishow_zone_type">
 			<Description><![CDATA[""]]></Description>
-			<Value>1</Value>
+			<Value>13</Value>
 		</Integer>
 		<Integer Name="ishow_zone_num">
 			<Description><![CDATA[""]]></Description>
@@ -399,8 +517,6 @@ if mark_type then LOCK "mark_num"
 <Keywords SectVersion="1" SectionFlags="0" SubIdent="0">
 <![CDATA[]]>
 </Keywords>
-
-<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
 
 <Comment SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[]]>

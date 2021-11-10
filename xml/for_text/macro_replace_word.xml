@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="3F1A476B-44B6-4A9C-93AE-7816A0509FDD" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="38">
+<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="3F1A476B-44B6-4A9C-93AE-7816A0509FDD" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="43">
 <Ancestry SectVersion="1" SectionFlags="0" SubIdent="0" Template="false">
 	<MainGUID>F938E33A-329D-4A36-BE3E-85E126820996</MainGUID>
 	<MainGUID>103E8D2C-8230-42E1-9597-46F84CCE28C0</MainGUID>
@@ -57,7 +57,6 @@ ENDWHILE
 
 "m_end":
 mrw_out_str = mrw_out_str_
-parameters mrw_out_str=mrw_out_str
 EXIT mrw_out_str
 
 ]]>
@@ -93,9 +92,8 @@ EXIT mrw_out_str
 <![CDATA[]]>
 </Script_BWM>
 
-<ParamSection SectVersion="26" SectionFlags="0" SubIdent="0">
+<ParamSection SectVersion="27" SectionFlags="0" SubIdent="0">
 	<ParamSectHeader>
-		<Version>26</Version>
 		<AutoHotspots>false</AutoHotspots>
 		<StatBits>
 			<STBit_FixSize/>
@@ -107,7 +105,6 @@ EXIT mrw_out_str
 		<LayFlags>65535</LayFlags>
 		<WDMirrorThickness>0</WDMirrorThickness>
 		<WDWallInset>0</WDWallInset>
-		<SymbolColor>0</SymbolColor>
 	</ParamSectHeader>
 	<Parameters>
 		<Length Name="A">
@@ -179,8 +176,6 @@ EXIT mrw_out_str
 <Keywords SectVersion="1" SectionFlags="0" SubIdent="0">
 <![CDATA[]]>
 </Keywords>
-
-<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
 
 <Comment SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[Замена слов в строке]]>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="A1ABC255-8AE4-41D8-AC50-84F6C6627609" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="38">
+<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="A1ABC255-8AE4-41D8-AC50-84F6C6627609" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="43">
 <Ancestry SectVersion="1" SectionFlags="0" SubIdent="0" Template="false">
 	<MainGUID>F938E33A-329D-4A36-BE3E-85E126820996</MainGUID>
 	<MainGUID>103E8D2C-8230-42E1-9597-46F84CCE28C0</MainGUID>
@@ -40,6 +40,76 @@ SEGMENT_ARC					= 9
 INTERSECT_CIRCLE_CIRCLE		= 10
 INTERSECT_SEGMENT_CIRCLE	= 11
 DISTRIBUTION_POLY_LINE		= 12
+INTERSECT_LINE_LINE_BY_DOT	= 13
+DOT_IN_LINE	= 14
+
+if iFunction = DOT_IN_LINE then
+	state	= 0
+	gosub "IsDotInLine"
+	state = IsOnLine
+	end state
+endif
+
+if iFunction = INTERSECT_LINE_LINE_BY_DOT then
+	px1 = Point1x
+	py1 = Point1y
+
+	DirectionVx	= 0
+	DirectionVy	= 0
+	DirectionVz	= 0
+	Distance	= 0
+	gosub "GetDirectionP2toP1"
+	vx1 = DirectionVx
+	vy1 = DirectionVy
+
+	px2 = Point4x
+	py2 = Point4y
+	Point1x = Point3x
+	Point1y = Point3y
+	Point1z = Point3z
+	Point2x = Point4x
+	Point2y = Point4y
+	Point2z = Point4z
+
+	DirectionVx	= 0
+	DirectionVy	= 0
+	DirectionVz	= 0
+	Distance	= 0
+	gosub "GetDirectionP2toP1"
+	vx2 = DirectionVx
+	vy2 = DirectionVy
+
+	ipx		= 0
+	ipy		= 0
+	state	= 0
+	gosub "LineLineIntersection"
+	if state > EPS then
+		Point3x_ = Point3x
+		Point3y_ = Point3y
+		Point3z_ = Point3z
+
+		Point3x = ipx
+		Point3y = ipy
+		Point3z = 0
+		gosub "IsDotInLine"
+		IsOnLine1 = IsOnLine
+
+
+		Point1x = Point3x_
+		Point1y = Point3y_
+		Point1z = Point3z_
+		Point2x = Point4x
+		Point2y = Point4y
+		Point2z = Point4z
+		gosub "IsDotInLine"
+		IsOnLine2 = IsOnLine
+		if IsOnLine1 then state = 2 + EPS
+		if IsOnLine2 then state = 3 + EPS
+	endif
+	end ipx,
+		ipy,
+		state
+endif
 
 if iFunction = DIRECTION_POINTS then
 	DirectionVx	= 0
@@ -228,6 +298,56 @@ endif
 end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end ! end
 ! =====================================================================================================================================
 
+
+! ===============================================
+! Name : IsDotInLine
+! -----------------------------------------------
+! Input:
+!	EPS:		epsylon
+!	Point1x:	Coordinate X of the first point
+!	Point1y:	Coordinate Y of the first point
+!	Point1z:	Coordinate Z of the first point
+!	Point2x:	Coordinate X of the second point
+!	Point2y:	Coordinate Y of the second point
+!	Point2z:	Coordinate Z of the second point
+!	Point3x:	Coordinate X of the dot
+!	Point3y:	Coordinate Y of the dot
+!	Point3z:	Coordinate Z of the dot
+! Output:
+!	IsOnLine:	1 if dot is on line, 0 otherwise
+! ===============================================
+"IsDotInLine":
+	gosub "GetDirectionP2toP1"
+	Dist_line = Distance
+
+	Point1x_ = Point1x
+	Point1y_ = Point1y
+	Point1z_ = Point1z
+
+	Point1x = Point3x
+	Point1y = Point3y
+	Point1z = Point3z
+
+	Point2x = Point2x
+	Point2y = Point2y
+	Point2z = Point2z
+
+	gosub "GetDirectionP2toP1"
+	Dist_1_dot = Distance
+
+	Point1x = Point1x
+	Point1y = Point1y
+	Point1z = Point1z
+
+	Point2x = Point3x
+	Point2y = Point3y
+	Point2z = Point3z
+	gosub "GetDirectionP2toP1"
+	Dist_2_dot = Distance
+	
+	IsOnLine = 0
+	if abs(Dist_line-Dist_1_dot-Dist_2_dot)<smallEPS then IsOnLine = 1
+return
 
 ! ===============================================
 ! Name : PolygonLineIntersection
@@ -674,15 +794,20 @@ return
 		C2 = -(A2*px2) - (B2*py2)
 
 		! Calculate coordinates of intersection point
-		ipy = ((A1*C2) - (C1*A2)) / ((B1*A2) - (A1*B2))
+		if abs((B1*A2) - (A1*B2))>EPS then
+			ipy = ((A1*C2) - (C1*A2)) / ((B1*A2) - (A1*B2))
+			state = 1
+		else
+			ipy = 0
+			state = 0
+text2 0,0,"ERR"
+		endif
 
 		if abs(A1) < EPS then
 			ipx = (-B2*ipy - C2) / A2
 		else
 			ipx = (-B1*ipy - C1) / A1
 		endif
-
-		state = 1
 	endif
 return
 
@@ -2056,7 +2181,6 @@ return
 
 <ParamSection SectVersion="26" SectionFlags="0" SubIdent="0">
 	<ParamSectHeader>
-		<Version>26</Version>
 		<AutoHotspots>false</AutoHotspots>
 		<StatBits>
 			<STBit_UIDefault/>
@@ -2070,7 +2194,6 @@ return
 		<LayFlags>65535</LayFlags>
 		<WDMirrorThickness>0</WDMirrorThickness>
 		<WDWallInset>0</WDWallInset>
-		<SymbolColor>0</SymbolColor>
 	</ParamSectHeader>
 	<Parameters>
 		<Length Name="A">
@@ -2396,6 +2519,54 @@ return
 			<Value>0</Value>
 		</Length>
 
+		<!-- BasicGeome_A: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="BasicGeome_A">
+			<Description><![CDATA["Inputs for Intersection of Two Lines By Dot"]]></Description>
+		</Title>
+		<Length Name="Point3x">
+			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="Point3y">
+			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="Point3z">
+			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="Point4x">
+			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="Point4y">
+			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="Point4z">
+			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+
 		<!-- GetSegmentDirectionParams: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
 
 		<Title Name="GetSegmentDirectionParams">
@@ -2693,8 +2864,6 @@ return
 <Keywords SectVersion="1" SectionFlags="0" SubIdent="0">
 <![CDATA[]]>
 </Keywords>
-
-<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
 
 <Comment SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[]]>

@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ParamSection>
+	<ParamSectHeader>
+		<AutoHotspots>false</AutoHotspots>
+		<StatBits>
+			<STBit_FixSize/>
+		</StatBits>
+		<WDLeftFrame>0</WDLeftFrame>
+		<WDRightFrame>0</WDRightFrame>
+		<WDTopFrame>0</WDTopFrame>
+		<WDBotFrame>0</WDBotFrame>
+		<LayFlags>65535</LayFlags>
+		<WDMirrorThickness>0</WDMirrorThickness>
+		<WDWallInset>0</WDWallInset>
+	</ParamSectHeader>
+	<Parameters SectVersion="26" SectionFlags="0" SubIdent="0">
+		<Length Name="A">
+			<Description><![CDATA["Размер 1"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Length Name="B">
+			<Description><![CDATA["Размер 2"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Length Name="ZZYZX">
+			<Description><![CDATA["Высота"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Boolean Name="AC_show2DHotspotsIn3D">
+			<Description><![CDATA["Показ Узловых 2D Точек в 3D"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Length Name="ac_bottomlevel">
+			<Description><![CDATA["Отметка Низа"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Length>
+		<Length Name="ac_toplevel">
+			<Description><![CDATA["Отметка Верха"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="x1">
+			<Description><![CDATA["Точка 1 - x"]]></Description>
+			<Value>0</Value>
+		</Length>
+		<Length Name="y1">
+			<Description><![CDATA["Точка 1 - y"]]></Description>
+			<Value>0</Value>
+		</Length>
+		<Length Name="x2">
+			<Description><![CDATA["Точка 2 - x"]]></Description>
+			<Value>0</Value>
+		</Length>
+		<Length Name="y2">
+			<Description><![CDATA["Точка 2 - y"]]></Description>
+			<Value>0</Value>
+		</Length>
+		<Length Name="x3">
+			<Description><![CDATA["Точка 3 - x"]]></Description>
+			<Value>0</Value>
+		</Length>
+		<Length Name="y3">
+			<Description><![CDATA["Точка 3 - y"]]></Description>
+			<Value>0</Value>
+		</Length>
+		<Length Name="x4">
+			<Description><![CDATA["Точка 4 - x"]]></Description>
+			<Value>0</Value>
+		</Length>
+		<Length Name="y4">
+			<Description><![CDATA["Точка 4 - y"]]></Description>
+			<Value>0</Value>
+		</Length>
+		<Length Name="dx">
+			<Description><![CDATA["Результат - x"]]></Description>
+			<Value>0</Value>
+		</Length>
+		<Length Name="dy">
+			<Description><![CDATA["Результат - y"]]></Description>
+			<Value>0</Value>
+		</Length>
+		<Integer Name="state">
+			<Description><![CDATA["Получилось?"]]></Description>
+			<Value>1</Value>
+		</Integer>
+	</Parameters>
+</ParamSection>
