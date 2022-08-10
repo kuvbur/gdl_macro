@@ -13,7 +13,7 @@
 		<WDMirrorThickness>0</WDMirrorThickness>
 		<WDWallInset>0</WDWallInset>
 	</ParamSectHeader>
-	<Parameters SectVersion="22" SectionFlags="0" SubIdent="0">
+	<Parameters SectVersion="27" SectionFlags="0" SubIdent="0">
 		<Length Name="A">
 			<Description><![CDATA["Размер 1"]]></Description>
 			<Fix/>
@@ -69,7 +69,7 @@
 		</Angle>
 		<Integer Name="show_type">
 			<Description><![CDATA[""]]></Description>
-			<Value>0</Value>
+			<Value>1</Value>
 		</Integer>
 		<Integer Name="bolt_type">
 			<Description><![CDATA[""]]></Description>
@@ -85,7 +85,7 @@
 		</Boolean>
 		<Boolean Name="show_wash_list">
 			<Description><![CDATA[""]]></Description>
-			<Value>0</Value>
+			<Value>1</Value>
 		</Boolean>
 	</Parameters>
 </ParamSection>

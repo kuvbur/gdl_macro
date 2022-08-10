@@ -33,6 +33,18 @@ dim ishow_weld[] : i=0
 i=i+1 : ishow_weld[i]=0 : tshow_weld[i] = "Нет"
 i=i+1 : ishow_weld[i]=1 : tshow_weld[i] = "Условно"
 i=i+1 : ishow_weld[i]=2 : tshow_weld[i] = "Тело"
+
+
+max_type = 12
+if vardim1(hide_type)<>max_type or vardim1(show_type)<>max_type then
+	dim t[]
+	for i = 1 to max_type
+		t[i] = ""
+	next i
+	hide_type = t
+	show_type = t
+	parameters show_type = show_type, hide_type = hide_type
+endif
 ]]>
 </Script_1D>
 
@@ -46,7 +58,7 @@ i=i+1 : ishow_weld[i]=2 : tshow_weld[i] = "Тело"
 
 <Script_UI SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
-ui_dialog `Параметры объектов КМ`, 600, 410
+ui_dialog `Kuvbur_КМ Общие параметры`, 600, 410
 UI_PAGE 1
 sxe = 250
 symax = 10
@@ -66,14 +78,7 @@ endif
 sy = sy + 20: UI_GROUPBOX "Номер/имя вида (0-видны все эл-ты)", sx, sy, 270, 40
 			 UI_INFIELD	"n_view",	sx+5,	sy+15, 260,	20
 
-sy = sy + 50: UI_OUTFIELD	`Отображать элементы крепления(болты, гайки)`,	sx+20,	sy,	0,	20
-			 UI_INFIELD	"show_crew",	sx,	sy-3, 20,	20
-
-sy = sy + 20: UI_OUTFIELD	`Отображать отверстия болтов`,	sx+20,	sy,	0,	20
-			 UI_INFIELD	"show_hole",	sx,	sy-3, 20,	20
-
-sy = sy + 20: UI_OUTFIELD	`Отображать фасонки`,	sx+20,	sy,	0,	20
-			 UI_INFIELD	"show_list",	sx,	sy-3, 20,	20
+sy = sy + 30
 
 sy = sy + 20: UI_OUTFIELD	`Отображать ось элементов`,	sx+20,	sy,	0,	20
 			 UI_INFIELD	"show_axsis",	sx,	sy-3, 20,	20
@@ -83,6 +88,25 @@ sy = sy + 20: UI_OUTFIELD	`Отображать ТОЛЬКО ось элемен
 
 sy = sy + 20: UI_OUTFIELD	`Отображать элементы узлов`,	sx+20,	sy,	0,	20
 			 UI_INFIELD	"show_connect",	sx,	sy-3, 20,	20
+
+sy = sy + 20: UI_OUTFIELD	`Отображать элементы крепления(болты, гайки)`,	sx+20,	sy,	0,	20
+			 UI_INFIELD	"show_crew",	sx,	sy-3, 20,	20
+
+sy = sy + 20: UI_OUTFIELD	`Отображать отверстия болтов`,	sx+20,	sy,	0,	20
+			 UI_INFIELD	"show_hole",	sx,	sy-3, 20,	20
+
+sy = sy + 20: UI_OUTFIELD	`Отображать фасонки`,	sx+20,	sy,	0,	20
+			 UI_INFIELD	"show_list",	sx,	sy-3, 20,	20
+
+sy = sy + 20:
+UI_GROUPBOX "Фильтрация по углу поворота", sx, sy, 270, 85
+sx = sx +10
+sy = sy + 20: UI_OUTFIELD	`Вертикальные элементы`,	sx+20,	sy,	160,	20
+			 UI_INFIELD	"show_if_vert",	sx,	sy-3, 20,	20
+sy = sy + 20: UI_OUTFIELD	`Горизонтальные элементы`,	sx+20,	sy,	160,	20
+			 UI_INFIELD	"show_if_gor",	sx,	sy-3, 20,	20
+sy = sy + 20: UI_OUTFIELD	`Наклонные элементы`,	sx+20,	sy,	160,	20
+			 UI_INFIELD	"show_if_ang",	sx,	sy-3, 20,	20
 
 sx = 350
 sy = symax+30+40+20
@@ -191,6 +215,38 @@ if mat_by_type_code = 8 then
 	next i
 endif
 301:
+n_page = n_page + 1
+sx = 20
+sy = 40
+sxe = 250
+UI_PAGE n_page, -1, "Фильтрация по типам"
+UI_OUTFIELD	"Фильтрация по типам конструкций",	sx+100,	sy-25,	260,	20
+UI_OUTFIELD	"Фильтровать по типам конструкций",	sx+20,	sy,	200,	25
+UI_INFIELD	"filter_type", sx,	sy-5, 20,	25
+
+sx = 20
+sy = sy + 25
+UI_OUTFIELD	"Скрыть выбранные",	sx+40,	sy,	200,	25
+for i=1 to vardim1(hide_type)
+	sy = sy + 25
+	UI_INFIELD{3} hide_type[i],	sx,	sy, 200, 20
+next i
+
+sx = 260
+sy = 40
+sy = sy + 25
+UI_OUTFIELD	"Отобразить только выбранные",	sx+20,	sy,	200,	25
+for i=1 to vardim1(show_type)
+	sy = sy + 25
+	UI_INFIELD{3} show_type[i],	sx,	sy, 200, 20
+next i
+
+ui_button ui_prev, " << ", 5,symax, 32,21, gs_ui_current_page - 1
+ui_button ui_next, " >> ", 50,symax, 32,21, gs_ui_current_page + 1
+
+
+
+303:
 if not(show_crew) then goto 302
 n_page = n_page + 1
 sx = 0
@@ -269,6 +325,31 @@ else
 endif
 parameters mat_by_type_code = mat_by_type_code
 
+if not(filter_type) then 
+	LOCK "hide_type", "show_type"
+else
+	dim t1[] : t1[1]=" " : j = 0
+	for i=1 to vardim1(hide_type)
+		if hide_type[i]<>" " and hide_type[i]<>"*" and strlen(hide_type[i])>0 then
+			j = j + 1
+			space = " " : var = hide_type[i] : gosub "trim_space"
+			space = " " : var = var : gosub "trim_space"
+			t1[j] = STRTOLOWER(var)
+		endif
+	next i
+	parameters hide_type_clear = t1
+
+	dim t2[] : t2[1]="*" : j = 0
+	for i=1 to vardim1(show_type)
+		if show_type[i]<>" " and show_type[i]<>"*" and strlen(show_type[i])>0 then
+			j = j + 1
+			space = " " : var = show_type[i] : gosub "trim_space"
+			space = " " : var = var : gosub "trim_space"
+			t2[j] = STRTOLOWER(show_type[i])
+		endif
+	next i
+	parameters show_type_clear = t2
+endif
 !!-------------------------------------------------------
 !!--------------- Антикоррозийка ------------------------
 !!-------------------------------------------------------
@@ -379,8 +460,8 @@ endif
 !!!-------------------------------------------------------
 !!!------------------- Марка стали -----------------------
 !!!-------------------------------------------------------
-dim stal_type_arr[]
-dim stal_gost_arr[] : i=0
+dim stal_type_arr[] : stal_type_arr[1] = ""
+dim stal_gost_arr[] : stal_gost_arr[1] = "" : i=0
 
 var1 = " ": var2 = " "
 ch1 = open("text", "Сталь.txt", "separator='\t', mode=ro, LIBRARY")
@@ -495,6 +576,23 @@ end
 		if var = arr_t[i] then inx = i
 	next i
 return
+
+"trim_space":
+	if vartype(var) = 2 then
+		DO
+			is_trim = 0
+			lvar = strlen(var)
+			is_first_space = (strstr(STRSUB (var, 1, 1),space)>0)
+			is_end_space = (strstr(STRSUB (var, lvar, 1),space)>0)
+			if is_first_space then
+				var = STRSUB (var, 2, lvar-1)
+				lvar = strlen(var)
+			endif
+			if is_end_space then var = STRSUB (var, 1, lvar-1)
+			is_trim = is_first_space + is_end_space
+		WHILE is_trim <> 0
+	endif
+return
 ]]>
 </Script_VL>
 
@@ -510,7 +608,7 @@ return
 <![CDATA[]]>
 </Script_BWM>
 
-<ParamSection SectVersion="22" SectionFlags="0" SubIdent="0">
+<ParamSection SectVersion="27" SectionFlags="0" SubIdent="0">
 	<ParamSectHeader>
 		<AutoHotspots>false</AutoHotspots>
 		<StatBits>
@@ -580,6 +678,68 @@ return
 			<Description><![CDATA["Отображать элементы КМ"]]></Description>
 			<Value>1</Value>
 		</Boolean>
+		<Boolean Name="show_if_vert">
+			<Description><![CDATA["Показывать вертикальные элементы"]]></Description>
+			<Value>1</Value>
+		</Boolean>
+		<Boolean Name="show_if_gor">
+			<Description><![CDATA["Показывать горизонтальные элементы"]]></Description>
+			<Value>1</Value>
+		</Boolean>
+		<Boolean Name="show_if_ang">
+			<Description><![CDATA["Показывать наклонные элементы"]]></Description>
+			<Value>1</Value>
+		</Boolean>
+		<Boolean Name="filter_type">
+			<Description><![CDATA["Фильтрация по типам"]]></Description>
+			<Value>1</Value>
+		</Boolean>
+		<String Name="hide_type">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="12" SecondDimension="0">
+				<AVal Row="1"><![CDATA[""]]></AVal>
+				<AVal Row="2"><![CDATA[""]]></AVal>
+				<AVal Row="3"><![CDATA[""]]></AVal>
+				<AVal Row="4"><![CDATA[""]]></AVal>
+				<AVal Row="5"><![CDATA[""]]></AVal>
+				<AVal Row="6"><![CDATA[""]]></AVal>
+				<AVal Row="7"><![CDATA[""]]></AVal>
+				<AVal Row="8"><![CDATA[""]]></AVal>
+				<AVal Row="9"><![CDATA[""]]></AVal>
+				<AVal Row="10"><![CDATA[""]]></AVal>
+				<AVal Row="11"><![CDATA[""]]></AVal>
+				<AVal Row="12"><![CDATA[""]]></AVal>
+			</ArrayValues>
+		</String>
+		<String Name="show_type">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="12" SecondDimension="0">
+				<AVal Row="1"><![CDATA[""]]></AVal>
+				<AVal Row="2"><![CDATA[""]]></AVal>
+				<AVal Row="3"><![CDATA[""]]></AVal>
+				<AVal Row="4"><![CDATA[""]]></AVal>
+				<AVal Row="5"><![CDATA[""]]></AVal>
+				<AVal Row="6"><![CDATA[""]]></AVal>
+				<AVal Row="7"><![CDATA[""]]></AVal>
+				<AVal Row="8"><![CDATA[""]]></AVal>
+				<AVal Row="9"><![CDATA[""]]></AVal>
+				<AVal Row="10"><![CDATA[""]]></AVal>
+				<AVal Row="11"><![CDATA[""]]></AVal>
+				<AVal Row="12"><![CDATA[""]]></AVal>
+			</ArrayValues>
+		</String>
+		<String Name="hide_type_clear">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="1" SecondDimension="0">
+				<AVal Row="1"><![CDATA[" "]]></AVal>
+			</ArrayValues>
+		</String>
+		<String Name="show_type_clear">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="1" SecondDimension="0">
+				<AVal Row="1"><![CDATA["*"]]></AVal>
+			</ArrayValues>
+		</String>
 		<String Name="gs_detlevel_3D">
 			<Description><![CDATA["Уровень деталей"]]></Description>
 			<Value><![CDATA["Детальный"]]></Value>

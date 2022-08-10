@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="381B15D3-22A5-4373-9902-319F34851E6B" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="43">
+<Ancestry SectVersion="1" SectionFlags="0" SubIdent="0" Template="false">
+	<MainGUID>F938E33A-329D-4A36-BE3E-85E126820996</MainGUID>
+	<MainGUID>103E8D2C-8230-42E1-9597-46F84CCE28C0</MainGUID>
+</Ancestry>
+
+<CalledMacros SectVersion="2" SectionFlags="0" SubIdent="0">
+</CalledMacros>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_3D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_3D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_2D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_2D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_1D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[
+! Разбивает строку mss_in_str по разделителю mss_delim_char
+! Использование:
+!dim mss_out_array[] : mss_delim_char = ";" : mss_in_str = "string1;string2"
+!call "macro_split_string" parameters mss_in_str=mss_in_str,
+!							mss_delim_char=mss_delim_char,
+!							RETURNED_PARAMETERS mss_out_array
+
+EPS = 0.0001
+dim _out_array[] : _out_array[1] = ""
+if strlen(mss_in_str)<EPS then goto "m_end"
+if strlen(mss_delim_char)<EPS then goto "m_end"
+if STRSTR(mss_in_str, mss_delim_char)<EPS then
+	_out_array[1] = mss_in_str
+	goto "m_end"
+endif
+
+_i = 1
+_currStr = mss_in_str
+while STRSTR(_currStr, mss_delim_char)>EPS and _i < 1000 do
+	_n = STRSTR (_currStr, mss_delim_char, 1)
+	_newStr = STRSUB (_currStr, 1, _n-1)
+	_currStr = STRSUB (_currStr, _n + 1, STRLEN(_currStr) - _n)	
+	_out_array[_i] = _newStr
+	_i = _i + 1
+endwhile
+if STRLEN(_currStr)>EPS then _out_array[_i] = _currStr
+
+"m_end":
+mss_out_array=_out_array
+parameters mss_out_array=mss_out_array
+EXIT mss_out_array
+]]>
+</Script_1D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_PR SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_PR>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_UI SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_UI>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_VL SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_VL>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_FWM SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_FWM>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_BWM SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_BWM>
+
+<ParamSection SectVersion="27" SectionFlags="0" SubIdent="0">
+	<ParamSectHeader>
+		<AutoHotspots>false</AutoHotspots>
+		<StatBits>
+			<STBit_FixSize/>
+		</StatBits>
+		<WDLeftFrame>0</WDLeftFrame>
+		<WDRightFrame>0</WDRightFrame>
+		<WDTopFrame>0</WDTopFrame>
+		<WDBotFrame>0</WDBotFrame>
+		<LayFlags>65535</LayFlags>
+		<WDMirrorThickness>0</WDMirrorThickness>
+		<WDWallInset>0</WDWallInset>
+	</ParamSectHeader>
+	<Parameters>
+		<Length Name="A">
+			<Description><![CDATA["Размер 1"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Length Name="B">
+			<Description><![CDATA["Размер 2"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Length Name="ZZYZX">
+			<Description><![CDATA["Высота"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Boolean Name="AC_show2DHotspotsIn3D">
+			<Description><![CDATA["Показ Узловых 2D Точек в 3D"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Length Name="ac_bottomlevel">
+			<Description><![CDATA["Отметка Низа"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Length>
+		<Length Name="ac_toplevel">
+			<Description><![CDATA["Отметка Верха"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<String Name="mss_in_str">
+			<Description><![CDATA["Входная строка"]]></Description>
+			<Value><![CDATA["string1; string20"]]></Value>
+		</String>
+		<String Name="mss_delim_char">
+			<Description><![CDATA["Символ разделитель"]]></Description>
+			<Value><![CDATA["-"]]></Value>
+		</String>
+		<String Name="mss_out_array">
+			<Description><![CDATA["Выходной массив"]]></Description>
+			<ArrayValues FirstDimension="1" SecondDimension="0">
+				<AVal Row="1"><![CDATA["string1; string20"]]></AVal>
+			</ArrayValues>
+		</String>
+	</Parameters>
+</ParamSection>
+
+<Copyright SectVersion="1" SectionFlags="0" SubIdent="0">
+	<Author>kuvbur</Author>
+	<License>
+		<Type>CC0</Type>
+		<Version>1.0</Version>
+	</License>
+</Copyright>
+
+<Keywords SectVersion="1" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Keywords>
+
+<Comment SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[Замена символов в строке]]>
+</Comment>
+
+</Symbol>

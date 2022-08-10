@@ -61,11 +61,10 @@ for i=1 to vardim1(otm)
 		line2 -dlin_polki+vistup_strelki,h_polki,-dlin_polki+vistup_strelki-dlin_vin,h_polki
 		line2 -dlin_polki+vistup_strelki,0,-dlin_polki+vistup_strelki,h_polki
 		if strlen(otmetka_v)>EPS then
-			STYLE "verh"
 			add2 -dlin_polki+vistup_strelki,h_polki
 			if polozh = 4 then mul2 -1,-1
 			if polozh = 3 then mul2 1,-1
-			RICHTEXT2 2*PAPER_TO_MODEL, dx_txt,"otmetka_v"+str("%.0",i)
+			RICHTEXT2 -2*PAPER_TO_MODEL, dx_txt,"otmetka_v"+str("%.0",i)
 			del top
 		endif
 		add2 coord[1][1], coord[1][2]
@@ -73,11 +72,10 @@ for i=1 to vardim1(otm)
 		if polozh = 3 then mul2 1,-1
 		if polozh = 4 then mul2 -1,-1
 		if strlen(otmetka_n)>EPS then
-			STYLE "niz"
 			add2 -dlin_polki+vistup_strelki,h_polki
 			if polozh = 4 then mul2 -1,-1
 			if polozh = 3 then mul2 1,-1
-			RICHTEXT2 2*PAPER_TO_MODEL, dx_txt,"otmetka_n"+str("%.0",i)
+			RICHTEXT2 -2*PAPER_TO_MODEL, dx_txt,"otmetka_n"+str("%.0",i)
 			del top
 		endif
 	endif

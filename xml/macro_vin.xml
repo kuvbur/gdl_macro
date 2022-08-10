@@ -33,25 +33,26 @@ r = request ("View_Rotangle", "", _angleViewRot)
 _totalRotate	= (SYMB_ROTANGLE + _angleViewRot) MOD 360
 ang = _totalRotate * (SYMB_MIRRORED - not(SYMB_MIRRORED))
 
-if use_hotspot then
-	coord_vin[inx_vin][1] = coord_vin_s[inx_vin][1]*PAPER_TO_MODEL
-	coord_vin[inx_vin][2] = coord_vin_s[inx_vin][2]*PAPER_TO_MODEL
-	HOTSPOT2 0, coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 1+128+1024, coord_vin_s[inx_vin][1]: unID=unID+1
-	HOTSPOT2 coord_vin[inx_vin][1], coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 2+1024, coord_vin_s[inx_vin][1]: unID=unID+1
-	HOTSPOT2 -1, coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 3+1024, coord_vin_s[inx_vin][1]: unID=unID+1
+!if use_hotspot then
+!	coord_vin[inx_vin][1] = coord_vin_s[inx_vin][1]*PAPER_TO_MODEL
+!	coord_vin[inx_vin][2] = coord_vin_s[inx_vin][2]*PAPER_TO_MODEL
+!	HOTSPOT2 0, coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 1+128+1024, coord_vin_s[inx_vin][1]: unID=unID+1
+!	HOTSPOT2 coord_vin[inx_vin][1], coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 2+1024, coord_vin_s[inx_vin][1]: unID=unID+1
+!	HOTSPOT2 -1, coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 3+1024, coord_vin_s[inx_vin][1]: unID=unID+1
+!
+!	HOTSPOT2 coord_vin[inx_vin][1], 0, unID, coord_vin[inx_vin][2], 1+128+1024, coord_vin_s[inx_vin][2]: unID=unID+1
+!	HOTSPOT2 coord_vin[inx_vin][1], coord_vin[inx_vin][2], unID, coord_vin[inx_vin][2], 2+1024, coord_vin_s[inx_vin][2]: unID=unID+1
+!	HOTSPOT2 coord_vin[inx_vin][1], -1, unID, coord_vin[inx_vin][2], 3+1024, coord_vin_s[inx_vin][2]: unID=unID+1
+!else
+!	HOTSPOT2 0, coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 1+128 : unID=unID+1
+!	HOTSPOT2 coord_vin[inx_vin][1], coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 2 : unID=unID+1
+!	HOTSPOT2 -1, coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 3 : unID=unID+1
+!
+!	HOTSPOT2 coord_vin[inx_vin][1], 0, unID, coord_vin[inx_vin][2], 1+128 : unID=unID+1
+!	HOTSPOT2 coord_vin[inx_vin][1], coord_vin[inx_vin][2], unID, coord_vin[inx_vin][2], 2 : unID=unID+1
+!	HOTSPOT2 coord_vin[inx_vin][1], -1, unID, coord_vin[inx_vin][2], 3 : unID=unID+1
+!endif
 
-	HOTSPOT2 coord_vin[inx_vin][1], 0, unID, coord_vin[inx_vin][2], 1+128+1024, coord_vin_s[inx_vin][2]: unID=unID+1
-	HOTSPOT2 coord_vin[inx_vin][1], coord_vin[inx_vin][2], unID, coord_vin[inx_vin][2], 2+1024, coord_vin_s[inx_vin][2]: unID=unID+1
-	HOTSPOT2 coord_vin[inx_vin][1], -1, unID, coord_vin[inx_vin][2], 3+1024, coord_vin_s[inx_vin][2]: unID=unID+1
-else
-	HOTSPOT2 0, coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 1+128 : unID=unID+1
-	HOTSPOT2 coord_vin[inx_vin][1], coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 2 : unID=unID+1
-	HOTSPOT2 -1, coord_vin[inx_vin][2], unID, coord_vin[inx_vin][1], 3 : unID=unID+1
-
-	HOTSPOT2 coord_vin[inx_vin][1], 0, unID, coord_vin[inx_vin][2], 1+128 : unID=unID+1
-	HOTSPOT2 coord_vin[inx_vin][1], coord_vin[inx_vin][2], unID, coord_vin[inx_vin][2], 2 : unID=unID+1
-	HOTSPOT2 coord_vin[inx_vin][1], -1, unID, coord_vin[inx_vin][2], 3 : unID=unID+1
-endif
 
 add2 coord_vin[inx_vin][1], coord_vin[inx_vin][2]
 rot2 ang
@@ -220,7 +221,7 @@ endif
 <![CDATA[]]>
 </Script_BWM>
 
-<ParamSection SectVersion="26" SectionFlags="0" SubIdent="0">
+<ParamSection SectVersion="27" SectionFlags="0" SubIdent="0">
 	<ParamSectHeader>
 		<AutoHotspots>false</AutoHotspots>
 		<StatBits>

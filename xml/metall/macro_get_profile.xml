@@ -1,0 +1,670 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="D0DC3E6A-A675-4C29-AE55-263A7AA328FF" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="43">
+<Ancestry SectVersion="1" SectionFlags="0" SubIdent="0" Template="false">
+	<MainGUID>F938E33A-329D-4A36-BE3E-85E126820996</MainGUID>
+	<MainGUID>103E8D2C-8230-42E1-9597-46F84CCE28C0</MainGUID>
+</Ancestry>
+
+<CalledMacros SectVersion="2" SectionFlags="0" SubIdent="0">
+	<Macro>
+		<MName><![CDATA["macro_get_sort"]]></MName>
+		<MainGUID>FEB7F942-C5B1-4441-8FEC-5FE35041A630</MainGUID>
+	</Macro>
+</CalledMacros>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_3D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_3D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_2D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_2D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_1D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[
+dict _dataprof
+_dataprof.error = ""
+ves_p = 0: Ase = 0: ds = 0: ws = 0: wt = 0: ft = 0: rr = 0: tr = 0: dbf = 0: ax_y = 0 : has_hole = 0
+
+!Читаем сортамент, если его не передали
+gosub "read_sort"
+
+if haskey(prof_data.set.name_prof) then
+	_dataprof.name_prof = prof_data.set.name_prof
+else
+	_dataprof.error = _dataprof.error + " ;Не определена форма профиля"
+	goto "m_end"
+endif
+
+if haskey(prof_data.set.tip_p) then
+	_dataprof.tip_p = prof_data.set.tip_p
+else
+	_dataprof.error = _dataprof.error + " ;Не определён тип профиля"
+	goto "m_end"
+endif
+
+if haskey(prof_data.set.profile) then
+	_dataprof.profile = prof_data.set.profile
+else
+	_dataprof.error = _dataprof.error + " ;Не задан профиль"
+	goto "m_end"
+endif
+
+f_name = ""
+if haskey(sort_data.tip_p[_dataprof.name_prof].f_name[_dataprof.tip_p]) then
+	f_name = sort_data.tip_p[_dataprof.name_prof].f_name[_dataprof.tip_p]
+else
+	_dataprof.error = _dataprof.error + " ;Не определён файл профиля"
+	goto "m_end"
+endif
+
+gosub "set_profile"
+gosub "set_boundbox"
+gosub "set_data"
+gosub "get_view"
+_dataprof.error = "ok"
+
+"m_end":
+
+if haskey(prof_data.read) then _d = REMOVEKEY (prof_data.read)
+prof_data.read = _dataprof
+prof_data.error = _dataprof.error
+exit prof_data
+
+"set_data":
+	!!!i=i+1 : iname_prof[i]=1 : tname_prof[i] = "Круглая труба"
+	!!!i=i+1 : iname_prof[i]=2 : tname_prof[i] = "Квадратная труба"
+	!!!i=i+1 : iname_prof[i]=3 : tname_prof[i] = "Швеллер"
+	!!!i=i+1 : iname_prof[i]=4 : tname_prof[i] = "Двутавр"
+	!!!i=i+1 : iname_prof[i]=5 : tname_prof[i] = "Уголок"
+	!!!i=i+1 : iname_prof[i]=6 : tname_prof[i] = "Лист"
+	!!!i=i+1 : iname_prof[i]=8 : tname_prof[i] = "Уголок гнутый"
+	!!!i=i+1 : iname_prof[i]=9 : tname_prof[i] = "Швеллер гнутый"
+
+	_dataprof.obozn = sort_data.tip_p[_dataprof.name_prof].obozn[_dataprof.tip_p]
+	_dataprof.naen_t = sort_data.tip_p[_dataprof.name_prof].naen[_dataprof.tip_p]
+
+	IF strstr(_dataprof.profile,"L")>0 then 
+		_dataprof.tip_profile = strsub(_dataprof.profile,2,strlen(_dataprof.profile))
+	else
+		_dataprof.tip_profile = _dataprof.profile
+	endif
+return
+
+"set_profile":
+	profile = ""
+	szelv = open("text", f_name, "separator = '\t', mode = ro, LIBRARY")
+	n = input(szelv, _dataprof.profile, 2, profile, ves_p, Ase, ds, ws, wt, ft, rr, tr, dbf, ax_y)
+	close szelv
+	if n>2 then
+		if vartype(profile) = 1 then profile = str("%.2",profile)
+		if vartype(ds)=1 then
+			_dataprof.profile = profile
+			_dataprof.ds = ds/1000
+			_dataprof.ws = ws/1000
+			_dataprof.wt = wt/1000
+			_dataprof.ft = ft/1000
+			_dataprof.rr = rr/1000
+			_dataprof.tr = tr/1000
+			_dataprof.dbf = dbf/1000
+			_dataprof.ves_p = ves_p
+			_dataprof.Ase = Ase
+			_dataprof.ax_y = ax_y/1000
+			ds = ds/1000
+			ws = ws/1000
+			wt = wt/1000
+			ft = ft/1000
+			rr = rr/1000
+			tr = tr/1000
+			dbf = dbf/1000
+			ax_y = ax_y/1000
+		else
+			_dataprof.error = "Ошибка при чтении профиля " + ds
+			goto "m_end"
+		endif
+	else
+		_dataprof.error = "Ошибка при чтении профиля"
+		goto "m_end"
+	endif
+return
+
+"set_boundbox":
+	if _dataprof.name_prof = 6 then return
+	!Максимальные размеры (ширина/высота)
+	if _dataprof.name_prof = 1 then
+		_dataprof.aa = ds/2
+		_dataprof.bb = _dataprof.aa
+		_dataprof.t_sten = ws
+		_dataprof.ax_y = 0 : _dataprof.ax_x = 0
+	endif
+	if _dataprof.name_prof = 2 then
+		_dataprof.aa = ws/2
+		_dataprof.bb = ds/2
+		_dataprof.t_sten = wt
+		_dataprof.ax_y = 0 : _dataprof.ax_x = 0
+	endif
+	if _dataprof.name_prof = 3 then
+		_dataprof.aa = ws/2
+		_dataprof.bb = ds/2
+		_dataprof.t_sten = ft
+		_dataprof.ax_y = -_dataprof.aa + ax_y : _dataprof.ax_x = 0
+	endif
+	if _dataprof.name_prof = 4 then
+		_dataprof.aa = ws/2
+		_dataprof.bb = ds/2
+		_dataprof.t_sten = ft
+		_dataprof.ax_y = 0 : _dataprof.ax_x = 0
+	endif
+	if _dataprof.name_prof = 5 then
+		_dataprof.aa = ws/2
+		_dataprof.bb = ds/2
+		_dataprof.t_sten = wt
+		_dataprof.ax_y = -_dataprof.aa + dbf : _dataprof.ax_x = -_dataprof.bb + tr
+	endif
+	if _dataprof.name_prof = 8 then
+		_dataprof.aa = ws/2
+		_dataprof.bb = ds/2
+		_dataprof.t_sten = wt
+		_dataprof.ax_y = 0 : _dataprof.ax_x = 0
+	endif
+	if _dataprof.name_prof = 9 then
+		_dataprof.aa = ws/2
+		_dataprof.bb = ds/2
+		_dataprof.t_sten = wt
+		_dataprof.ax_y = 0 : _dataprof.ax_x = 0
+	endif
+	
+	!Привязки края
+	aa = _dataprof.aa
+	bb = _dataprof.bb
+	t_sten = _dataprof.t_sten
+	ax_y = _dataprof.ax_y
+	ax_x = _dataprof.ax_x
+
+	i=0
+	i=i+1 : _dataprof.cpoint[i].x=0	 : _dataprof.cpoint[i].y=0 	        !0 Нет
+	i=i+1 : _dataprof.cpoint[i].x=ax_y	 : _dataprof.cpoint[i].y=ax_x 	!1 Ц.т.
+	i=i+1 : _dataprof.cpoint[i].x=-aa	 : _dataprof.cpoint[i].y=0 	    !2
+	i=i+1 : _dataprof.cpoint[i].x=-aa	 : _dataprof.cpoint[i].y=bb 	!3
+	i=i+1 : _dataprof.cpoint[i].x=0 	 : _dataprof.cpoint[i].y=bb 	!4
+	i=i+1 : _dataprof.cpoint[i].x=aa 	 : _dataprof.cpoint[i].y=bb	    !5
+	i=i+1 : _dataprof.cpoint[i].x=aa  	 : _dataprof.cpoint[i].y=0 	    !6
+	i=i+1 : _dataprof.cpoint[i].x=aa 	 : _dataprof.cpoint[i].y=-bb 	!7
+	i=i+1 : _dataprof.cpoint[i].x=0 	 : _dataprof.cpoint[i].y=-bb 	!8
+	i=i+1 : _dataprof.cpoint[i].x=-aa 	 : _dataprof.cpoint[i].y=-bb 	!9
+
+	!Для кругляка, квадрата, полосы и подобного не вырезаем внутреннее отверстие
+	has_hole = 1
+	_dataprof.has_hole = has_hole
+	!Периметр
+	!"Круглая труба"
+	if _dataprof.name_prof = 1 then _dataprof.perim = 3.146*ds/1000
+	
+	!"Квадратная труба"
+	if _dataprof.name_prof = 2 then _dataprof.perim = (ws+ds)*2/1000
+
+	!"Швеллер"
+	!"Швеллер гнутый"
+	if _dataprof.name_prof = 3 or _dataprof.name_prof = 9 then _dataprof.perim = (ws*4+ds*2)/1000
+	
+	!"Двутавр"
+	if _dataprof.name_prof = 4 then _dataprof.perim = (ws*4+ds*2)/1000
+	
+	!"Уголок"
+	!"Уголок гнутый"
+	if _dataprof.name_prof = 5 or _dataprof.name_prof = 8 then _dataprof.perim = (ws*2+ds*2)/1000
+return
+
+"get_view":
+	if _dataprof.name_prof = 6 then return
+	det_lvl = 1 : n_form = 1
+	!Запись 2д детального вида
+	jt = 1 : gosub "prof_" + str("%.0",_dataprof.name_prof)  + "det"
+	det_lvl = 2 : gosub "write_2d_view"
+	!Запись 2д простого вида
+	jt = 1 : gosub "prof_" + str("%.0",_dataprof.name_prof)  + "simp"
+	det_lvl = 1 : gosub "write_2d_view"
+	!Запись 3д детального вида
+	jt = 15 : gosub "prof_" + str("%.0",_dataprof.name_prof)  + "det"
+	det_lvl = 2 : gosub "write_3d_view"
+	!Запись 3д простого вида
+	jt = 15 : gosub "prof_" + str("%.0",_dataprof.name_prof)  + "simp"
+	det_lvl = 1 : gosub "write_3d_view"
+	!Запись 3д для использования в операциях вычитания
+	show_hole = 0
+	jt = 15 : gosub "prof_" + str("%.0",_dataprof.name_prof)  + "simp"
+	det_lvl = 3 : gosub "write_3d_view"
+return
+
+"write_2d_view":
+	for i=1 to n_form
+		_dataprof._2d[det_lvl].unput[i].x = get(1)
+		_dataprof._2d[det_lvl].unput[i].y = get(1)
+		_dataprof._2d[det_lvl].unput[i].s = get(1)
+	next i
+return
+
+"write_3d_view":
+	for i=1 to n_form
+		_dataprof._3d[det_lvl].unput[i].x = get(1)
+		_dataprof._3d[det_lvl].unput[i].y = get(1)
+		_dataprof._3d[det_lvl].unput[i].s = get(1)
+	next i
+return
+
+"prof_1det":
+	tstart = NSP
+	put 0,0,900
+	put ds/2,360,4000+jt
+	put ds/2-ws,360,4000+jt
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_1simp":
+	tstart = NSP
+	put 0,0,900
+	put ds/2,360,4000+jt
+	put ds/2-ws,360,4000+jt
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_2simp":
+	tstart = NSP
+	put -ws/2,-ds/2,jt
+	put ws/2,-ds/2,jt
+	put ws/2,ds/2,jt
+	put -ws/2,ds/2,jt
+	put -ws/2,-ds/2,-1
+	if has_hole = 1 then
+		put wt-ws/2,wt-ds/2,jt
+		put ws/2-wt,wt-ds/2,jt
+		put ws/2-wt,ds/2-wt,jt
+		put wt-ws/2,ds/2-wt,jt
+		put wt-ws/2,wt-ds/2,-1
+	endif
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_2det":
+	tstart = NSP
+	put -ws/2+ft,-ds/2,jt
+	put ws/2-ft,-ds/2,jt
+	put ws/2-ft,-ds/2+ft,900
+	put 0,90,4000+jt
+	put ws/2,-ds/2+ft,jt
+	put ws/2,ds/2-ft,jt
+	put ws/2-ft,ds/2-ft,900
+	put 0,90,4000+jt
+	put ws/2-ft,ds/2,jt
+	put -ws/2+ft,ds/2,jt
+	put -ws/2+ft,ds/2-ft,900
+	put 0,90,4000+jt
+	put -ws/2,ds/2-ft,jt
+	put -ws/2,-ds/2+ft,jt
+	put -ws/2+ft,-ds/2+ft,900
+	put 0,90,4000+jt
+	put -ws/2+ft,-ds/2,jt
+	put -ws/2+ft,-ds/2,-1
+	if has_hole = 1 then
+		put -ws/2+ft,-ds/2+wt,jt
+		put ws/2-ft,-ds/2+wt,jt
+		put ws/2-ft,-ds/2+ft,900
+		put 0,90,4000+jt
+		put ws/2-wt,-ds/2+ft,jt
+		put ws/2-wt,ds/2-ft,jt
+		put ws/2-ft,ds/2-ft,900
+		put 0,90,4000+jt
+		put ws/2-ft,ds/2-wt,jt
+		put -ws/2+ft,ds/2-wt,jt
+		put -ws/2+ft,ds/2-ft,900
+		put 0,90,4000+jt
+		put -ws/2+wt,ds/2-ft,jt
+		put -ws/2+wt,-ds/2+ft,jt
+		put -ws/2+ft,-ds/2+ft,900
+		put 0,90,4000+jt
+		put -ws/2+ft,-ds/2+wt,jt
+		put -ws/2+ft,-ds/2+wt,-1
+	endif
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_3simp":
+	tstart = NSP
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-ft,jt
+	put wt-ws*0.5,ds*0.5-ft,jt
+	put wt-ws*0.5,ft-ds*0.5,jt
+	put ws*0.5,ft-ds*0.5,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_3det":
+	tstart = NSP
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-(ft-tr),jt
+	put tr,-90,2000+jt
+	put ws*0.5-tr,ds*0.5-ft,jt
+	put -ws*0.5+wt+rr,ds*0.5-ft,jt
+	put rr,90,2000+jt
+	put -ws*0.5+wt,ds*0.5-ft-rr,jt
+	put -ws*0.5+wt,-ds*0.5+ft+rr,jt
+	put rr,90,2000+jt
+	put -ws*0.5+wt+rr,-ds*0.5+ft,jt
+	put ws*0.5-tr,-ds*0.5+ft,jt
+	put tr,-90,2000+jt
+	put ws*0.5,-ds*0.5+ft-tr,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_4simp":
+	tstart = NSP
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5+ft,jt
+	put -wt*0.5,-ds*0.5+ft,jt
+	put -wt*0.5,ds*0.5-ft,jt
+	put -ws*0.5,ds*0.5-ft,jt
+	put -ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-ft,jt
+	put wt*0.5,ds*0.5-ft,jt
+	put wt*0.5,-ds*0.5+ft,jt
+	put ws*0.5,-ds*0.5+ft,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_4det":
+	tstart = NSP
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5+(ft-tr),jt
+	put tr,-90,2000+jt
+	put -ws*0.5+tr,-ds*0.5+ft,jt
+	put -wt*0.5-rr,-ds*0.5+ft,jt
+	put rr,90,2000+jt
+	put -wt*0.5,-ds*0.5+ft+rr,jt
+	put -wt*0.5,ds*0.5-ft-rr,jt
+	put rr,90,2000+jt
+	put -wt*0.5-rr,ds*0.5-ft,jt
+	put -ws*0.5+tr,ds*0.5-ft,jt
+	put tr,-90,2000+jt
+	put -ws*0.5,ds*0.5-(ft-tr),jt
+	put -ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-(ft-tr),jt
+	put tr,-90,2000+jt
+	put ws*0.5-tr,ds*0.5-ft,jt
+	put wt*0.5+rr,ds*0.5-ft,jt
+	put rr,90,2000+jt
+	put wt*0.5,ds*0.5-ft-rr,jt
+	put wt*0.5,-ds*0.5+ft+rr,jt
+	put rr,90,2000+jt
+	put wt*0.5+rr,-ds*0.5+ft,jt
+	put ws*0.5-tr,-ds*0.5+ft,jt
+	put tr,-90,2000+jt
+	put ws*0.5,-ds*0.5+(ft-tr),jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_5simp":
+	tstart = NSP
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,ds*0.5,jt
+	put -ws*0.5+wt,ds*0.5,jt
+	put -ws*0.5+wt,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_5det":
+	tstart = NSP
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,ds*0.5,jt
+	put -ws*0.5+wt-rr,ds*0.5,jt
+	put rr,-90,2000+jt
+	put -ws*0.5+wt,ds*0.5-rr,jt
+	put -ws*0.5+wt,-ds*0.5+wt+ft,jt
+	put ft,90,2000+jt
+	put -ws*0.5+wt+ft,-ds*0.5+wt,jt
+	put ws*0.5-rr,-ds*0.5+wt,jt
+	put rr,-90,2000+jt
+	put ws*0.5,-ds*0.5-rr+wt,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_8simp":
+	tstart = NSP
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,ds*0.5,jt
+	put -ws*0.5+wt,ds*0.5,jt
+	put -ws*0.5+wt,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_8det":
+	tstart = NSP
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5+wt+ft,-ds*0.5,jt
+	put wt+ft,-90,2000+jt
+	put -ws*0.5,-ds*0.5+wt+ft,jt
+	put -ws*0.5,ds*0.5,jt
+	put -ws*0.5+wt,ds*0.5,jt
+	put -ws*0.5+wt,-ds*0.5+wt+ft,jt
+	put ft,90,2000+jt
+	put -ws*0.5+wt+ft,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5,jt
+	put ws*0.5,-ds*0.5,-1
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_9simp":
+	tstart = NSP
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-wt,jt
+	put wt-ws*0.5,ds*0.5-wt,jt
+	put wt-ws*0.5,wt-ds*0.5,jt
+	put ws*0.5,wt-ds*0.5,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_9det":
+	tstart = NSP
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5+wt+ft,-ds*0.5,jt
+	put wt+ft,-90,2000+jt
+	put -ws*0.5,-ds*0.5+wt+ft,jt
+	put -ws*0.5,ds*0.5-wt-ft,jt
+	put wt+ft,-90,2000+jt
+	put -ws*0.5+wt+ft,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-wt,jt
+	put -ws*0.5+wt+ft,ds*0.5-wt,jt
+	put ft,90,2000+jt
+	put -ws*0.5+wt,ds*0.5-wt-ft,jt
+	put -ws*0.5+wt,-ds*0.5+wt+ft,jt
+	put ft,90,2000+jt
+	put -ws*0.5+wt+ft,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5,-1
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"read_sort":
+	if not(haskey(sort_data.isread)) then call "macro_get_sort" PARAMETERS RETURNED_PARAMETERS sort_data
+	if haskey(sort_data.isread) then 
+		if sort_data.isread = 0 then
+			text2 0,0, "Сортамент прочитан с ошибкой"
+			goto "m_end"
+		endif
+	else
+		text2 0,0, "Сортамент не прочитан"
+		goto "m_end"
+	endif
+return
+]]>
+</Script_1D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_PR SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_PR>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_UI SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_UI>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_VL SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[
+if haskey(sort_data.isread) then parameters sort_data = sort_data
+]]>
+</Script_VL>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_FWM SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_FWM>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_BWM SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_BWM>
+
+<ParamSection SectVersion="27" SectionFlags="0" SubIdent="0">
+	<ParamSectHeader>
+		<AutoHotspots>false</AutoHotspots>
+		<StatBits>
+			<STBit_FixSize/>
+		</StatBits>
+		<WDLeftFrame>0</WDLeftFrame>
+		<WDRightFrame>0</WDRightFrame>
+		<WDTopFrame>0</WDTopFrame>
+		<WDBotFrame>0</WDBotFrame>
+		<LayFlags>65535</LayFlags>
+		<WDMirrorThickness>0</WDMirrorThickness>
+		<WDWallInset>0</WDWallInset>
+	</ParamSectHeader>
+	<Parameters>
+		<Length Name="A">
+			<Description><![CDATA["Размер 1"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Length Name="B">
+			<Description><![CDATA["Размер 2"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Length Name="ZZYZX">
+			<Description><![CDATA["Высота"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Boolean Name="AC_show2DHotspotsIn3D">
+			<Description><![CDATA["Показ Узловых 2D Точек в 3D"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Length Name="ac_bottomlevel">
+			<Description><![CDATA["Отметка Низа"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Length>
+		<Length Name="ac_toplevel">
+			<Description><![CDATA["Отметка Верха"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Dictionary Name="prof_data">
+			<Description><![CDATA[""]]></Description>
+			<Value>
+				<Dictionary Name="OUT">
+					<String Name="ERROR"><![CDATA["Не найден тип профиля"]]></String>
+				</Dictionary>
+			</Value>
+		</Dictionary>
+		<Dictionary Name="sort_data">
+			<Description><![CDATA[""]]></Description>
+			<Value/>
+		</Dictionary>
+	</Parameters>
+</ParamSection>
+
+<Copyright SectVersion="1" SectionFlags="0" SubIdent="0">
+	<Author></Author>
+	<License>
+		<Type>CC BY</Type>
+		<Version>4.0</Version>
+	</License>
+</Copyright>
+
+<Keywords SectVersion="1" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Keywords>
+
+<Comment SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Comment>
+
+</Symbol>
+
+
+
+

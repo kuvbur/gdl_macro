@@ -140,6 +140,7 @@ if n_sh>0 then
 			if nd1=6 then
 				if vartype(var_param)=1 then var_param = STR (unstr, var_param)
 			else
+				flag_find = 0
 				var_param = ""
 				dim	parentPropertiesArray[]
 				n = request ("Properties_Of_Parent", "", parentPropertiesArray)
@@ -152,10 +153,12 @@ if n_sh>0 then
 							_stPropertyID = id
 							gosub "getPropertyValue"
 							var_param = _stPropertyValue
+							i=vardim1(parentPropertiesArray)
+							flag_find = 1
 						endif
 					endif
 				next i
-				if custom_unit=1 and var_param = "" then
+				if custom_unit=1 and flag_find = 0 then
 					for i=1 to vardim1(parentPropertiesArray) step 4
 						if i+3<=vardim1(parentPropertiesArray) then
 							PropertyName = parentPropertiesArray[i+3]
@@ -165,9 +168,30 @@ if n_sh>0 then
 								_stPropertyID = id
 								gosub "getPropertyValue"
 								var_param = _stPropertyValue
+								i=vardim1(parentPropertiesArray)
+								flag_find = 1
 							endif
 						endif
 					next i
+				endif
+				if flag_find = 0 then
+					_stPropertyValue = "Нет"
+					DIM folderNamesArray[]
+					n = APPLICATION_QUERY ("OwnCustomParameters", "GetParameterFolderNames()", folderNamesArray)
+					for iii = 1 to vardim1(folderNamesArray) step 3
+						DIM parNamesArray[]
+						querystring = "GetParameterNames(" + folderNamesArray[iii] + ")"
+						n = APPLICATION_QUERY ("OwnCustomParameters", querystring, parNamesArray)
+						for jjj = 1 to vardim1(parNamesArray) step 3
+							if strstr(STRTOLOWER(parNamesArray[jjj]), STRTOLOWER(param_name_str))>0 then
+								querystring = "GetParameter(" + parNamesArray[jjj] + ")"
+								n = APPLICATION_QUERY ("OwnCustomParameters", querystring, _stPropertyValue)
+								flag_find = 1
+								jjj = vardim1(parNamesArray)
+								iii = vardim1(folderNamesArray)
+							endif
+						next jjj
+					next iii
 				endif
 			endif
 		endif
@@ -242,6 +266,7 @@ return
 	propInputIds.propertyIds[1].id = _stPropertyID
 	if HASKEY(propOutputVals.propertyValues) then t = REMOVEKEY(propOutputVals.propertyValues)
 	n = REQUEST ("Property_Values_Of_Parent", propInputIds, propOutputVals)
+	if HASKEY(propOutputVals.propertyValues)=0 then return
 	if propOutputVals.propertyValues[1].value_status = 1 then
 		_typeValue = propOutputVals.propertyValues[1].type
 		_value = 0

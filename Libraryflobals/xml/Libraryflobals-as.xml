@@ -103,8 +103,13 @@ if show_asotv then
 			dx = dx + 30
 		next i
 	endif
-	sy = sy + 40
+	sy = sy + 20
+	sy = sy + 20: UI_OUTFIELD	`Показ зоны сбора воды в приямок`,	sx+25,	sy,	sx+200,	20
+				  UI_INFIELD	"show_razukl",	sx,	sy-3, 20,	20
 	
+	sy = sy + 20: UI_OUTFIELD	`Показ условных стен приямка`,	sx+25,	sy,	sx+180,	20
+				  UI_INFIELD	"show_th",	sx,	sy-3, 20,	20
+
 	sy = sy + 20: UI_OUTFIELD	`Не отображать отверстия, если`,	sx+40,	sy,	sxe,	20
 	
 	sy = sy + 20: UI_OUTFIELD	`Высота менее, мм.`,	sx,	sy,	sx+120,	20
@@ -117,32 +122,35 @@ endif
 
 sy = sy + 20: UI_OUTFIELD	`Отображение окон, дверей`,	sx+50,	sy,	sxe,	20
 
-
-sy = sy + 20: UI_OUTFIELD	`Только проём двери`,	sx+20,	sy,	110,	20
+sy = sy + 18: UI_OUTFIELD	`Только проём двери`,	sx+20,	sy,	110,	20
 			  UI_INFIELD	"show_empty_door",	sx,	sy-3, 20,	20
 
 			  UI_OUTFIELD	`Только проём окна`,	sx+120+40,	sy,	110,	20
 			  UI_INFIELD	"show_empty_wind",	sx+120+20,	sy-3, 20,	20
 
-sy = sy + 30: UI_OUTFIELD	`Отображать л. стены дверей`,	sx,	sy,	sx+150,	20
+sy = sy + 25: UI_OUTFIELD	`Отображать л. стены дверей`,	sx,	sy,	sx+150,	20
 			  UI_INFIELD	"show_wallline_door",	sx+160,	sy-3, 110,	20
 
-sy = sy + 30: UI_OUTFIELD	`Отображать л. стены окон`,	sx,	sy,	sx+150,	20
+sy = sy + 25: UI_OUTFIELD	`Отображать л. стены окон`,	sx,	sy,	sx+150,	20
 			  UI_INFIELD	"show_wallline_wind",	sx+160,	sy-3, 110,	20
 
-sy = sy + 30: UI_OUTFIELD	`Тип л. дверей`,	sx,	sy,	sx+70,	20
+sy = sy + 25: UI_OUTFIELD	`Тип л. дверей`,	sx,	sy,	sx+70,	20
 			  UI_INFIELD	"wallline_door_type",	sx+80,	sy-3, 165,	20
 			  UI_INFIELD	"wallline_door_type_su",	sx+80+165+10,	sy-3, 20,	20
-sy = sy + 30: UI_INFIELD	"wallline_door_diag_type",	sx+80,	sy-3, 165,	20
+sy = sy + 25: UI_INFIELD	"wallline_door_diag_type",	sx+80,	sy-3, 165,	20
 
 
-sy = sy + 30: UI_OUTFIELD	`Тип л. окон`,	sx,	sy,	sx+70,	20
+sy = sy + 25: UI_OUTFIELD	`Тип л. окон`,	sx,	sy,	sx+70,	20
 			  UI_INFIELD	"wallline_wind_type",	sx+80,	sy-3, 165,	20
 			  UI_INFIELD	"wallline_wind_type_su",	sx+80+165+10,	sy-3, 20,	20
-sy = sy + 30: UI_INFIELD	"wallline_wind_diag_type",	sx+80,	sy-3, 165,	20
+sy = sy + 25: UI_INFIELD	"wallline_wind_diag_type",	sx+80,	sy-3, 165,	20
+
+
+sy = sy + 25: UI_OUTFIELD	`Детализация`,	sx,	sy,	sx+70,	20
+			  UI_INFIELD	"gs_detlevel_3D_m",	sx+80,	sy-3, 165,	20
+
+
 sy = 250
-
-
 sx = 290
 sy = 0
 sy = sy + 5: UI_OUTFIELD	`Отображение информации о помещениях`,	sx,	sy,	sx,	18
@@ -204,16 +212,20 @@ sy = sy + 20: UI_INFIELD	"show_zone_num",	sx,	sy-3, 180,	20
 
 
 sy = 250
-sy = sy + 25: UI_OUTFIELD	`Сист. значение неполного показа конст.`,	sx+20,	sy,	260,	20
+
+sy = sy + 22: UI_OUTFIELD	`Показывать высотные отметки в 3д`,	sx+20,	sy,	260,	20
+			  UI_INFIELD	"show_3d_leveldim",	sx,	sy-3, 20,	20
+
+sy = sy + 22: UI_OUTFIELD	`Сист. значение неполного показа конст.`,	sx+20,	sy,	260,	20
 			  UI_INFIELD	"mark_type",	sx,	sy-3, 20,	20
-sy = sy + 25: UI_OUTFIELD	`Тип неполного показа`,	sx+90,	sy,	250,	20
+sy = sy + 22: UI_OUTFIELD	`Тип неполного показа`,	sx+90,	sy,	250,	20
 			  UI_INFIELD	"mark_num",	sx,	sy-3, 90,	20
 
-sy = sy + 25: UI_OUTFIELD	`Тип устройства проёма дверей/окон`,	sx+20,	sy,	250,	20
+sy = sy + 22: UI_OUTFIELD	`Тип устройства проёма дверей/окон`,	sx+20,	sy,	250,	20
 			  UI_INFIELD	"show_renov_winddoor",	sx,	sy-3, 20,	20
-sy = sy + 25: UI_OUTFIELD	`Только огнестойкость дверей/окон`,	sx+20,	sy,	250,	20
+sy = sy + 22: UI_OUTFIELD	`Только огнестойкость дверей/окон`,	sx+20,	sy,	250,	20
 			  UI_INFIELD	"show_firest_winddoor",	sx,	sy-3, 20,	20
-sy = sy + 25: UI_OUTFIELD	`Только размер прохода в свету дверей`,	sx+20,	sy,	250,	20
+sy = sy + 22: UI_OUTFIELD	`Только размер прохода в свету дверей`,	sx+20,	sy,	250,	20
 			  UI_INFIELD	"show_egress_winddoor",	sx,	sy-3, 20,	20
 
 end
@@ -278,6 +290,8 @@ if not(show_prop_rect) then LOCK "prop_rect"
 if not(show_prop_line) then LOCK "prop_line"
 if not(show_prop_triang) then LOCK "prop_triang"
 if not(show_prop_text) then LOCK "prop_text"
+
+values{2} "gs_detlevel_3D_m" 2, `Детальный`, 1, `Простой`, 0, `Откл.`
 ]]>
 </Script_VL>
 
@@ -403,6 +417,18 @@ if not(show_prop_text) then LOCK "prop_text"
 			<Description><![CDATA["Минимальная ширина (диаметр) отверстий"]]></Description>
 			<Value>0</Value>
 		</Length>
+		<Boolean Name="show_3d_leveldim">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Boolean>
+		<Boolean Name="show_razukl">
+			<Description><![CDATA["Отображать зону разуклонки"]]></Description>
+			<Value>0</Value>
+		</Boolean>
+		<Boolean Name="show_th">
+			<Description><![CDATA["Отображать условные стенки"]]></Description>
+			<Value>0</Value>
+		</Boolean>
 		<String Name="show_zone_type">
 			<Description><![CDATA["Отображение информации о помещениях"]]></Description>
 			<Value><![CDATA["Вывод свойств"]]></Value>
@@ -503,6 +529,10 @@ if not(show_prop_text) then LOCK "prop_text"
 			<Description><![CDATA["Перо отверстий"]]></Description>
 			<Value>2</Value>
 		</PenColor>
+		<Integer Name="gs_detlevel_3D_m">
+			<Description><![CDATA["Детализация"]]></Description>
+			<Value>2</Value>
+		</Integer>
 	</Parameters>
 </ParamSection>
 

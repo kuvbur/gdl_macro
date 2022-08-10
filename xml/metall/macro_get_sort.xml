@@ -1,0 +1,602 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="FEB7F942-C5B1-4441-8FEC-5FE35041A630" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="43">
+<Ancestry SectVersion="1" SectionFlags="0" SubIdent="0" Template="false">
+	<MainGUID>F938E33A-329D-4A36-BE3E-85E126820996</MainGUID>
+	<MainGUID>103E8D2C-8230-42E1-9597-46F84CCE28C0</MainGUID>
+</Ancestry>
+
+<CalledMacros SectVersion="2" SectionFlags="0" SubIdent="0">
+</CalledMacros>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_3D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[
+end
+
+"set_form":
+	n_form = 0
+	tstart = NSP
+	if det_lvl_3d_prof=0 then det_lvl_3d_prof = det_lvl_3d
+	if name_prof_i=1 then
+		gosub "prof_1det"
+	endif
+	if name_prof_i=2 then
+		if det_lvl_3d_prof = 2 then
+			gosub "prof_2det"
+		else
+			gosub "prof_2simp"
+		endif
+	endif
+	if name_prof_i=3 then
+		jt = 15
+		if det_lvl_3d_prof = 2 then
+			gosub "prof_3det"
+		else
+			gosub "prof_3simp"
+		endif
+	endif
+	if name_prof_i=4 then
+		if det_lvl_3d_prof = 2 then
+			gosub "prof_4det"
+		else
+			gosub "prof_4simp"
+		endif
+	endif
+	if name_prof_i=5 then
+		if det_lvl_3d_prof = 2 then
+			gosub "prof_5det"
+		else
+			gosub "prof_5simp"
+		endif
+	endif
+	if name_prof_i=8 then
+		if det_lvl_3d_prof = 2 then
+			gosub "prof_8det"
+		else
+			gosub "prof_8simp"
+		endif
+	endif
+	if name_prof_i=9 then
+		if det_lvl_3d_prof = 2 then
+			gosub "prof_9det"
+		else
+			gosub "prof_9simp"
+		endif
+	endif
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"prof_1det": !"Круглая труба"
+	if show_empty and has_hole=1 then
+		put 0,0,900+jt
+		put ds/2,360,4000+jt
+		put ds/2-ws,360,4000+jt
+	else
+		put 0,0,900+jt
+		put ds/2,360,4000+jt
+	endif
+return
+
+"prof_2simp": !"Квадратная труба"
+	put -ws/2,-ds/2,jt
+	put 0,-ds/2,jt
+	put ws/2,-ds/2,jt
+	put ws/2,0,jt
+	put ws/2,ds/2,jt
+	put -ws/2,ds/2,jt
+	put -ws/2,0,jt
+	put -ws/2,-ds/2,-1
+	if show_empty and has_hole=1 then
+		put wt-ws/2,wt-ds/2,jt
+		put ws/2-wt,wt-ds/2,jt
+		put ws/2-wt,ds/2-wt,jt
+		put wt-ws/2,ds/2-wt,jt
+		put wt-ws/2,wt-ds/2,-1
+	endif
+return
+
+"prof_2det": !"Квадратная труба"
+	put -ws/2+ft,-ds/2,jt
+	put 0,-ds/2,jt
+	put ws/2-ft,-ds/2,jt
+	put ws/2-ft,-ds/2+ft,900+jt
+	put 0,90,4000+jt
+	put ws/2,-ds/2+ft,jt
+	put ws/2,0,jt
+	put ws/2,ds/2-ft,jt
+	put ws/2-ft,ds/2-ft,900+jt
+	put 0,90,4000+jt
+	put ws/2-ft,ds/2,jt
+	put 0,ds/2,jt
+	put -ws/2+ft,ds/2,jt
+	put -ws/2+ft,ds/2-ft,900+jt
+	put 0,90,4000+jt
+	put -ws/2,ds/2-ft,jt
+	put -ws/2,0,jt
+	put -ws/2,-ds/2+ft,jt
+	put -ws/2+ft,-ds/2+ft,900+jt
+	put 0,90,4000+jt
+	put -ws/2+ft,-ds/2,jt
+	put -ws/2+ft,-ds/2,-1
+	if show_empty and has_hole=1 then
+		put -ws/2+ft,-ds/2+wt,jt
+		put ws/2-ft,-ds/2+wt,jt
+		put ws/2-ft,-ds/2+ft,900+jt
+		put 0,90,4000+jt
+		put ws/2-wt,-ds/2+ft,jt
+		put ws/2-wt,ds/2-ft,jt
+		put ws/2-ft,ds/2-ft,900+jt
+		put 0,90,4000+jt
+		put ws/2-ft,ds/2-wt,jt
+		put -ws/2+ft,ds/2-wt,jt
+		put -ws/2+ft,ds/2-ft,900+jt
+		put 0,90,4000+jt
+		put -ws/2+wt,ds/2-ft,jt
+		put -ws/2+wt,-ds/2+ft,jt
+		put -ws/2+ft,-ds/2+ft,900+jt
+		put 0,90,4000+jt
+		put -ws/2+ft,-ds/2+wt,jt
+		put -ws/2+ft,-ds/2+wt,-1
+	endif
+return
+
+"prof_3simp": !"Швеллер"
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-ft,jt
+	put wt-ws*0.5,ds*0.5-ft,jt
+	put wt-ws*0.5,ft-ds*0.5,jt
+	put ws*0.5,ft-ds*0.5,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+return
+
+"prof_3det": !"Швеллер"
+	put 0,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,0,jt
+	put -ws*0.5,ds*0.5,jt
+	put 0,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-(ft-tr),jt
+	put tr,-90,2000+jt
+	put ws*0.5-tr,ds*0.5-ft,jt
+	put 0,ds*0.5-ft,jt
+	put -ws*0.5+wt+rr,ds*0.5-ft,jt
+	put rr,90,2000+jt
+	put -ws*0.5+wt,ds*0.5-ft-rr,jt
+	put -ws*0.5+wt,0,jt
+	put -ws*0.5+wt,-ds*0.5+ft+rr,jt
+	put rr,90,2000+jt
+	put -ws*0.5+wt+rr,-ds*0.5+ft,jt
+	put 0,-ds*0.5+ft,jt
+	put ws*0.5-tr,-ds*0.5+ft,jt
+	put tr,-90,2000+jt
+	put ws*0.5,-ds*0.5+ft-tr,jt
+	put ws*0.5,-ds*0.5,jt
+	put ws*0.5,-ds*0.5,-1
+return
+
+"prof_4simp": !"Двутавр"
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5+ft,jt
+	put -wt*0.5,-ds*0.5+ft,jt
+	put -wt*0.5,0,jt
+	put -wt*0.5,ds*0.5-ft,jt
+	put -ws*0.5,ds*0.5-ft,jt
+	put -ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-ft,jt
+	put wt*0.5,ds*0.5-ft,jt
+	put wt*0.5,0,jt
+	put wt*0.5,-ds*0.5+ft,jt
+	put ws*0.5,-ds*0.5+ft,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+return
+
+"prof_4det": !"Двутавр"
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5+(ft-tr),jt
+	put tr,-90,2000+jt
+	put -ws*0.5+tr,-ds*0.5+ft,jt
+	put -wt*0.5-rr,-ds*0.5+ft,jt
+	put rr,90,2000+jt
+	put -wt*0.5,-ds*0.5+ft+rr,jt
+	put -wt*0.5,0,jt
+	put -wt*0.5,ds*0.5-ft-rr,jt
+	put rr,90,2000+jt
+	put -wt*0.5-rr,ds*0.5-ft,jt
+	put -ws*0.5+tr,ds*0.5-ft,jt
+	put tr,-90,2000+jt
+	put -ws*0.5,ds*0.5-(ft-tr),jt
+	put -ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-(ft-tr),jt
+	put tr,-90,2000+jt
+	put ws*0.5-tr,ds*0.5-ft,jt
+	put wt*0.5+rr,ds*0.5-ft,jt
+	put rr,90,2000+jt
+	put wt*0.5,ds*0.5-ft-rr,jt
+	put wt*0.5,0,jt
+	put wt*0.5,-ds*0.5+ft+rr,jt
+	put rr,90,2000+jt
+	put wt*0.5+rr,-ds*0.5+ft,jt
+	put ws*0.5-tr,-ds*0.5+ft,jt
+	put tr,-90,2000+jt
+	put ws*0.5,-ds*0.5+(ft-tr),jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+return
+
+"prof_5simp": !"Уголок"
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,ds*0.5,jt
+	put -ws*0.5+wt,ds*0.5,jt
+	put -ws*0.5+wt,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+return
+
+"prof_5det": !"Уголок"
+	put 0,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,0,jt !
+	put -ws*0.5,ds*0.5,jt
+	put -ws*0.5+wt-rr,ds*0.5,jt
+	put rr,-90,2000+jt
+	put -ws*0.5+wt,ds*0.5-rr,jt
+	put -ws*0.5+wt,0,jt
+	put -ws*0.5+wt,-ds*0.5+wt+ft,jt
+	put ft,90,2000+jt
+	put -ws*0.5+wt+ft,-ds*0.5+wt,jt
+	put 0,-ds*0.5+wt,jt
+	put ws*0.5-rr,-ds*0.5+wt,jt
+	put rr,-90,2000+jt
+	put ws*0.5,-ds*0.5-rr+wt,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+return
+
+"prof_8simp": !"Уголок гнутый"
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,ds*0.5,jt
+	put -ws*0.5+wt,ds*0.5,jt
+	put -ws*0.5+wt,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+return
+
+"prof_8det": !"Уголок гнутый"
+	put ws*0.5,-ds*0.5,jt
+	put 0,-ds*0.5,jt
+	put -ws*0.5+wt+ft,-ds*0.5,jt
+	put wt+ft,-90,2000+jt
+	put -ws*0.5,-ds*0.5+wt+ft,jt
+	put -ws*0.5,0,jt
+	put -ws*0.5,ds*0.5,jt
+	put -ws*0.5+wt,ds*0.5,jt
+	put -ws*0.5+wt,0,jt
+	put -ws*0.5+wt,-ds*0.5+wt+ft,jt
+	put ft,90,2000+jt
+	put -ws*0.5+wt+ft,-ds*0.5+wt,jt
+	put 0,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5,jt
+	put ws*0.5,-ds*0.5,-1
+return
+
+"prof_9simp": !"Швеллер гнутый"
+	put -ws*0.5,-ds*0.5,jt
+	put -ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-wt,jt
+	put wt-ws*0.5,ds*0.5-wt,jt
+	put wt-ws*0.5,wt-ds*0.5,jt
+	put ws*0.5,wt-ds*0.5,jt
+	put ws*0.5,-ds*0.5,jt
+	put -ws*0.5,-ds*0.5,-1
+return
+
+"prof_9det": !"Швеллер гнутый"
+	put ws*0.5,-ds*0.5,jt
+	put 0,-ds*0.5,jt
+	put -ws*0.5+wt+ft,-ds*0.5,jt
+	put wt+ft,-90,2000+jt
+	put -ws*0.5,-ds*0.5+wt+ft,jt
+	put -ws*0.5,-0,jt
+	put -ws*0.5,ds*0.5-wt-ft,jt
+	put wt+ft,-90,2000+jt
+	put -ws*0.5+wt+ft,ds*0.5,jt
+	put 0,ds*0.5,jt
+	put ws*0.5,ds*0.5,jt
+	put ws*0.5,ds*0.5-wt,jt
+	put 0,ds*0.5-wt,jt
+	put -ws*0.5+wt+ft,ds*0.5-wt,jt
+	put ft,90,2000+jt
+	put -ws*0.5+wt,ds*0.5-wt-ft,jt
+	put -ws*0.5+wt,0,jt
+	put -ws*0.5+wt,-ds*0.5+wt+ft,jt
+	put ft,90,2000+jt
+	put -ws*0.5+wt+ft,-ds*0.5+wt,jt
+	put 0,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5+wt,jt
+	put ws*0.5,-ds*0.5,-1
+return
+]]>
+</Script_3D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_2D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_2D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_1D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[
+!dict sort_data
+!if not(haskey(sort_data.isread)) then call "macro_get_sort" PARAMETERS RETURNED_PARAMETERS sort_data
+!if haskey(sort_data.isread) then 
+!	if sort_data.isread = 0 then
+!		text2 0,0, "Сортамент прочитан с ошибкой"
+!		end
+!	endif
+!else
+!	text2 0,0, "Сортамент не прочитан"
+!	end
+!endif
+
+
+!Возвращает словарь с профилями
+dim tname_prof[]
+dim iname_prof[] : i=0
+i=i+1 : iname_prof[i]=1 : tname_prof[i] = "Круглая труба"
+i=i+1 : iname_prof[i]=2 : tname_prof[i] = "Квадратная труба"
+i=i+1 : iname_prof[i]=3 : tname_prof[i] = "Швеллер"
+i=i+1 : iname_prof[i]=4 : tname_prof[i] = "Двутавр"
+i=i+1 : iname_prof[i]=5 : tname_prof[i] = "Уголок"
+i=i+1 : iname_prof[i]=6 : tname_prof[i] = "Лист"
+i=i+1 : iname_prof[i]=8 : tname_prof[i] = "Уголок гнутый"
+i=i+1 : iname_prof[i]=9 : tname_prof[i] = "Швеллер гнутый"
+dict _data
+_data.error = ""
+_data.name_profs = tname_prof
+_data.inx_name_profs = iname_prof
+
+gosub "read_tip"
+gosub "read_profile"
+_data.isread = 1
+
+"m_end":
+exit _data
+
+"read_tip":
+	var1 = " ": var2 = " ": var3 = " ": var4 = " ": var5 = " "
+	ch1 = open("text", "Сортаменты.txt", "separator='\t', mode=ro, LIBRARY")
+	i = 2: j = 1
+	1:
+	n = input (ch1, i, 1, var1, var2, var3, var4, var5)
+	if n <> -1 then
+		inx = 0
+		for kk=1 to vardim1(tname_prof)
+			if var5 = tname_prof[kk] then
+				inx = iname_prof[kk]
+				kk = vardim1(tname_prof)
+			endif
+		next kk
+		if inx > 0 then
+			if haskey(_data.tip_p[inx].values) then 
+				j = vardim1(_data.tip_p[inx].values)+1
+			else
+				j = 1
+			endif
+			_data.tip_p[inx].values[j] = var1
+			_data.tip_p[inx].inx_values[j] = j
+			_data.tip_p[inx].f_name[j] = var3 + ".txt"
+			_data.tip_p[inx].obozn[j] = var2
+			_data.tip_p[inx].naen[j] = var5
+		endif
+		i = i + 1
+		goto 1
+	else
+		goto "close"
+	endif
+	"close":
+	close ch1
+return
+
+"read_profile":
+	f_name = ""
+	for i=1 to vardim1(iname_prof)
+		inx_prof = iname_prof[i]
+		if haskey(_data.tip_p[inx_prof].inx_values) then
+			for j=1 to vardim1(_data.tip_p[inx_prof].inx_values)
+				inx_tip = _data.tip_p[inx_prof].inx_values[j]
+				f_name = _data.tip_p[inx_prof].f_name[inx_tip]
+				ch2 = open("text", f_name, "separator='\t', mode=ro, LIBRARY")
+				k = 2 : m = 1
+				2:
+				v1 = ""
+				n = input(ch2, k, 2, v1)
+				if n <> -1 then
+					if vartype(v1)=1 then
+						if abs(v1)>0 then v1 = str("%.2", v1)
+					endif
+					if vartype(v1)=2 then
+						if strlen(v1)>1 then
+							_data.tip_p[inx_prof].profiles[inx_tip].names[m] = v1
+							_data.tip_p[inx_prof].profiles[inx_tip].inx_names[m] = k
+							m = m + 1
+						endif
+					endif
+					k = k + 1
+					goto 2
+				else
+					goto "close2"
+				endif
+				"close2":
+				close ch2
+			next j
+		endif
+	next i
+return
+]]>
+</Script_1D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_PR SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_PR>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_UI SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_UI>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_VL SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_VL>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_FWM SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_FWM>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_BWM SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_BWM>
+
+<ParamSection SectVersion="27" SectionFlags="0" SubIdent="0">
+	<ParamSectHeader>
+		<AutoHotspots>false</AutoHotspots>
+		<StatBits>
+			<STBit_FixSize/>
+		</StatBits>
+		<WDLeftFrame>0</WDLeftFrame>
+		<WDRightFrame>0</WDRightFrame>
+		<WDTopFrame>0</WDTopFrame>
+		<WDBotFrame>0</WDBotFrame>
+		<LayFlags>65535</LayFlags>
+		<WDMirrorThickness>0</WDMirrorThickness>
+		<WDWallInset>0</WDWallInset>
+	</ParamSectHeader>
+	<Parameters>
+		<Length Name="A">
+			<Description><![CDATA["Размер 1"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Length Name="B">
+			<Description><![CDATA["Размер 2"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Length Name="ZZYZX">
+			<Description><![CDATA["Высота"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Boolean Name="AC_show2DHotspotsIn3D">
+			<Description><![CDATA["Показ Узловых 2D Точек в 3D"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Length Name="ac_bottomlevel">
+			<Description><![CDATA["Отметка Низа"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Length>
+		<Length Name="ac_toplevel">
+			<Description><![CDATA["Отметка Верха"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Dictionary Name="sort_data">
+			<Description><![CDATA[""]]></Description>
+			<Value>
+				<String Name="ERROR"><![CDATA[""]]></String>
+				<Array Name="NAME_PROFS">
+					<Integer Index="1">1</Integer>
+					<Integer Index="2">2</Integer>
+					<Integer Index="3">3</Integer>
+					<Integer Index="4">4</Integer>
+					<Integer Index="5">5</Integer>
+					<Integer Index="6">8</Integer>
+					<Integer Index="7">9</Integer>
+				</Array>
+				<Array Name="INX_NAME_PROFS">
+					<String Index="1"><![CDATA["Круглая труба"]]></String>
+					<String Index="2"><![CDATA["Квадратная труба"]]></String>
+					<String Index="3"><![CDATA["Швеллер"]]></String>
+					<String Index="4"><![CDATA["Двутавр"]]></String>
+					<String Index="5"><![CDATA["Уголок"]]></String>
+					<String Index="6"><![CDATA["Уголок гнутый"]]></String>
+					<String Index="7"><![CDATA["Швеллер гнутый"]]></String>
+				</Array>
+				<Array Name="TIP_P">
+					<Dictionary Index="1"/>
+					<Dictionary Index="2"/>
+					<Dictionary Index="3"/>
+					<Dictionary Index="4"/>
+					<Dictionary Index="5"/>
+					<Dictionary Index="6"/>
+					<Dictionary Index="7"/>
+					<Dictionary Index="8">
+						<Array Name="VALUES">
+							<String Index="1"><![CDATA["гн. НЕравнополочный"]]></String>
+						</Array>
+						<Array Name="F_NAME">
+							<String Index="1"><![CDATA["уг_гн_НеРавнополочный_19772_93.txt"]]></String>
+						</Array>
+						<Array Name="SOR">
+							<Integer Index="1">14</Integer>
+						</Array>
+					</Dictionary>
+				</Array>
+			</Value>
+		</Dictionary>
+	</Parameters>
+</ParamSection>
+
+<Copyright SectVersion="1" SectionFlags="0" SubIdent="0">
+	<Author></Author>
+	<License>
+		<Type>CC BY</Type>
+		<Version>4.0</Version>
+	</License>
+</Copyright>
+
+<Keywords SectVersion="1" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Keywords>
+
+<Comment SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[Возвращает словарь с профилями]]>
+</Comment>
+
+</Symbol>
+
+

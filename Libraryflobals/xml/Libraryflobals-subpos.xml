@@ -30,7 +30,6 @@ max_subpos = 40
 max_subpos_id = 40
 max_id = 40
 
-
 if vardim1(show_subpos)<>max_subpos then 
 	dim show_subpos_t[]
 	min_n = max(vardim1(show_subpos), max_subpos)
@@ -56,6 +55,7 @@ if vardim1(show_id)<>max_id then
 	next i
 	parameters show_id = show_id_t
 endif
+
 
 if vardim1(show_no_subposmarker)<>max_subpos then 
 	dim show_no_subposmarker_t[]
@@ -109,7 +109,7 @@ endif
 <![CDATA[
 max_dialog_h = 500
 max_dialog_b = 600
-ui_dialog `Параметры сборок`, max_dialog_b, max_dialog_h
+ui_dialog `Kuvbur_Фильтр по сборкам`, max_dialog_b, max_dialog_h
 sx = 0
 sy = 40
 sxe = 250
@@ -125,14 +125,16 @@ ui_button ui_next, " >> ", 50,10, 32,21, gs_ui_current_page + 1
 sy = systart
 
 UI_INFIELD	"show_all_subpos",	100,12, 20,	20
-UI_outFIELD	"Показывать все сборки", 123, 15,125,20
+UI_outFIELD	"Все сборки", 120, 15,60,20
 
-UI_INFIELD	"show_no_subpos",	120+140+10,	12, 20,	20
-UI_outFIELD	"Показывать элементы вне сборок", 123+140+20+10, 15,200,20
+UI_INFIELD	"show_no_subpos",	120+80,	12, 20,	20
+UI_outFIELD	"Элементы вне сборок", 120+100, 15,120,20
 
+UI_INFIELD	"show_invert_subpos",	120+100+120+30,	12, 20,	20
+UI_outFIELD	"Инвертировать выбор", 120+100+120+30+20, 15,200,20
 
 !!--------------- Фильтрация ------------------------
-for i=1 to vardim1(show_subpos)
+for i=1 to vardim1(show_subpos)-1
 	if sy=systart then
 		UI_outFIELD	"Имя сборки", sx+180/2-40, sy,100,20
 		UI_outFIELD	"Все поз.", sx+180, sy,45,20
@@ -149,17 +151,48 @@ for i=1 to vardim1(show_subpos)
 	if (sx+270)>=max_dialog_b then i=vardim1(show_subpos)
 next i
 
-for i=1 to vardim1(show_subpos)
-	if show_subpos[i]<>"" and show_subpos[i]<>" " and show_subpos[i]<>"-" and show_id[i]=0 then
+if show_no_subpos then
+	i=vardim1(show_subpos)
+	sx = 20
+	systart = 40
+	sy = systart
+	sxe = 250
+	name_page = "Фильтрация позиций вне сборок"
+	UI_PAGE 2, -1, name_page
+	UI_outFIELD	name_page, 100, 15,250,20
+	ui_button ui_prev, " << ", 5,10, 32,21, gs_ui_current_page - 1
+	ui_button ui_next, " >> ", 50,10, 32,21, gs_ui_current_page + 1
+
+	UI_INFIELD{3} show_invert_pos[i],	120+100+120+30,	12, 20,	20
+	UI_outFIELD	"Инвертировать выбор", 120+100+120+30+20, 15,200,20
+
+	for j=1 to vardim2(show_subpos_id)
+		if sy=systart then UI_outFIELD	"Поз.", sx+35, sy,100,20
+		sy = sy + 22 : UI_INFIELD{3}	show_subpos_id[i][j],	sx,	sy, 100, 20
+		if sy+22>=max_dialog_h then 
+			sx=sx+130
+			sy=systart
+		endif
+	next j
+endif
+
+
+n_p = 3
+for i=1 to vardim1(show_subpos)-1
+	if show_subpos[i]<>"" and show_subpos[i]<>" " and show_subpos[i]<>"-" and show_id[i]=0 and not(show_all_subpos) then
 		sx = 20
 		systart = 40
+		sy = systart
 		sxe = 250
 		name_page = "Фильтрация позиций для сборки "+show_subpos[i]
-		UI_PAGE i+1, -1, name_page
+		UI_PAGE n_p, -1, name_page
+		n_p = n_p+1
 		UI_outFIELD	name_page, 100, 15,250,20
 		ui_button ui_prev, " << ", 5,10, 32,21, gs_ui_current_page - 1
 		ui_button ui_next, " >> ", 50,10, 32,21, gs_ui_current_page + 1
 
+		UI_INFIELD{3} show_invert_pos[i],	120+100+120+30,	12, 20,	20
+		UI_outFIELD	"Инвертировать выбор", 120+100+120+30+20, 15,200,20
 
 		for j=1 to vardim2(show_subpos_id)
 			if sy=systart then UI_outFIELD	"Поз.", sx+35, sy,100,20
@@ -183,7 +216,19 @@ end
 
 <Script_VL SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
-if show_all_subpos then LOCK 'show_id','show_subpos_id','show_no_subposmarker', 'show_subpos'
+if show_all_subpos then LOCK 'show_id','show_no_subposmarker', 'show_subpos'
+
+dim n_t[] : n_t[1] = 0
+for i=1 to vardim1(show_subpos_id)
+	n_t[i] = 0
+	for j=1 to vardim2(show_subpos_id)
+		if show_subpos_id[i][j]<>"" and show_subpos_id[i][j]<>" " then 
+			n_t[i] = 1
+			j = vardim2(show_subpos_id)
+		endif
+	next j
+next i
+parameters n_id = n_t
 ]]>
 </Script_VL>
 
@@ -199,7 +244,7 @@ if show_all_subpos then LOCK 'show_id','show_subpos_id','show_no_subposmarker', 
 <![CDATA[]]>
 </Script_BWM>
 
-<ParamSection SectVersion="22" SectionFlags="0" SubIdent="0">
+<ParamSection SectVersion="27" SectionFlags="0" SubIdent="0">
 	<ParamSectHeader>
 		<AutoHotspots>false</AutoHotspots>
 		<StatBits>
@@ -1973,6 +2018,100 @@ if show_all_subpos then LOCK 'show_id','show_subpos_id','show_no_subposmarker', 
 				<AVal Row="40">0</AVal>
 			</ArrayValues>
 		</Boolean>
+		<Boolean Name="show_invert_pos">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="40" SecondDimension="0">
+				<AVal Row="1">0</AVal>
+				<AVal Row="2">0</AVal>
+				<AVal Row="3">0</AVal>
+				<AVal Row="4">0</AVal>
+				<AVal Row="5">0</AVal>
+				<AVal Row="6">0</AVal>
+				<AVal Row="7">0</AVal>
+				<AVal Row="8">0</AVal>
+				<AVal Row="9">0</AVal>
+				<AVal Row="10">0</AVal>
+				<AVal Row="11">0</AVal>
+				<AVal Row="12">0</AVal>
+				<AVal Row="13">0</AVal>
+				<AVal Row="14">0</AVal>
+				<AVal Row="15">0</AVal>
+				<AVal Row="16">0</AVal>
+				<AVal Row="17">0</AVal>
+				<AVal Row="18">0</AVal>
+				<AVal Row="19">0</AVal>
+				<AVal Row="20">0</AVal>
+				<AVal Row="21">0</AVal>
+				<AVal Row="22">0</AVal>
+				<AVal Row="23">0</AVal>
+				<AVal Row="24">0</AVal>
+				<AVal Row="25">0</AVal>
+				<AVal Row="26">0</AVal>
+				<AVal Row="27">0</AVal>
+				<AVal Row="28">0</AVal>
+				<AVal Row="29">0</AVal>
+				<AVal Row="30">0</AVal>
+				<AVal Row="31">0</AVal>
+				<AVal Row="32">0</AVal>
+				<AVal Row="33">0</AVal>
+				<AVal Row="34">0</AVal>
+				<AVal Row="35">0</AVal>
+				<AVal Row="36">0</AVal>
+				<AVal Row="37">0</AVal>
+				<AVal Row="38">0</AVal>
+				<AVal Row="39">0</AVal>
+				<AVal Row="40">0</AVal>
+			</ArrayValues>
+		</Boolean>
+		<Boolean Name="show_invert_subpos">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Boolean>
+		<Integer Name="n_id">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="40" SecondDimension="0">
+				<AVal Row="1">0</AVal>
+				<AVal Row="2">0</AVal>
+				<AVal Row="3">0</AVal>
+				<AVal Row="4">0</AVal>
+				<AVal Row="5">0</AVal>
+				<AVal Row="6">0</AVal>
+				<AVal Row="7">0</AVal>
+				<AVal Row="8">0</AVal>
+				<AVal Row="9">0</AVal>
+				<AVal Row="10">0</AVal>
+				<AVal Row="11">0</AVal>
+				<AVal Row="12">0</AVal>
+				<AVal Row="13">0</AVal>
+				<AVal Row="14">0</AVal>
+				<AVal Row="15">0</AVal>
+				<AVal Row="16">0</AVal>
+				<AVal Row="17">0</AVal>
+				<AVal Row="18">0</AVal>
+				<AVal Row="19">0</AVal>
+				<AVal Row="20">0</AVal>
+				<AVal Row="21">0</AVal>
+				<AVal Row="22">0</AVal>
+				<AVal Row="23">0</AVal>
+				<AVal Row="24">0</AVal>
+				<AVal Row="25">0</AVal>
+				<AVal Row="26">0</AVal>
+				<AVal Row="27">0</AVal>
+				<AVal Row="28">0</AVal>
+				<AVal Row="29">0</AVal>
+				<AVal Row="30">0</AVal>
+				<AVal Row="31">0</AVal>
+				<AVal Row="32">0</AVal>
+				<AVal Row="33">0</AVal>
+				<AVal Row="34">0</AVal>
+				<AVal Row="35">0</AVal>
+				<AVal Row="36">0</AVal>
+				<AVal Row="37">0</AVal>
+				<AVal Row="38">0</AVal>
+				<AVal Row="39">0</AVal>
+				<AVal Row="40">0</AVal>
+			</ArrayValues>
+		</Integer>
 	</Parameters>
 </ParamSection>
 

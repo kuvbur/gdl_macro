@@ -13,7 +13,7 @@
 		<WDMirrorThickness>0</WDMirrorThickness>
 		<WDWallInset>0</WDWallInset>
 	</ParamSectHeader>
-	<Parameters SectVersion="26" SectionFlags="0" SubIdent="0">
+	<Parameters SectVersion="27" SectionFlags="0" SubIdent="0">
 		<Length Name="A">
 			<Description><![CDATA[""]]></Description>
 			<Fix/>
@@ -236,6 +236,14 @@
 			<Description><![CDATA["Editable"]]></Description>
 			<Value>0</Value>
 		</Boolean>
+		<String Name="MEP_ConInfo">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="1" SecondDimension="3">
+				<AVal Column="1" Row="1"><![CDATA[""]]></AVal>
+				<AVal Column="2" Row="1"><![CDATA[""]]></AVal>
+				<AVal Column="3" Row="1"><![CDATA[""]]></AVal>
+			</ArrayValues>
+		</String>
 		<Length Name="MEP_Position">
 			<Description><![CDATA["Position"]]></Description>
 			<ArrayValues FirstDimension="3" SecondDimension="3">
@@ -510,9 +518,29 @@
 			<Description><![CDATA[""]]></Description>
 			<Value>0</Value>
 		</Integer>
+		<Integer Name="ConToolType_2">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Integer>
+		<Integer Name="ConToolType_3">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Integer>
+		<Integer Name="ConToolType_4">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Integer>
+		<Integer Name="ConToolType">
+			<Description><![CDATA[""]]></Description>
+			<Value>-1</Value>
+		</Integer>
 		<Boolean Name="isMep">
 			<Description><![CDATA[""]]></Description>
 			<Value>0</Value>
+		</Boolean>
+		<Boolean Name="isEqp">
+			<Description><![CDATA[""]]></Description>
+			<Value>1</Value>
 		</Boolean>
 	</Parameters>
 </ParamSection>

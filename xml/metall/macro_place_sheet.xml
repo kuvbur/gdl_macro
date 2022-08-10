@@ -1,0 +1,2287 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Symbol IsArchivable="false" IsPlaceable="false" MainGUID="9078BB1F-28C4-41B5-8BD8-BE80175CD850" MigrationValue="Normal" Owner="1196638531" Signature="1196644685" Version="43">
+<Ancestry SectVersion="1" SectionFlags="0" SubIdent="0" Template="false">
+	<MainGUID>F938E33A-329D-4A36-BE3E-85E126820996</MainGUID>
+	<MainGUID>103E8D2C-8230-42E1-9597-46F84CCE28C0</MainGUID>
+	<MainGUID>43EC5FE8-94F1-488F-8E9C-A63483E499C1</MainGUID>
+	<MainGUID>D5683851-C949-498A-84DF-67D991BD2C95</MainGUID>
+	<MainGUID>B62F1C43-86A4-4B65-807A-8621F19C81DC</MainGUID>
+	<MainGUID>3223B670-ACCA-41C1-ADD2-456341943036</MainGUID>
+</Ancestry>
+
+<CalledMacros SectVersion="2" SectionFlags="0" SubIdent="0">
+	<Macro>
+		<MName><![CDATA["macro_get_vert_sheet"]]></MName>
+		<MainGUID>33DCCAD0-DB13-4C9E-9A30-D15B1D14BAA9</MainGUID>
+	</Macro>
+	<Macro>
+		<MName><![CDATA["macro_get_sort"]]></MName>
+		<MainGUID>FEB7F942-C5B1-4441-8FEC-5FE35041A630</MainGUID>
+	</Macro>
+	<Macro>
+		<MName><![CDATA["Показ_по_типам"]]></MName>
+		<MainGUID>0DA25901-D04F-4AC0-8D04-87400B445F9E</MainGUID>
+	</Macro>
+	<Macro>
+		<MName><![CDATA["Показ_по_группам"]]></MName>
+		<MainGUID>7B4E6DAD-4C1D-422E-AD6A-F03F65C3A3B5</MainGUID>
+	</Macro>
+	<Macro>
+		<MName><![CDATA["Показ_по_сборкам"]]></MName>
+		<MainGUID>8CE26AA8-652F-4D4A-95D8-E7E763E145D4</MainGUID>
+	</Macro>
+	<Macro>
+		<MName><![CDATA["Показ_систем"]]></MName>
+		<MainGUID>815BEB36-F280-443A-937B-64990DB2FB36</MainGUID>
+	</Macro>
+	<Macro>
+		<MName><![CDATA["Libraryflobals-km"]]></MName>
+		<MainGUID>2087989F-7AAB-43CC-9F4A-8CC8975EA122</MainGUID>
+	</Macro>
+	<Macro>
+		<MName><![CDATA["Libraryflobals-mep"]]></MName>
+		<MainGUID>9799A140-EDFF-46BA-ACA1-B5401FE64F3E</MainGUID>
+	</Macro>
+	<Macro>
+		<MName><![CDATA["MEP_m_RequestSystemGlobals"]]></MName>
+		<MainGUID>5DC5ED79-B7C9-4B2A-A7A7-687FB97394F7</MainGUID>
+	</Macro>
+</CalledMacros>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_3D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[
+if not(haskey(profile_data.set.path)) and typesheet = VERT_SHEET then end
+if not(haskey(profile_data.set.start)) then end
+if vardim1(profile_data.set.start)<EPS then end
+
+gosub "set_show_3d"
+if not(show) or det_lvl_3d=0 then end
+gosub "get_mat"
+gosub "set_mat"
+show_empty = 1
+IF GLOB_CONTEXT=2 THEN det_lvl_3d = 1
+if show_only_axsis then det_lvl_3d = 1
+if GLOB_PREVIEW_MODE=1 or GLOB_PREVIEW_MODE=2 or GLOB_FEEDBACK_MODE=1 then
+	gs_resol = 3
+	det_lvl_3d = 1
+else
+	if GLOB_SEO_TOOL_MODE = 1 then
+		gs_resol = 9
+		show_empty = 0
+	else
+		if gs_resol<10 then gs_resol=12
+	endif
+endif
+!Группа с построенным по пути профилем
+group "profile"
+	if haskey(profile_data.set.coord) and typesheet = POLY_SHEET then
+		if vardim1(profile_data.set.coord)>2 then
+			tstart = NSP
+			for i=1 to vardim1(profile_data.set.coord)
+				put profile_data.set.coord[i].x+dx, profile_data.set.coord[i].y+dy*d, profile_data.set.coord[i].z
+			next i
+			tend = NSP
+			n_form = (tend - tstart)/3
+			PLANE n_form, get(n_form*3)
+		endif
+	endif
+	if haskey(profile_data.read._3d[det_lvl_3d].unput) then
+		if typesheet = VERT_SHEET then
+			gosub "set_form"
+			gosub "set_path"
+			mask = 1+2+16+32
+			TUBE n_form, n_path, mask, get(n_form*3+n_path*4)
+		endif
+		if typesheet = GOR_SHEET then
+			gosub "set_form"
+			mask = 1+2+16+32
+			EXTRUDE n_form, 0, 0, thickness*sgnth, mask, get(n_form*3)
+		endif
+	endif
+endgroup
+
+!Копируем группу скольно надо раз
+for i=1 to vardim1(profile_data.set.start)
+	!Смещение
+	if haskey(profile_data.set.start[i].x) then
+		addx profile_data.set.start[i].x
+		n_trans = n_trans + 1
+	endif
+	if haskey(profile_data.set.start[i].y) then
+		addy profile_data.set.start[i].y
+		n_trans = n_trans + 1
+	endif
+	if haskey(profile_data.set.start[i].z) then
+		addz profile_data.set.start[i].z
+		n_trans = n_trans + 1
+	endif
+	!Поворот
+	if haskey(profile_data.set.start[i].rx) then
+		rotx profile_data.set.start[i].rx
+		n_trans = n_trans + 1
+	endif
+	if haskey(profile_data.set.start[i].ry) then
+		roty profile_data.set.start[i].ry
+		n_trans = n_trans + 1
+	endif
+	if haskey(profile_data.set.start[i].rz) then
+		rotz profile_data.set.start[i].rz
+		n_trans = n_trans + 1
+	endif
+	!Отражение
+	if haskey(profile_data.set.start[i].mx) then
+		if abs(profile_data.set.start[i].mx)>EPS and profile_data.set.start[i].mx<EPS then
+			mulx -1
+			n_trans = n_trans + 1
+		endif
+	endif
+	if haskey(profile_data.set.start[i].my) then
+		if abs(profile_data.set.start[i].my)>EPS and profile_data.set.start[i].my<EPS then
+			muly -1
+			n_trans = n_trans + 1
+		endif
+	endif
+	if haskey(profile_data.set.start[i].mz) then
+		if abs(profile_data.set.start[i].mz)>EPS and profile_data.set.start[i].mz<EPS then
+			mulz -1
+			n_trans = n_trans + 1
+		endif
+	endif
+	placegroup "profile"
+	if n_trans>0 then del n_trans
+next i
+end
+
+"set_form":
+	tstart = NSP
+	for i=1 to vardim1(profile_data.read._3d[det_lvl_3d].unput)
+		if not(haskey(profile_data.read._3d[det_lvl_3d].unput[i].s)) then profile_data.read._3d[det_lvl_3d].unput[i].s = 15
+		iStatus = profile_data.read._3d[det_lvl_3d].unput[i].s
+		if (iStatus > 0) then iStatus = iStatus - iStatus % 100
+		_d = 1 : if iStatus = 4000 or iStatus = 2000 then _d = 0
+		put profile_data.read._3d[det_lvl_3d].unput[i].x+dx*d, profile_data.read._3d[det_lvl_3d].unput[i].y+dy*d, profile_data.read._3d[det_lvl_3d].unput[i].s
+	next i
+	tend = NSP
+	n_form = (tend - tstart)/3
+return
+
+"set_path":
+	n_path = 0
+	tstart = NSP
+	for i=1 to vardim1(profile_data.set.path)
+		put profile_data.set.path[i].x, profile_data.set.path[i].y, profile_data.set.path[i].z, profile_data.set.path[i].a
+	next i
+	tend = NSP
+	n_path = (tend - tstart)/4
+return
+
+"set_mat":
+	material col_mat
+	pen gs_cont_pen
+	fill gs_fill_type_sec
+	line_type gs_line_type
+	SECT_ATTRS gs_fill_type_sec, gs_back_pen, gs_fill_pen, gs_sec_pen, gs_line_type
+return
+
+"set_show_3d":
+	success = LIBRARYGLOBAL ("Libraryflobals-km", "show_connect", show_connect)
+	show = 0
+	if show_connect and upr then show = 1
+	if not(upr) then show = 1
+	if show then 
+		call "Показ_по_типам" PARAMETERS tip_konstr=tip_konstr RETURNED_PARAMETERS show_type
+		show = show_type
+	endif
+	if show then 
+		call "Показ_по_группам" PARAMETERS ALL el_views=el_views RETURNED_PARAMETERS show_el
+		show = show_el
+	endif
+	if show then 
+		call "Показ_по_сборкам" PARAMETERS ALL subpos=subpos, pos=pos RETURNED_PARAMETERS show_subpos, show_marker
+		show = show_subpos
+	endif
+	if show then
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_list", show_list)
+		show = show_list
+	endif
+	if show then
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_izd", show_izd)
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_metall", show_metall)
+		if type_spec = "Металл" and not(show_metall) then show = 0
+		if type_spec = "Изделие" and not(show_izd) then show = 0
+	endif
+	if show then
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "ignore_id", ignore_id)
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_ingore", show_ingore)
+		show_spec = 0 : IF STRSTR (GLOB_ID, ignore_id, 1) > 0 or type_spec="Не специфицировать" THEN show_spec = 1
+		if not(show_ingore) and show_spec then show = 0
+	endif
+	success = LIBRARYGLOBAL ("Libraryflobals-km", "show_axsis", show_axsis)
+	success = LIBRARYGLOBAL ("Libraryflobals-km", "show_only_axsis", show_only_axsis)
+	success = LIBRARYGLOBAL ("Libraryflobals-km", "gs_detlevel_3D", gs_detlevel_3D)
+	IF gs_detlevel_3D=`Простой` then
+		det_lvl_2d = 1
+		det_lvl_3d = 1
+	endif
+	IF gs_detlevel_3D=`Детальный` THEN
+		det_lvl_2d = 2
+		det_lvl_3d = 2
+	endif
+	IF gs_detlevel_3D=`Откл` THEN
+		det_lvl_2d = 2
+		det_lvl_3d = 0
+	endif
+	if show then
+		show_if_vert=1 : show_if_gor=1 : show_if_ang=1
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_if_vert", show_if_vert)
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_if_gor", show_if_gor)
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_if_ang", show_if_ang)
+		if el_type_view=1 and not(show_if_gor) and show then show = 0
+		if el_type_view=2 and not(show_if_vert) and show then show = 0
+		if el_type_view=3 and not(show_if_ang) and show then show = 0
+	endif
+	show_list = 0 : success = LIBRARYGLOBAL ("Libraryflobals-km", "show_list", show_list)
+	if strlen(syst_name)>1 then
+		success = LIBRARYGLOBAL ("Libraryflobals-mep", "show_op", show_op)
+		call "Показ_систем" PARAMETERS All isMep=0, isEqp=1 RETURNED_PARAMETERS show_el
+		if show = 1 and show_el < EPS then show = 0
+		if show = 1 and show_op < EPS then show = 0
+		if show = 1 then CALL "MEP_m_RequestSystemGlobals" PARAMETERS ALL one_ConID=0 returned_parameters gs_cont_pe, sMat, gs_InsMat
+	endif
+return
+
+"get_mat":
+	success = LIBRARYGLOBAL ("Libraryflobals-km", "mat_by_type_code", mat_by_type_code)
+	is_mat_set = 0
+	if (show_spec or type_spec = "Не специфицировать") and not(is_mat_set) and mat_by_type_code<>1 then
+		ignore_mat = 0
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "ignore_mat", ignore_mat)
+		col_mat = ignore_mat
+		is_mat_set = 1
+	endif
+	if mat_by_type_code<>1 and not(is_mat_set) then
+		if mat_by_type_code=2 then 
+			name_mat_arr = "cov_mat_arr"
+			inx_mat = cov_mat
+		endif
+		if mat_by_type_code=3 then
+			name_mat_arr = "fire_keep_mat_arr"
+			inx_mat = fire_keep_mat
+		endif
+		if mat_by_type_code=4 then
+			name_mat_arr = "konstr_mat_arr"
+			inx_mat = type_mat
+		endif
+		if mat_by_type_code=5 then
+			name_mat_arr = "fire_mat_arr"
+			inx_mat = fire_mat
+		endif
+		if mat_by_type_code=6 then
+			name_mat_arr = "stal_mat_arr"
+			inx_mat = stal_mat
+		endif
+		if mat_by_type_code=7 then
+			name_mat_arr = "type_spec_mat_arr"
+			inx_mat = type_spec_mat
+		endif
+		if mat_by_type_code=8 then
+			name_mat_arr = "connect_mat_arr"
+			inx_mat = upr_mat
+		endif
+		if inx_mat=99 or inx_mat<1 then 
+			col_mat = 0
+		else
+			dim cov_mat_arr[]
+			success = LIBRARYGLOBAL ("Libraryflobals-km", name_mat_arr, cov_mat_arr)
+			col_mat = cov_mat_arr[inx_mat]
+		endif
+		is_mat_set = 1
+	endif
+	if strlen(syst_name)>1 then col_mat = sMat
+	col_mat = 1
+	shadow on
+return
+]]>
+</Script_3D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_2D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[
+if not(haskey(profile_data.set.path)) and typesheet = VERT_SHEET then end
+gosub "set_show_2d"
+if not(show) or det_lvl_2d=0 then end
+chStoryDist = GLOB_CH_STORY_DIST
+IF gs_StorySensitive = 0 THEN chStoryDist = 0
+if chStoryDist > EPS then !"Этажом выше"
+	gs_cont_pen = gs_cont_pen_up
+	gs_fill_type = gs_fill_type_up
+	gs_fill_pen = gs_fill_pen_up
+	gs_back_pen = gs_back_pen_up
+	gs_line_type = gs_line_type_up
+	mark = mark_up
+endif
+if chStoryDist < EPS then
+	if abs(chStoryDist) < EPS then !"Собственный этаж"
+	else !"Этажом ниже"
+		gs_cont_pen = gs_cont_pen_down
+		gs_fill_type = gs_fill_type_down
+		gs_fill_pen = gs_fill_pen_down
+		gs_back_pen = gs_back_pen_down
+		gs_line_type = gs_line_type_down
+		mark = mark_down
+	endif
+endif
+pen gs_cont_pen
+fill gs_fill_type
+line_type gs_line_type
+SECT_ATTRS gs_fill_type, gs_back_pen, gs_fill_pen, gs_cont_pen, gs_line_type
+IF GLOB_FEEDBACK_MODE=1 THEN det_lvl_2d = 1
+
+!if el_type_view = 1 then
+! 
+!endif
+!!Вертикальный вид
+!if el_type_view = 2 then
+!	tstart = NSP
+!	for i=1 to vardim1(profile_data.read._2d[det_lvl_2d].unput)
+!		if profile_data.read._2d[det_lvl_2d].unput[i].s>0 or show_empty then 
+!			put profile_data.read._2d[det_lvl_2d].unput[i].x+dx, profile_data.read._2d[det_lvl_2d].unput[i].y+dy, profile_data.read._2d[det_lvl_2d].unput[i].s
+!		endif
+!	next i
+!	tend = NSP
+!	n_form = (tend - tstart)/3
+!	pen gs_cont_pen
+!	fill gs_fill_type
+!	for i=1 to vardim1(profile_data.set.start)
+!		!Смещение
+!		if haskey(profile_data.set.start[i].x) then
+!			add2 profile_data.set.start[i].x,0
+!			n_trans = n_trans + 1
+!		endif
+!		if haskey(profile_data.set.start[i].y) then
+!			add2 0,profile_data.set.start[i].y
+!			n_trans = n_trans + 1
+!		endif
+!		!Поворот
+!		if haskey(profile_data.set.start[i].rz) then
+!			rot2 profile_data.set.start[i].rz
+!			n_trans = n_trans + 1
+!		endif
+!		!Отражение
+!		if haskey(profile_data.set.start[i].mx) then
+!			if abs(profile_data.set.start[i].mx)>EPS and profile_data.set.start[i].mx<EPS then
+!				mul2 -1,1
+!				n_trans = n_trans + 1
+!			endif
+!		endif
+!		if haskey(profile_data.set.start[i].my) then
+!			if abs(profile_data.set.start[i].my)>EPS and profile_data.set.start[i].my<EPS then
+!				mul2 1,-1
+!				n_trans = n_trans + 1
+!			endif
+!		endif
+!		POLY2_b n_form, 1+2+4+8, gs_fill_pen, gs_back_pen,use(n_form*3)
+!		if n_trans>0 then del n_trans
+!	next i
+!	if nsp>0 then tt = max(get(NSP))
+!endif
+!
+!if el_type_view = 3 then project2{2} 3, 270, 32+3, gs_back_pen, 0, 0, 90
+project2{2} 3, 270, 32+3, gs_back_pen, 0, 0, 90
+end
+"set_show_2d":
+	show_connect = 1
+	success = LIBRARYGLOBAL ("Libraryflobals-km", "show_connect", show_connect)
+	show = 0
+	if show_connect and upr then show = 1
+	if not(upr) then show = 1
+	if show then 
+		call "Показ_по_типам" PARAMETERS tip_konstr=tip_konstr RETURNED_PARAMETERS show_type
+		show = show_type
+	endif
+	if show then 
+		call "Показ_по_группам" PARAMETERS ALL el_views=el_views RETURNED_PARAMETERS show_el
+		show = show_el
+	endif
+	if show then 
+		call "Показ_по_сборкам" PARAMETERS ALL subpos=subpos, pos=pos RETURNED_PARAMETERS show_subpos, show_marker
+		show = show_subpos
+	endif
+	if show then
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_list", show_list)
+		show = show_list
+	endif
+	if show then
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_izd", show_izd)
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_metall", show_metall)
+		if type_spec = "Металл" and not(show_metall) then show = 0
+		if type_spec = "Изделие" and not(show_izd) then show = 0
+	endif
+	if show then
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "ignore_id", ignore_id)
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_ingore", show_ingore)
+		show_spec = 0 : IF STRSTR (GLOB_ID, ignore_id, 1) > 0 or type_spec="Не специфицировать" THEN show_spec = 1
+		if not(show_ingore) and show_spec then show = 0
+	endif
+	success = LIBRARYGLOBAL ("Libraryflobals-km", "show_axsis", show_axsis)
+	success = LIBRARYGLOBAL ("Libraryflobals-km", "show_only_axsis", show_only_axsis)
+	success = LIBRARYGLOBAL ("Libraryflobals-km", "gs_detlevel_3D", gs_detlevel_3D)
+	IF gs_detlevel_3D=`Простой` then
+		det_lvl_2d = 1
+		det_lvl_3d = 1
+	endif
+	IF gs_detlevel_3D=`Детальный` THEN
+		det_lvl_2d = 2
+		det_lvl_3d = 2
+	endif
+	IF gs_detlevel_3D=`Откл` THEN
+		det_lvl_2d = 2
+		det_lvl_3d = 0
+	endif
+	if show then
+		show_if_vert=1 : show_if_gor=1 : show_if_ang=1
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_if_vert", show_if_vert)
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_if_gor", show_if_gor)
+		success = LIBRARYGLOBAL ("Libraryflobals-km", "show_if_ang", show_if_ang)
+		if el_type_view=1 and not(show_if_gor) and show then show = 0
+		if el_type_view=2 and not(show_if_vert) and show then show = 0
+		if el_type_view=3 and not(show_if_ang) and show then show = 0
+	endif
+	show_list = 0 : success = LIBRARYGLOBAL ("Libraryflobals-km", "show_list", show_list)
+	if strlen(syst_name)>1 then
+		success = LIBRARYGLOBAL ("Libraryflobals-mep", "show_op", show_op)
+		call "Показ_систем" PARAMETERS All isMep=0, isEqp=1 RETURNED_PARAMETERS show_el
+		if show = 1 and show_el < EPS then show = 0
+		if show = 1 and show_op < EPS then show = 0
+	endif
+return
+]]>
+</Script_2D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_1D SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[
+EPS = 0.0001
+flag = 0
+
+tip_konstr = " "
+subpos = " "
+pos = " "
+upr = 0
+type_spec = "Металл"
+
+!Смещение оси
+dx = 0
+dy = 0
+el_type_view = 0
+
+VERT_SHEET = 1
+GOR_SHEET = 2
+POLY_SHEET = 3
+
+dict _dataprof
+dict _all
+dict _tmp
+dict _emp
+
+if not(haskey(profile_data.set)) then
+	text2 0,0,"mpl - not(haskey(profile_data.set))"
+	goto "m_end"
+endif
+
+if not(haskey(profile_data.set.coord)) then 
+	text2 0,0,"mpl - not(haskey(profile_data.set.coord))"
+	goto "m_end"
+else
+	for i=1 to vardim1(profile_data.set.coord)
+		if not(haskey(profile_data.set.coord[i].x)) then profile_data.set.coord[i].x = 0
+		if not(haskey(profile_data.set.coord[i].y)) then profile_data.set.coord[i].y = 0
+		if not(haskey(profile_data.set.coord[i].z)) then profile_data.set.coord[i].z = 0
+	next i
+endif
+
+typesheet = 0
+if haskey(profile_data.set.typesheet) then 
+	typesheet = profile_data.set.typesheet
+else
+	typesheet = VERT_SHEET
+endif
+
+if not(haskey(profile_data.set.path)) and typesheet = VERT_SHEET then 
+	text2 0,0,"mpl - not(haskey(profile_data.set.path))"
+	goto "m_end"
+else
+	for i=1 to vardim1(profile_data.set.path)
+		if not(haskey(profile_data.set.path[i].x)) then profile_data.set.path[i].x = 0
+		if not(haskey(profile_data.set.path[i].y)) then profile_data.set.path[i].y = 0
+		if not(haskey(profile_data.set.path[i].z)) then profile_data.set.path[i].z = 0
+		if not(haskey(profile_data.set.path[i].a)) then profile_data.set.path[i].a = 0
+	next i
+endif
+
+!Если задана точка привязки - получим смещение сечения
+sgnth = 1
+if haskey(profile_data.set.cpoint) then
+	if haskey(profile_data.set.cpoint.x) then dx = profile_data.read.cpoint.x
+	if haskey(profile_data.set.cpoint.y) then dy = profile_data.read.cpoint.y
+	if haskey(profile_data.set.cpoint.sgnth) then 
+		sgnth = profile_data.set.cpoint.sgnth
+		if abs(sgnth)<EPS then sgnth = 1
+	endif
+endif
+
+thickness = 0.003
+if haskey(profile_data.set.thickness) then thickness = profile_data.set.thickness
+
+if not(haskey(profile_data.set.start)) then profile_data.set.start[1].x = 0
+
+!Читаем сортамент, если его не передали
+gosub "read_sort"
+if typesheet = VERT_SHEET then
+	dict coord
+	coord.in = profile_data.set.coord
+	coord.thickness = thickness
+	coord.fold = profile_data.set.fold
+	coord.sgnth = sgnth
+	coord.error = "-"
+	call "macro_get_vert_sheet" parameters coord = coord, RETURNED_PARAMETERS coord
+	if coord.error = "ok" then
+		profile_data.read.dlin_prof = coord.length
+		profile_data.read.sum_length = coord.sum_length
+		profile_data.read._2d[1].unput = coord.out
+		profile_data.read._2d[2].unput = profile_data.read._2d[1].unput
+		profile_data.read._3d[1].unput = profile_data.read._2d[2].unput
+		for i=1 to vardim1(profile_data.read._3d[1].unput)
+			if not(haskey(profile_data.read._3d[1].unput[i].s)) then profile_data.read._3d[1].unput[i].s = 1
+			profile_data.read._3d[1].unput[i].s = profile_data.read._3d[1].unput[i].s + 14
+		next i
+		profile_data.read._3d[2].unput = profile_data.read._3d[1].unput
+	else
+		text2 0,0,"mpl - " + coord.error
+	endif
+endif
+
+if typesheet = GOR_SHEET or typesheet = POLY_SHEET then
+	profile_data.read._3d[1].unput = profile_data.set.coord
+	profile_data.read._2d[1].unput = profile_data.read._3d[1].unput
+	for i=1 to vardim1(profile_data.read._3d[1].unput)
+		if not(haskey(profile_data.read._3d[1].unput[i].s)) then
+			profile_data.read._3d[1].unput[i].s = 15
+			profile_data.read._2d[1].unput[i].s = 1
+		endif
+	next i
+	profile_data.read._3d[2].unput = profile_data.read._3d[1].unput
+	profile_data.read._2d[2].unput = profile_data.read._2d[1].unput
+endif
+
+goto "m_end"
+
+"read_sort":
+	if not(haskey(sort_data.isread)) then call "macro_get_sort" PARAMETERS RETURNED_PARAMETERS sort_data
+	if haskey(sort_data.isread) then 
+		if sort_data.isread = 0 then
+			text2 0,0, "mpl - Сортамент прочитан с ошибкой"
+			goto "m_end"
+		endif
+	else
+		text2 0,0, "mpl - Сортамент не прочитан"
+		goto "m_end"
+	endif
+return
+
+"m_end":
+]]>
+</Script_1D>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_PR SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_PR>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_UI SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_UI>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_VL SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_VL>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_FWM SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_FWM>
+
+<!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
+
+<Script_BWM SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Script_BWM>
+
+<ParamSection SectVersion="27" SectionFlags="0" SubIdent="0">
+	<ParamSectHeader>
+		<AutoHotspots>false</AutoHotspots>
+		<StatBits>
+			<STBit_FixSize/>
+		</StatBits>
+		<WDLeftFrame>0</WDLeftFrame>
+		<WDRightFrame>0</WDRightFrame>
+		<WDTopFrame>0</WDTopFrame>
+		<WDBotFrame>0</WDBotFrame>
+		<LayFlags>65535</LayFlags>
+		<WDMirrorThickness>0</WDMirrorThickness>
+		<WDWallInset>0</WDWallInset>
+	</ParamSectHeader>
+	<Parameters>
+		<Length Name="kontur">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<ArrayValues FirstDimension="90" SecondDimension="2">
+				<AVal Column="1" Row="1">0</AVal>
+				<AVal Column="2" Row="1">0</AVal>
+				<AVal Column="1" Row="2">0.5</AVal>
+				<AVal Column="2" Row="2">0.1</AVal>
+				<AVal Column="1" Row="3">0.5</AVal>
+				<AVal Column="2" Row="3">0.5</AVal>
+				<AVal Column="1" Row="4">0.1</AVal>
+				<AVal Column="2" Row="4">0.5</AVal>
+				<AVal Column="1" Row="5">0</AVal>
+				<AVal Column="2" Row="5">0</AVal>
+				<AVal Column="1" Row="6">0</AVal>
+				<AVal Column="2" Row="6">0</AVal>
+				<AVal Column="1" Row="7">0</AVal>
+				<AVal Column="2" Row="7">0</AVal>
+				<AVal Column="1" Row="8">0</AVal>
+				<AVal Column="2" Row="8">0</AVal>
+				<AVal Column="1" Row="9">0</AVal>
+				<AVal Column="2" Row="9">0</AVal>
+				<AVal Column="1" Row="10">0</AVal>
+				<AVal Column="2" Row="10">0</AVal>
+				<AVal Column="1" Row="11">0</AVal>
+				<AVal Column="2" Row="11">0</AVal>
+				<AVal Column="1" Row="12">0</AVal>
+				<AVal Column="2" Row="12">0</AVal>
+				<AVal Column="1" Row="13">0</AVal>
+				<AVal Column="2" Row="13">0</AVal>
+				<AVal Column="1" Row="14">0</AVal>
+				<AVal Column="2" Row="14">0</AVal>
+				<AVal Column="1" Row="15">0</AVal>
+				<AVal Column="2" Row="15">0</AVal>
+				<AVal Column="1" Row="16">0</AVal>
+				<AVal Column="2" Row="16">0</AVal>
+				<AVal Column="1" Row="17">0</AVal>
+				<AVal Column="2" Row="17">0</AVal>
+				<AVal Column="1" Row="18">0</AVal>
+				<AVal Column="2" Row="18">0</AVal>
+				<AVal Column="1" Row="19">0</AVal>
+				<AVal Column="2" Row="19">0</AVal>
+				<AVal Column="1" Row="20">0</AVal>
+				<AVal Column="2" Row="20">0</AVal>
+				<AVal Column="1" Row="21">0</AVal>
+				<AVal Column="2" Row="21">0</AVal>
+				<AVal Column="1" Row="22">0</AVal>
+				<AVal Column="2" Row="22">0</AVal>
+				<AVal Column="1" Row="23">0</AVal>
+				<AVal Column="2" Row="23">0</AVal>
+				<AVal Column="1" Row="24">0</AVal>
+				<AVal Column="2" Row="24">0</AVal>
+				<AVal Column="1" Row="25">0</AVal>
+				<AVal Column="2" Row="25">0</AVal>
+				<AVal Column="1" Row="26">0</AVal>
+				<AVal Column="2" Row="26">0</AVal>
+				<AVal Column="1" Row="27">0</AVal>
+				<AVal Column="2" Row="27">0</AVal>
+				<AVal Column="1" Row="28">0</AVal>
+				<AVal Column="2" Row="28">0</AVal>
+				<AVal Column="1" Row="29">0</AVal>
+				<AVal Column="2" Row="29">0</AVal>
+				<AVal Column="1" Row="30">0</AVal>
+				<AVal Column="2" Row="30">0</AVal>
+				<AVal Column="1" Row="31">0</AVal>
+				<AVal Column="2" Row="31">0</AVal>
+				<AVal Column="1" Row="32">0</AVal>
+				<AVal Column="2" Row="32">0</AVal>
+				<AVal Column="1" Row="33">0</AVal>
+				<AVal Column="2" Row="33">0</AVal>
+				<AVal Column="1" Row="34">0</AVal>
+				<AVal Column="2" Row="34">0</AVal>
+				<AVal Column="1" Row="35">0</AVal>
+				<AVal Column="2" Row="35">0</AVal>
+				<AVal Column="1" Row="36">0</AVal>
+				<AVal Column="2" Row="36">0</AVal>
+				<AVal Column="1" Row="37">0</AVal>
+				<AVal Column="2" Row="37">0</AVal>
+				<AVal Column="1" Row="38">0</AVal>
+				<AVal Column="2" Row="38">0</AVal>
+				<AVal Column="1" Row="39">0</AVal>
+				<AVal Column="2" Row="39">0</AVal>
+				<AVal Column="1" Row="40">0</AVal>
+				<AVal Column="2" Row="40">0</AVal>
+				<AVal Column="1" Row="41">0</AVal>
+				<AVal Column="2" Row="41">0</AVal>
+				<AVal Column="1" Row="42">0</AVal>
+				<AVal Column="2" Row="42">0</AVal>
+				<AVal Column="1" Row="43">0</AVal>
+				<AVal Column="2" Row="43">0</AVal>
+				<AVal Column="1" Row="44">0</AVal>
+				<AVal Column="2" Row="44">0</AVal>
+				<AVal Column="1" Row="45">0</AVal>
+				<AVal Column="2" Row="45">0</AVal>
+				<AVal Column="1" Row="46">0</AVal>
+				<AVal Column="2" Row="46">0</AVal>
+				<AVal Column="1" Row="47">0</AVal>
+				<AVal Column="2" Row="47">0</AVal>
+				<AVal Column="1" Row="48">0</AVal>
+				<AVal Column="2" Row="48">0</AVal>
+				<AVal Column="1" Row="49">0</AVal>
+				<AVal Column="2" Row="49">0</AVal>
+				<AVal Column="1" Row="50">0</AVal>
+				<AVal Column="2" Row="50">0</AVal>
+				<AVal Column="1" Row="51">0</AVal>
+				<AVal Column="2" Row="51">0</AVal>
+				<AVal Column="1" Row="52">0</AVal>
+				<AVal Column="2" Row="52">0</AVal>
+				<AVal Column="1" Row="53">0</AVal>
+				<AVal Column="2" Row="53">0</AVal>
+				<AVal Column="1" Row="54">0</AVal>
+				<AVal Column="2" Row="54">0</AVal>
+				<AVal Column="1" Row="55">0</AVal>
+				<AVal Column="2" Row="55">0</AVal>
+				<AVal Column="1" Row="56">0</AVal>
+				<AVal Column="2" Row="56">0</AVal>
+				<AVal Column="1" Row="57">0</AVal>
+				<AVal Column="2" Row="57">0</AVal>
+				<AVal Column="1" Row="58">0</AVal>
+				<AVal Column="2" Row="58">0</AVal>
+				<AVal Column="1" Row="59">0</AVal>
+				<AVal Column="2" Row="59">0</AVal>
+				<AVal Column="1" Row="60">0</AVal>
+				<AVal Column="2" Row="60">0</AVal>
+				<AVal Column="1" Row="61">0</AVal>
+				<AVal Column="2" Row="61">0</AVal>
+				<AVal Column="1" Row="62">0</AVal>
+				<AVal Column="2" Row="62">0</AVal>
+				<AVal Column="1" Row="63">0</AVal>
+				<AVal Column="2" Row="63">0</AVal>
+				<AVal Column="1" Row="64">0</AVal>
+				<AVal Column="2" Row="64">0</AVal>
+				<AVal Column="1" Row="65">0</AVal>
+				<AVal Column="2" Row="65">0</AVal>
+				<AVal Column="1" Row="66">0</AVal>
+				<AVal Column="2" Row="66">0</AVal>
+				<AVal Column="1" Row="67">0</AVal>
+				<AVal Column="2" Row="67">0</AVal>
+				<AVal Column="1" Row="68">0</AVal>
+				<AVal Column="2" Row="68">0</AVal>
+				<AVal Column="1" Row="69">0</AVal>
+				<AVal Column="2" Row="69">0</AVal>
+				<AVal Column="1" Row="70">0</AVal>
+				<AVal Column="2" Row="70">0</AVal>
+				<AVal Column="1" Row="71">0</AVal>
+				<AVal Column="2" Row="71">0</AVal>
+				<AVal Column="1" Row="72">0</AVal>
+				<AVal Column="2" Row="72">0</AVal>
+				<AVal Column="1" Row="73">0</AVal>
+				<AVal Column="2" Row="73">0</AVal>
+				<AVal Column="1" Row="74">0</AVal>
+				<AVal Column="2" Row="74">0</AVal>
+				<AVal Column="1" Row="75">0</AVal>
+				<AVal Column="2" Row="75">0</AVal>
+				<AVal Column="1" Row="76">0</AVal>
+				<AVal Column="2" Row="76">0</AVal>
+				<AVal Column="1" Row="77">0</AVal>
+				<AVal Column="2" Row="77">0</AVal>
+				<AVal Column="1" Row="78">0</AVal>
+				<AVal Column="2" Row="78">0</AVal>
+				<AVal Column="1" Row="79">0</AVal>
+				<AVal Column="2" Row="79">0</AVal>
+				<AVal Column="1" Row="80">0</AVal>
+				<AVal Column="2" Row="80">0</AVal>
+				<AVal Column="1" Row="81">0</AVal>
+				<AVal Column="2" Row="81">0</AVal>
+				<AVal Column="1" Row="82">0</AVal>
+				<AVal Column="2" Row="82">0</AVal>
+				<AVal Column="1" Row="83">0</AVal>
+				<AVal Column="2" Row="83">0</AVal>
+				<AVal Column="1" Row="84">0</AVal>
+				<AVal Column="2" Row="84">0</AVal>
+				<AVal Column="1" Row="85">0</AVal>
+				<AVal Column="2" Row="85">0</AVal>
+				<AVal Column="1" Row="86">0</AVal>
+				<AVal Column="2" Row="86">0</AVal>
+				<AVal Column="1" Row="87">0</AVal>
+				<AVal Column="2" Row="87">0</AVal>
+				<AVal Column="1" Row="88">0</AVal>
+				<AVal Column="2" Row="88">0</AVal>
+				<AVal Column="1" Row="89">0</AVal>
+				<AVal Column="2" Row="89">0</AVal>
+				<AVal Column="1" Row="90">4</AVal>
+				<AVal Column="2" Row="90">8</AVal>
+			</ArrayValues>
+		</Length>
+		<Integer Name="n_t">
+			<Description><![CDATA["Количество точек"]]></Description>
+			<Fix/>
+			<Value>4</Value>
+		</Integer>
+		<Angle Name="ry">
+			<Description><![CDATA["Поворот 1"]]></Description>
+			<Fix/>
+			<Value>0</Value>
+		</Angle>
+		<Angle Name="rx">
+			<Description><![CDATA["Поворот 2"]]></Description>
+			<Fix/>
+			<Value>0</Value>
+		</Angle>
+		<String Name="Profile">
+			<Description><![CDATA["Серийный размер"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_BoldName/>
+				<ParFlg_Unique/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA["Лист1"]]></Value>
+		</String>
+		<String Name="lastProfile">
+			<Description><![CDATA["Предыдущий профиль"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA["10x1"]]></Value>
+		</String>
+		<String Name="tip_p">
+			<Description><![CDATA["Тип профиля"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_BoldName/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA["Сплошной "]]></Value>
+		</String>
+		<String Name="mater">
+			<Description><![CDATA["Из стали -"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_BoldName/>
+			</Flags>
+			<Value><![CDATA["С245"]]></Value>
+		</String>
+		<String Name="tip_konstr">
+			<Description><![CDATA["Тип конструкции"]]></Description>
+			<Fix/>
+			<Value><![CDATA["Балки"]]></Value>
+		</String>
+
+		<!-- sp1_Z: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="sp1_Z">
+			<Description><![CDATA["Заглушка"]]></Description>
+			<Fix/>
+		</Title>
+		<Boolean Name="is_z_left">
+			<Description><![CDATA["Заглушка слева"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_BoldName/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Length Name="out_left">
+			<Description><![CDATA["Выступ (0 - заступ на тощину стенки) слева"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="z_th_left">
+			<Description><![CDATA["Толщина слева"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0.003</Value>
+		</Length>
+		<Boolean Name="is_z_right">
+			<Description><![CDATA["Заглушка справа"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_BoldName/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Length Name="out_right">
+			<Description><![CDATA["Выступ (0 - заступ на тощину стенки) справа"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="z_th_right">
+			<Description><![CDATA["Толщина справа"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0.003</Value>
+		</Length>
+		<String Name="z_mater">
+			<Description><![CDATA["Сталь заглушки"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["С235"]]></Value>
+		</String>
+		<String Name="z_stal_gost">
+			<Description><![CDATA["Гост стали"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA["ГОСТ 27772-2015"]]></Value>
+		</String>
+		<String Name="z_obozn">
+			<Description><![CDATA["Обозначение"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA["ГОСТ 19903-74"]]></Value>
+		</String>
+		<Length Name="z_a_left">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="z_b_left">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="z_a_right">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Length Name="z_b_right">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<String Name="z_mater_left">
+			<Description><![CDATA["Сталь заглушки слева"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["С235"]]></Value>
+		</String>
+		<String Name="z_mater_right">
+			<Description><![CDATA["Сталь заглушки справа"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["С235"]]></Value>
+		</String>
+		<String Name="z_stal_gost_right">
+			<Description><![CDATA["Гост стали справа"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["ГОСТ 27772-2015"]]></Value>
+		</String>
+		<String Name="z_stal_gost_left">
+			<Description><![CDATA["Гост стали слева"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["ГОСТ 27772-2015"]]></Value>
+		</String>
+		<Length Name="A">
+			<Description><![CDATA["Длина уголка"]]></Description>
+			<Fix/>
+			<Value>0.5</Value>
+		</Length>
+		<Length Name="B">
+			<Description><![CDATA["Диаметр поперечин"]]></Description>
+			<Fix/>
+			<Value>0.5</Value>
+		</Length>
+		<Length Name="zzyzx">
+			<Description><![CDATA["Диаметр поперечин"]]></Description>
+			<Fix/>
+			<Value>0.005</Value>
+		</Length>
+		<Boolean Name="AC_show2DHotspotsIn3D">
+			<Description><![CDATA["Показыв. 2D-узл.т. в 3D"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Length Name="ac_bottomlevel">
+			<Description><![CDATA["Уровень внизу"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Length>
+		<Length Name="ac_toplevel">
+			<Description><![CDATA["Уровень вверху"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<Boolean Name="ac_special_2d_symbol">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Integer Name="ac_symb_display_option">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>3</Value>
+		</Integer>
+		<Integer Name="ac_symb_show_projection_to">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Integer>
+
+		<!-- all_spec: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="all_spec">
+			<Description><![CDATA["Спецификация"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+		</Title>
+
+		<!-- _sp0: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="_sp0">
+			<Description><![CDATA["Размеры"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+		</Title>
+		<RealNum Name="ws">
+			<Description><![CDATA["Ширина профиля (мм)"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</RealNum>
+		<RealNum Name="ds">
+			<Description><![CDATA["Высота профиля (мм)"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>10</Value>
+		</RealNum>
+		<RealNum Name="wt">
+			<Description><![CDATA["Толщина стенки (мм)"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>2</Value>
+		</RealNum>
+		<RealNum Name="ft">
+			<Description><![CDATA["Толщина фланца (мм)"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0.018</Value>
+		</RealNum>
+		<RealNum Name="rr">
+			<Description><![CDATA["Радиус основания (мм)"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0.022</Value>
+		</RealNum>
+		<RealNum Name="tr">
+			<Description><![CDATA["Глубина между скругл. (мм)"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0.009</Value>
+		</RealNum>
+		<RealNum Name="dbf">
+			<Description><![CDATA["Глубина между скругл. (мм)"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0.314</Value>
+		</RealNum>
+		<RealNum Name="ax_y">
+			<Description><![CDATA["Привязка оси y (мм)"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>3846</Value>
+		</RealNum>
+
+		<!-- gs_2D_representation: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="gs_2D_representation">
+			<Description><![CDATA["2D-представление"]]></Description>
+			<Fix/>
+		</Title>
+		<Boolean Name="upr">
+			<Description><![CDATA["Отображать в упрощённом виде"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<String Name="obozn">
+			<Description><![CDATA["Обозначение"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["ГОСТ 19903-74 "]]></Value>
+		</String>
+		<String Name="naen">
+			<Description><![CDATA["Наименование"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["-- 500x500x5"]]></Value>
+		</String>
+		<RealNum Name="ves">
+			<Description><![CDATA["Масса ед., кг."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>8</Value>
+		</RealNum>
+		<Integer Name="kol_vo_spec">
+			<Description><![CDATA["Кол-во"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</Integer>
+		<String Name="komment">
+			<Description><![CDATA["Комментарий"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA[" "]]></Value>
+		</String>
+		<RealNum Name="ves_p">
+			<Description><![CDATA["Масса кв.м., кг."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>39.25</Value>
+		</RealNum>
+		<RealNum Name="proc_zap">
+			<Description><![CDATA["Процент запасса по массе"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0.01</Value>
+		</RealNum>
+		<String Name="pref_naen">
+			<Description><![CDATA["Префикс к наименованию"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA[" "]]></Value>
+		</String>
+		<String Name="stal_marka">
+			<Description><![CDATA["Марка стали"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["С245"]]></Value>
+		</String>
+		<String Name="stal_gost">
+			<Description><![CDATA["Гост на сталь"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["ГОСТ 27772-88"]]></Value>
+		</String>
+		<String Name="tip_profile">
+			<Description><![CDATA["Имя профиля"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["-- 5"]]></Value>
+		</String>
+		<Boolean Name="show_proj">
+			<Description><![CDATA["Показывать проекцию"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Boolean>
+		<String Name="subpos">
+			<Description><![CDATA["Часть сборки"]]></Description>
+			<Fix/>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<String Name="tip_el">
+			<Description><![CDATA["Тип элемента"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA[" "]]></Value>
+		</String>
+
+		<!-- spec: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="spec">
+			<Description><![CDATA["Спецификация"]]></Description>
+			<Fix/>
+		</Title>
+		<String Name="type_ves">
+			<Description><![CDATA["Вес и площадь брать по"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["По геометрическим размерам"]]></Value>
+		</String>
+		<String Name="type_spec">
+			<Description><![CDATA["Специфицировать как"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["Металл"]]></Value>
+		</String>
+		<Boolean Name="pm">
+			<Description><![CDATA["Длина в погонных метрах"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Boolean Name="mun">
+			<Description><![CDATA["Заполнять вручную"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<String Name="param_name_out">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<ArrayValues FirstDimension="5" SecondDimension="0">
+				<AVal Row="1"><![CDATA["!!Профиль Двутавр!!"]]></AVal>
+				<AVal Row="2"><![CDATA["naen - наименование"]]></AVal>
+				<AVal Row="3"><![CDATA["obozn - обозначение"]]></AVal>
+				<AVal Row="4"><![CDATA["tip_profile - сечение"]]></AVal>
+				<AVal Row="5"><![CDATA["mater - марка стали"]]></AVal>
+			</ArrayValues>
+		</String>
+		<String Name="param_temp_out">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<ArrayValues FirstDimension="3" SecondDimension="0">
+				<AVal Row="1"><![CDATA["%subpos%"]]></AVal>
+				<AVal Row="2"><![CDATA["%naen%"]]></AVal>
+				<AVal Row="3"><![CDATA["%tip_profile% по %obozn% %mater%"]]></AVal>
+			</ArrayValues>
+		</String>
+		<Boolean Name="show_el">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Boolean Name="ParamcontrolByGrasshopper">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Boolean Name="show_subpos">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Boolean Name="show_marker">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Boolean Name="manual_elev">
+			<Description><![CDATA["Вручную выставить собственный этаж"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Integer Name="n_elev">
+			<Description><![CDATA["Номер этажа"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Integer>
+		<String Name="ur">
+			<Description><![CDATA["Уровень"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<Length Name="ur_num">
+			<Description><![CDATA["Уровень числом"]]></Description>
+			<Fix/>
+			<Value>0</Value>
+		</Length>
+
+		<!-- d2vid: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="d2vid">
+			<Description><![CDATA["2D-представление"]]></Description>
+			<Fix/>
+		</Title>
+		<Length Name="krat_txt">
+			<Description><![CDATA["Кратность размеров"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0.001</Value>
+		</Length>
+		<Integer Name="krat">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1000</Value>
+		</Integer>
+		<String Name="version">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<String Name="help_url">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<Boolean Name="gs_shadow">
+			<Description><![CDATA["Показ теней"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<RealNum Name="s_plit_obsh">
+			<Description><![CDATA["Площадь фасонки"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0.2</Value>
+		</RealNum>
+		<Length Name="dlin_prof">
+			<Description><![CDATA["Длина профиля с учётом подрезки"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0.5</Value>
+		</Length>
+		<Integer Name="group_konstr">
+			<Description><![CDATA["Группа стальных конструкций"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>3</Value>
+		</Integer>
+
+		<!-- _sp1_A: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="_sp1_A">
+			<Description><![CDATA["Усилия для прикрепления"]]></Description>
+			<Fix/>
+		</Title>
+		<RealNum Name="M">
+			<Description><![CDATA["M, кН*м"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<RealNum Name="N">
+			<Description><![CDATA["N, кН"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<RealNum Name="Q">
+			<Description><![CDATA["Q, кН"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<Integer Name="type_spec_mat">
+			<Description><![CDATA["Материал по типу спец-ии"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Integer>
+
+		<!-- uch_pokr: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Boolean Name="uch_pokr">
+			<Description><![CDATA["Окрашено"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_BoldName/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Integer Name="cov_mat">
+			<Description><![CDATA["Покрытие по антикорозийке"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>2</Value>
+		</Integer>
+		<RealNum Name="spokr">
+			<Description><![CDATA["Площадь окраски + 3%"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0.412</Value>
+		</RealNum>
+		<String Name="mat_pokr">
+			<Description><![CDATA["Материал окраски"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["тип 1"]]></Value>
+		</String>
+		<Material Name="col_mat">
+			<Description><![CDATA["Покрытие декоративное"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>76</Value>
+		</Material>
+
+		<!-- fire_prof: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<String Name="fire_prof">
+			<Description><![CDATA["Группа конструкций"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_BoldName/>
+			</Flags>
+			<Value><![CDATA["Не требует защиты"]]></Value>
+		</String>
+		<Boolean Name="konstr_zash">
+			<Description><![CDATA["Конструктивная огнезащита"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Integer Name="n_storon">
+			<Description><![CDATA["Количество обогреваемых сторон"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</Integer>
+		<String Name="st_prof">
+			<Description><![CDATA["Степень огнестойкости"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["II"]]></Value>
+		</String>
+		<String Name="time_fire">
+			<Description><![CDATA["Требуемое время защиты от огня"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["90"]]></Value>
+		</String>
+		<String Name="priv_t">
+			<Description><![CDATA["Приведённая толщина металла, мм."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["-"]]></Value>
+		</String>
+		<String Name="t_pokr_txt">
+			<Description><![CDATA["Требуемая толщина огнезащиты, мм."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["Обеспечивается металлом"]]></Value>
+		</String>
+		<RealNum Name="r_fire">
+			<Description><![CDATA["Расход огнезащиты, кг"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<RealNum Name="Ase">
+			<Description><![CDATA["Площадь сечения, кв.см."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>-2.5e-5</Value>
+		</RealNum>
+		<String Name="perim_txt">
+			<Description><![CDATA["Обогреваемый периметр, cм"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["-"]]></Value>
+		</String>
+		<Length Name="perim">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Length>
+		<RealNum Name="sprof">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<RealNum Name="pprof">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<Integer Name="fire_mat">
+			<Description><![CDATA["Покрытие по огнестойкости"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>5</Value>
+		</Integer>
+		<Integer Name="fire_keep_mat">
+			<Description><![CDATA["Покрытие по огнезащите"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Integer>
+		<Material Name="gs_ifc_mat">
+			<Description><![CDATA["Перо фона штриховки"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>15</Value>
+		</Material>
+		<Boolean Name="gs_StorySensitive">
+			<Description><![CDATA["Изменять отображение на других этажах"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<String Name="gs_cutmode_bot">
+			<Description><![CDATA["3D-представление"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<String Name="gs_cutmode_up">
+			<Description><![CDATA["Покрытие IFC"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<Integer Name="stal_mat">
+			<Description><![CDATA["Покрытие по стали"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>2</Value>
+		</Integer>
+		<Integer Name="type_mat">
+			<Description><![CDATA["Покрытие по типу"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</Integer>
+		<Angle Name="gs_cutang1_bot">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Angle>
+		<Angle Name="gs_cutang2_bot">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Angle>
+		<Angle Name="gs_cutang3_up">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Angle>
+		<Angle Name="gs_cutang4_up">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Angle>
+		<Angle Name="temp_cutang1_bot">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>60</Value>
+		</Angle>
+		<Angle Name="temp_cutang2_bot">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>60</Value>
+		</Angle>
+		<Angle Name="temp_cutang3_up">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>60</Value>
+		</Angle>
+		<Angle Name="temp_cutang4_up">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>60</Value>
+		</Angle>
+		<Angle Name="ang">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Angle>
+		<Angle Name="ang_pl">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Angle>
+		<Angle Name="temp_ang">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>90</Value>
+		</Angle>
+		<String Name="gs_rot_axis">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+
+		<!-- inf: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="inf">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+		</Title>
+		<String Name="name_prof">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA["Лист"]]></Value>
+		</String>
+		<String Name="f_name">
+			<Description><![CDATA["Информация"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["Лист_спл.txt"]]></Value>
+		</String>
+		<Integer Name="sor">
+			<Description><![CDATA["Вид профиля"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>2</Value>
+		</Integer>
+		<Integer Name="n_stroki">
+			<Description><![CDATA["Имя файла сортамента"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>2</Value>
+		</Integer>
+		<String Name="control_sum">
+			<Description><![CDATA["Кол-во строк"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["17244718544963"]]></Value>
+		</String>
+		<PenColor Name="gs_cont_pen">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</PenColor>
+		<PenColor Name="gs_sec_pen">
+			<Description><![CDATA["Перо сечения"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</PenColor>
+		<FillPattern Name="gs_fill_type">
+			<Description><![CDATA["а в упрощённом виде"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>65</Value>
+		</FillPattern>
+		<FillPattern Name="gs_fill_type_sec">
+			<Description><![CDATA["Штриховка в сечении"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</FillPattern>
+		<PenColor Name="gs_fill_pen">
+			<Description><![CDATA["Перо контура"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>21</Value>
+		</PenColor>
+		<PenColor Name="gs_back_pen">
+			<Description><![CDATA["Образец штриховки"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>19</Value>
+		</PenColor>
+		<LineType Name="gs_line_type">
+			<Description><![CDATA["Тип линии"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</LineType>
+		<PenColor Name="gs_cont_pen_up">
+			<Description><![CDATA["Перо контура этажом выше"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</PenColor>
+		<FillPattern Name="gs_fill_type_up">
+			<Description><![CDATA["Образец штриховки этажом выше"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>65</Value>
+		</FillPattern>
+		<PenColor Name="gs_fill_pen_up">
+			<Description><![CDATA["Перо штриховки этажом выше"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</PenColor>
+		<PenColor Name="gs_back_pen_up">
+			<Description><![CDATA["Перо фона штриховки этажом выше"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</PenColor>
+		<LineType Name="gs_line_type_up">
+			<Description><![CDATA["Тип линии этажом выше"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>21</Value>
+		</LineType>
+		<PenColor Name="gs_cont_pen_down">
+			<Description><![CDATA["Перо контура этажом ниже"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</PenColor>
+		<FillPattern Name="gs_fill_type_down">
+			<Description><![CDATA["Образец штриховки этажом ниже"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>65</Value>
+		</FillPattern>
+		<PenColor Name="gs_fill_pen_down">
+			<Description><![CDATA["Перо штриховки этажом ниже"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</PenColor>
+		<PenColor Name="gs_back_pen_down">
+			<Description><![CDATA["Перо фона штриховки этажом ниже"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</PenColor>
+		<LineType Name="gs_line_type_down">
+			<Description><![CDATA["Тип линии этажом ниже"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>21</Value>
+		</LineType>
+
+		<!-- label_sp: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="label_sp">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+		</Title>
+		<Length Name="label_posxyz">
+			<Description><![CDATA["Привязка выносной надписи"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<ArrayValues FirstDimension="3" SecondDimension="0">
+				<AVal Row="1">0</AVal>
+				<AVal Row="2">0</AVal>
+				<AVal Row="3">0</AVal>
+			</ArrayValues>
+		</Length>
+		<Length Name="label_posang">
+			<Description><![CDATA["Угла поворота выносной надписи"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<ArrayValues FirstDimension="2" SecondDimension="0">
+				<AVal Row="1">0</AVal>
+				<AVal Row="2">0</AVal>
+			</ArrayValues>
+		</Length>
+		<Boolean Name="label_posset">
+			<Description><![CDATA["Есть данные для передачи в выноску"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<String Name="label_otm">
+			<Description><![CDATA["Типы высотной отметки"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<ArrayValues FirstDimension="1" SecondDimension="0">
+				<AVal Row="1"><![CDATA[""]]></AVal>
+			</ArrayValues>
+		</String>
+		<Length Name="label_otm_num">
+			<Description><![CDATA["Значения высотной отметки"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<ArrayValues FirstDimension="1" SecondDimension="0">
+				<AVal Row="1">0</AVal>
+			</ArrayValues>
+		</Length>
+		<Integer Name="type_sech">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>2</Value>
+		</Integer>
+		<String Name="gs_detlevel_3D">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["Детальный"]]></Value>
+		</String>
+		<Integer Name="gs_resol">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>10</Value>
+		</Integer>
+		<PenColor Name="only_axis_pen">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>220</Value>
+		</PenColor>
+		<LineType Name="only_axis_line">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</LineType>
+		<Integer Name="det_lvl">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Integer>
+		<Integer Name="type_axis">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Integer>
+
+		<!-- gs_3D_representation: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="gs_3D_representation">
+			<Description><![CDATA["Перо штриховки"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Hidden/>
+			</Flags>
+		</Title>
+		<Dictionary Name="sort_data">
+			<Description><![CDATA[""]]></Description>
+			<Value/>
+		</Dictionary>
+		<Dictionary Name="profile_data">
+			<Description><![CDATA[""]]></Description>
+			<Value/>
+		</Dictionary>
+		<String Name="el_views">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<ArrayValues FirstDimension="20" SecondDimension="0">
+				<AVal Row="1"><![CDATA[""]]></AVal>
+				<AVal Row="2"><![CDATA[""]]></AVal>
+				<AVal Row="3"><![CDATA[""]]></AVal>
+				<AVal Row="4"><![CDATA[""]]></AVal>
+				<AVal Row="5"><![CDATA[""]]></AVal>
+				<AVal Row="6"><![CDATA[""]]></AVal>
+				<AVal Row="7"><![CDATA[""]]></AVal>
+				<AVal Row="8"><![CDATA[""]]></AVal>
+				<AVal Row="9"><![CDATA[""]]></AVal>
+				<AVal Row="10"><![CDATA[""]]></AVal>
+				<AVal Row="11"><![CDATA[""]]></AVal>
+				<AVal Row="12"><![CDATA[""]]></AVal>
+				<AVal Row="13"><![CDATA[""]]></AVal>
+				<AVal Row="14"><![CDATA[""]]></AVal>
+				<AVal Row="15"><![CDATA[""]]></AVal>
+				<AVal Row="16"><![CDATA[""]]></AVal>
+				<AVal Row="17"><![CDATA[""]]></AVal>
+				<AVal Row="18"><![CDATA[""]]></AVal>
+				<AVal Row="19"><![CDATA[""]]></AVal>
+				<AVal Row="20"><![CDATA[""]]></AVal>
+			</ArrayValues>
+		</String>
+		<Integer Name="upr_mat">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>2</Value>
+		</Integer>
+		<String Name="upr_rezhim">
+			<Description><![CDATA["Режим упрощения"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA["Без отделки"]]></Value>
+		</String>
+		<Integer Name="upr_n">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>2</Value>
+		</Integer>
+		<Length Name="tolsh">
+			<Description><![CDATA["??"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0.01</Value>
+		</Length>
+		<String Name="syst_name">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Value><![CDATA[""]]></Value>
+		</String>
+	</Parameters>
+</ParamSection>
+
+<Copyright SectVersion="1" SectionFlags="0" SubIdent="0">
+	<Author></Author>
+	<License>
+		<Type>CC BY</Type>
+		<Version>4.0</Version>
+	</License>
+</Copyright>
+
+<Keywords SectVersion="1" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Keywords>
+
+<Comment SectVersion="20" SectionFlags="0" SubIdent="0">
+<![CDATA[]]>
+</Comment>
+
+</Symbol>
+
+
+
+
