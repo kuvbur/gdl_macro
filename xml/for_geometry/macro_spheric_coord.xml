@@ -24,6 +24,8 @@
 
 <Script_1D SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
+EPS = 0.0001
+
 TO_XYZ = 1
 TO_RPE = 2
 
@@ -79,16 +81,21 @@ goto "m_end"
 
 "xytorphi":
 	r = SQR(dx*dx+dy*dy+dz*dz)
-	if dx>0 and dy>=0 then phi = atn(dy/dx)
-	if dx>0 and dy<0 then phi = atn(dy/dx)+360
-	if dx<0 then phi = atn(dy/dx)+180
-	if dx=0 and dy>0 then phi = 90
-	if dx=0 and dy<0 then phi = 270
-	if dx=0 and dy=0 then phi = 0
-	if abs(r)>EPS then
-		etta = acs(dz/r)
+	if r>EPS then
+		if dx>0 and dy>=0 then phi = atn(dy/dx)
+		if dx>0 and dy<0 then phi = atn(dy/dx)+360
+		if dx<0 then phi = atn(dy/dx)+180
+		if abs(dx)<EPS and dy>0 then phi = 90
+		if abs(dx)<EPS and dy<0 then phi = 270
+		if abs(dx)<EPS and abs(dy)<EPS then phi = 0
+		if abs(r)>EPS then
+			etta = acs(dz/r)
+		else
+			etta = 0
+		endif
 	else
 		etta = 0
+		phi = 0
 	endif
 return
 

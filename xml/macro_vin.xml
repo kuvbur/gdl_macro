@@ -6,6 +6,10 @@
 </Ancestry>
 
 <CalledMacros SectVersion="2" SectionFlags="0" SubIdent="0">
+	<Macro>
+		<MName><![CDATA["Libraryflobals-as"]]></MName>
+		<MainGUID>A92312CB-4BB0-4C60-AD15-6ADCA079C655</MainGUID>
+	</Macro>
 </CalledMacros>
 
 <!-- GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT ===== GDL SCRIPT -->
@@ -168,7 +172,17 @@ if AngleT+90>270 and AngleT+90<360 and coord_vin[inx_vin][5]<0 then coord_vin[in
 
 has_autotext = (STRSTR(fstr_vin, "<")>0 and STRSTR(fstr_vin, ">")>0) or (STRSTR(sstr_vin, "<")>0 and STRSTR(sstr_vin, ">")>0)
 
-
+if strlen(Shrift)<EPS then
+	Shrift_t = "" : success = LIBRARYGLOBAL ("Libraryflobals-as", "Shrift", Shrift_t)
+	Shrift_razm_t = 0 : success = LIBRARYGLOBAL ("Libraryflobals-as", "Shrift_pos_razm", Shrift_razm_t)
+	Shrift_tip_t = 0 : success = LIBRARYGLOBAL ("Libraryflobals-as", "Shrift_pos_tip", Shrift_tip_t)
+	!Если прочитать не удалось - применим значения по умолчанию
+	if strlen(Shrift_t)<EPS then Shrift_t = "ISOCPEUR"
+	if Shrift_razm_t<EPS then Shrift_razm_t = 3
+	Shrift = Shrift_t
+	Shrift_razm = Shrift_razm_t
+	Shrift_tip = Shrift_tip_t
+endif
 ]]>
 </Script_1D>
 
@@ -699,11 +713,11 @@ endif
 		</String>
 		<String Name="Shrift">
 			<Description><![CDATA["Шрифт"]]></Description>
-			<Value><![CDATA["ISOCPEUR"]]></Value>
+			<Value><![CDATA[""]]></Value>
 		</String>
 		<RealNum Name="Shrift_razm">
 			<Description><![CDATA["Размер шрифта"]]></Description>
-			<Value>2.5</Value>
+			<Value>0</Value>
 		</RealNum>
 		<Integer Name="Shrift_tip">
 			<Description><![CDATA["Тип шрифта"]]></Description>

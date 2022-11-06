@@ -12,8 +12,10 @@
 	Revert ... macro_get_polylinelength.gsm
 	Revert ... macro_offset_poly.gsm
 	Revert ... macro_parse.gsm
+	Revert ... macro_polyline.gsm
 	Revert ... macro_rotate.gsm
 	Revert ... macro_spheric_coord.gsm
+	Copy ... README.md
 	Revert ... macro_get_param.gsm
 	Revert ... macro_line_break.gsm
 	Revert ... macro_replace_char.gsm

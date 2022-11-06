@@ -14,3 +14,5 @@ set "hsf_glob_dir=%cd%\Libraryflobals\hsf"
 
 "C:\Program Files\GRAPHISOFT\ARCHICAD 25\LP_XMLConverter.exe"  l2x -l UTF8 "%gdl_glob_dir%" "%xml_glob_dir%" >"%bat_dir%\_xml_glob_log.txt"
 "C:\Program Files\GRAPHISOFT\ARCHICAD 25\LP_XMLConverter.exe"  l2hsf "%hsf_glob_dir%" "%xml_glob_dir%" >"%bat_dir%\_hsf_glob_log.txt"
+
+"C:\Program Files\GRAPHISOFT\ARCHICAD 25\LP_XMLConverter.exe"  createcontainer  macro.lcf -compress 9 "%gdl_dir%">"%bat_dir%\_lcf_log.txt"

@@ -53,7 +53,7 @@
 			</Flags>
 			<Value>0</Value>
 		</Length>
-		<Dictionary Name="sort_data">
+		<Dictionary Name="sort_data_in">
 			<Description><![CDATA[""]]></Description>
 			<Value>
 				<String Name="ERROR"><![CDATA[""]]></String>

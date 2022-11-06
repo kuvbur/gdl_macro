@@ -8,8 +8,8 @@
 
 <CalledMacros SectVersion="2" SectionFlags="0" SubIdent="0">
 	<Macro>
-		<MName><![CDATA["LibraryGlobals_param_razm"]]></MName>
-		<MainGUID>A96D81EA-8A29-4739-924C-1B15080D01A1</MainGUID>
+		<MName><![CDATA["Libraryflobals-as"]]></MName>
+		<MainGUID>A92312CB-4BB0-4C60-AD15-6ADCA079C655</MainGUID>
 	</Macro>
 </CalledMacros>
 
@@ -26,10 +26,13 @@
 if abs(razm_l)<EPS then end
 PAPER_TO_MODEL = GLOB_SCALE / 1000
 
-for i=5 to 10
-	coord_razm[inx_razm][i] = coord_razms[inx_razm][i] * PAPER_TO_MODEL
-next i
+if use_hotspot then
+	for i=5 to 10
+		coord_razm[inx_razm][i] = coord_razms[inx_razm][i] * PAPER_TO_MODEL
+	next i
+endif
 
+!Отдаление текста, после которого начинается построение выноски
 accuare = 5*PAPER_TO_MODEL
 
 r = request ("View_Rotangle", "", _angleViewRot)
@@ -91,7 +94,7 @@ if use_hotspot then
 	HOTSPOT2 coord_razm[inx_razm][10]*sgnx, razm_l/4, unID, coord_razm[inx_razm][10], 2+1024, coord_razms[inx_razm][10]: unID=unID+1
 	HOTSPOT2 -1*sgnx, razm_l/4, unID, coord_razm[inx_razm][10], 3+1024, coord_razms[inx_razm][10]: unID=unID+1
 endif
-otstup = coord_razm[inx_razm][5]
+otstup = coord_razm[inx_razm][5] * PAPER_TO_MODEL
 otstup_vinosnih = coord_razm[inx_razm][10]
 if abs(zasechka) < EPS then zasechka = 1 * PAPER_TO_MODEL
 if abs(vistup) < EPS then vistup = zasechka
@@ -118,6 +121,25 @@ rot2 angle_zas
 line2 -zasechka, 0, zasechka, 0
 del 2
 
+!Подготовка текстовых блоков и определение необходимости сдвинуть текст
+txtv = fstr_razm : tblockname = "txt_razm_f" : name_style = "razm" : gosub "get_block"
+razm_f_l = 0.5*tbwidth
+if STRLEN(sstr_razm)>EPS then
+	txtv = sstr_razm : tblockname = "txt_razm_s" : name_style = "razm" : gosub "get_block"
+	razm_s_l = 0.5*tbwidth
+	razm_fs = max(razm_f_l, razm_s_l)
+else
+	razm_fs = razm_f_l
+	razm_s_l = 0
+endif
+
+!Сдвигаем первый размер, если нужно, и если положение текста не задано (равно 0)
+!Сдвигаем всегда вправо
+if (razm_fs-razm_l*0.5)>EPS and not(abs(coord_razm[inx_razm][6])>EPS or abs(coord_razm[inx_razm][7])>EPS) and not(abs(coord_razm[inx_razm][8])>EPS or abs(coord_razm[inx_razm][9])>EPS) then
+	coord_razm[inx_razm][7] = razm_fs+razm_l/2+zasechka
+	coord_razm[inx_razm][9] = razm_fs+razm_l/2+zasechka
+endif
+
 !!Первый размер
 if use_hotspot then
 	HOTSPOT2 otstup, razm_l/2+coord_razm[inx_razm][7], unID, coord_razm[inx_razm][6], 1+128+1024, coord_razms[inx_razm][6]: unID=unID+1
@@ -128,16 +150,13 @@ if use_hotspot then
 	HOTSPOT2 otstup+coord_razm[inx_razm][6], razm_l/2-1, unID, coord_razm[inx_razm][7], 3+1024, coord_razms[inx_razm][7]: unID=unID+1
 endif
 add2 otstup+coord_razm[inx_razm][6], razm_l/2+coord_razm[inx_razm][7]
-txtv = fstr_razm : tblockname = "txt_razm_f" : name_style = "razm" : gosub "get_block"
-RICHTEXT2 -dx_txt-tbheight/2, 0, tblockname
+RICHTEXT2 -dx_txt-tbheight/2, 0, "txt_razm_f"
 del 1
 !Выносная линия
-razm_f_l = 0.5*tbwidth
-if razm_l<razm_f_l or abs(coord_razm[inx_razm][6])>accuare or abs(coord_razm[inx_razm][7])-razm_l/2>accuare then
+if abs(coord_razm[inx_razm][6])>accuare or abs(coord_razm[inx_razm][7])-razm_l/2>EPS then
 	line2 otstup+coord_razm[inx_razm][6], razm_l/2+coord_razm[inx_razm][7]-razm_f_l, otstup+coord_razm[inx_razm][6], razm_l/2+coord_razm[inx_razm][7]+razm_f_l
 	line2 otstup+coord_razm[inx_razm][6], razm_l/2+coord_razm[inx_razm][7]-razm_f_l*sgn(coord_razm[inx_razm][7]), otstup, razm_l/2
 endif
-
 
 if STRLEN(sstr_razm)>EPS then
 	!Второй размер
@@ -150,12 +169,10 @@ if STRLEN(sstr_razm)>EPS then
 		HOTSPOT2 otstup+coord_razm[inx_razm][8], razm_l/2-1, unID, coord_razm[inx_razm][9], 3+1024, coord_razms[inx_razm][9]: unID=unID+1
 	endif
 	add2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9]
-	txtv = sstr_razm : tblockname = "txt_razm_s" : name_style = "razm" : gosub "get_block"
-	RICHTEXT2 dx_txt+tbheight/2, 0, tblockname
+	RICHTEXT2 dx_txt+tbheight/2, 0, "txt_razm_s"
 	del 1
 	!Выносная линия
-	razm_s_l = 0.5*tbwidth
-	if razm_l<razm_s_l or abs(coord_razm[inx_razm][8])>accuare or abs(coord_razm[inx_razm][9])-razm_l/2>accuare then
+	if abs(coord_razm[inx_razm][8])>accuare or abs(coord_razm[inx_razm][9])-razm_l/2>EPS then
 		line2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9]-razm_s_l, otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9]+razm_s_l
 		line2 otstup+coord_razm[inx_razm][8], razm_l/2+coord_razm[inx_razm][9]-razm_s_l*sgn(coord_razm[inx_razm][9]), otstup, razm_l/2
 	endif
@@ -244,16 +261,17 @@ i=i+1 : itype_razm[i]=2 : ttype_razm[i] = "По У"
 
 !Если имя шрифта пустое, то читаем его из ПМВ
 if strlen(Shrift)<EPS then
-	Shrift_t = "" : success = LIBRARYGLOBAL ("LibraryGlobals_param_razm", "Shrift", Shrift_t)
-	Shrift_razm_t = 0 : success = LIBRARYGLOBAL ("LibraryGlobals_param_razm", "Shrift_razm", Shrift_razm_t)
-	Shrift_tip_t = 0 : success = LIBRARYGLOBAL ("LibraryGlobals_param_razm", "Shrift_tip", Shrift_tip_t)
+	Shrift_t = "" : success = LIBRARYGLOBAL ("Libraryflobals-as", "Shrift", Shrift_t)
+	Shrift_razm_t = 0 : success = LIBRARYGLOBAL ("Libraryflobals-as", "Shrift_razm_razm", Shrift_razm_t)
+	Shrift_tip_t = 0 : success = LIBRARYGLOBAL ("Libraryflobals-as", "Shrift_razm_tip", Shrift_tip_t)
 	!Если прочитать не удалось - применим значения по умолчанию
 	if strlen(Shrift_t)<EPS then Shrift_t = "ISOCPEUR"
-	if Shrift_razm_t<EPS then Shrift_razm_t = 2.5
+	if Shrift_razm_t<EPS then Shrift_razm_t = 3
 	Shrift = Shrift_t
 	Shrift_razm = Shrift_razm_t
 	Shrift_tip = Shrift_tip_t
 endif
+
 
 !Если прилетел массив, не соответсвующий по размеру индексу - обновим его размер
 n_param = 10

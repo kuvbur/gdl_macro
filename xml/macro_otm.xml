@@ -7,8 +7,8 @@
 
 <CalledMacros SectVersion="2" SectionFlags="0" SubIdent="0">
 	<Macro>
-		<MName><![CDATA["LibraryGlobals_param_razm"]]></MName>
-		<MainGUID>00000000-0000-0000-0000-000000000000</MainGUID>
+		<MName><![CDATA["Libraryflobals-as"]]></MName>
+		<MainGUID>A92312CB-4BB0-4C60-AD15-6ADCA079C655</MainGUID>
 	</Macro>
 </CalledMacros>
 
@@ -22,6 +22,31 @@
 
 <Script_2D SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
+if polozh = 0 then polozh = 1
+h_polki=0
+n_preobr = 0
+
+if polozh = 1 then
+	anch_v = 9
+	anch_n = 3
+endif
+
+if polozh = 2 then
+	anch_v = 7
+	anch_n = 1
+endif
+
+if polozh = 3 then
+	anch_v = 9
+	anch_n = 3
+endif
+
+if polozh = 4 then
+	anch_v = 7
+	anch_n = 1
+	h_polki = 2
+endif
+
 PAPER_TO_MODEL = GLOB_SCALE / 1000
 DEFINE STYLE{2} "razm" Shrift , Shrift_razm, Shrift_tip
 txt_width = 0
@@ -41,20 +66,18 @@ if h_strelki<EPS then h_strelki = tbheight/2
 if vistup_strelki<EPS then vistup_strelki = h_strelki
 if dlin_vin<EPS then dlin_vin = txt_width
 
-add2 coord[1][1], coord[1][2]
+gosub "mulp" : n_preobr = n_preobr + n_mul
+add2 coord[1][1], coord[1][2] : n_preobr = n_preobr + 1
 line2 0,0,-dlin_polki,0
 line2 -dlin_polki+vistup_strelki,0,-dlin_polki+vistup_strelki-h_strelki,h_strelki
 line2 -dlin_polki+vistup_strelki,0,-dlin_polki+vistup_strelki+h_strelki,h_strelki
 h_polki=h_strelki
+
+
 for i=1 to vardim1(otm)
 	otmetka_v=otm[i][1]
 	otmetka_n=otm[i][2]
 	if strlen(otmetka_v)>EPS or strlen(otmetka_n)>EPS then
-		del top
-		add2 coord[1][1], coord[1][2]
-		if polozh = 2 then mul2 -1,1
-		if polozh = 3 then mul2 1,-1
-		if polozh = 4 then mul2 -1,-1
 		n = REQUEST("TEXTBLOCK_INFO", "otmetka_v"+str("%.0",i), width, height)
 		height = height * PAPER_TO_MODEL
 		h_polki = h_polki + height
@@ -62,26 +85,40 @@ for i=1 to vardim1(otm)
 		line2 -dlin_polki+vistup_strelki,0,-dlin_polki+vistup_strelki,h_polki
 		if strlen(otmetka_v)>EPS then
 			add2 -dlin_polki+vistup_strelki,h_polki
-			if polozh = 4 then mul2 -1,-1
-			if polozh = 3 then mul2 1,-1
-			RICHTEXT2 -2*PAPER_TO_MODEL, dx_txt,"otmetka_v"+str("%.0",i)
-			del top
+			gosub "mulp"
+			RICHTEXT2 -2*PAPER_TO_MODEL*sgnmulx, -dx_txt,"otmetka_v"+str("%.0",i)
+			del n_mul+1
 		endif
-		add2 coord[1][1], coord[1][2]
-		if polozh = 2 then mul2 -1,1
-		if polozh = 3 then mul2 1,-1
-		if polozh = 4 then mul2 -1,-1
 		if strlen(otmetka_n)>EPS then
 			add2 -dlin_polki+vistup_strelki,h_polki
-			if polozh = 4 then mul2 -1,-1
-			if polozh = 3 then mul2 1,-1
-			RICHTEXT2 -2*PAPER_TO_MODEL, dx_txt,"otmetka_n"+str("%.0",i)
-			del top
+			gosub "mulp"
+			RICHTEXT2 -2*PAPER_TO_MODEL*sgnmulx, dx_txt,"otmetka_n"+str("%.0",i)
+			del n_mul+1
 		endif
 	endif
 next i
 
+if n_preobr>EPS then del n_preobr
+	
 end
+
+"mulp":
+	sgnmulx = 1 : sgnmuly = 1
+	if polozh = 2 then 
+		sgnmulx = -1 : sgnmuly = 1
+	endif
+	if polozh = 3 then
+		sgnmulx = 1 : sgnmuly = -1
+	endif
+	if polozh = 4 then
+		sgnmulx = -1 : sgnmuly = -1
+	endif
+	n_mul = 0
+	if (sgnmulx<EPS or sgnmuly<EPS) and abs(sgnmulx)>EPS and abs(sgnmuly)>EPS then
+		mul2 sgnmulx, sgnmuly
+		n_mul = 1
+	endif
+return
 
 "get_block":
 	width_factor = 1
@@ -121,42 +158,16 @@ i=i+1 : ipolozh[i]=3 : tpolozh[i] = "Влево-вниз"
 i=i+1 : ipolozh[i]=4 : tpolozh[i] = "Вправо-вниз"
 
 if strlen(Shrift)<EPS then
-	Shrift_t = "" : success = LIBRARYGLOBAL ("LibraryGlobals_param_razm", "Shrift", Shrift_t)
-	Shrift_razm_t = 0 : success = LIBRARYGLOBAL ("LibraryGlobals_param_razm", "Shrift_razm", Shrift_razm_t)
-	Shrift_tip_t = 0 : success = LIBRARYGLOBAL ("LibraryGlobals_param_razm", "Shrift_tip", Shrift_tip_t)
+	Shrift_t = "" : success = LIBRARYGLOBAL ("Libraryflobals-as", "Shrift", Shrift_t)
+	Shrift_razm_t = 0 : success = LIBRARYGLOBAL ("Libraryflobals-as", "Shrift_otm_razm", Shrift_razm_t)
+	Shrift_tip_t = 0 : success = LIBRARYGLOBAL ("Libraryflobals-as", "Shrift_otm_tip", Shrift_tip_t)
 	!Если прочитать не удалось - применим значения по умолчанию
 	if strlen(Shrift_t)<EPS then Shrift_t = "ISOCPEUR"
-	if Shrift_razm_t<EPS then Shrift_razm_t = 2.5
+	if Shrift_razm_t<EPS then Shrift_razm_t = 3
 	Shrift = Shrift_t
 	Shrift_razm = Shrift_razm_t
 	Shrift_tip = Shrift_tip_t
 endif
-
-if polozh = 0 then polozh = 1
-h_polki=0
-if polozh = 1 then
-	anch_v = 9
-	anch_n = 3
-endif
-if polozh = 2 then
-	anch_v = 9
-	anch_n = 3
-	mul2 -1,1
-endif
-
-if polozh = 3 then
-	anch_v = 9
-	anch_n = 3
-	mul2 1,-1
-endif
-
-if polozh = 4 then
-	anch_v = 7
-	anch_n = 1
-	mul2 -1,-1
-	h_polki = 2
-endif
-
 
 ]]>
 </Script_1D>
@@ -294,14 +305,14 @@ values{2} "polozh" ipolozh, tpolozh
 			<Flags>
 				<ParFlg_Child/>
 			</Flags>
-			<Value><![CDATA["ISOCPEUR"]]></Value>
+			<Value><![CDATA[""]]></Value>
 		</String>
 		<RealNum Name="Shrift_razm">
 			<Description><![CDATA["Размер шрифта"]]></Description>
 			<Flags>
 				<ParFlg_Child/>
 			</Flags>
-			<Value>2.5</Value>
+			<Value>0</Value>
 		</RealNum>
 		<Integer Name="Shrift_tip">
 			<Description><![CDATA["Тип (обычный, курсив, жирный)"]]></Description>

@@ -100,14 +100,14 @@
 			<Flags>
 				<ParFlg_Child/>
 			</Flags>
-			<Value><![CDATA["ISOCPEUR"]]></Value>
+			<Value><![CDATA[""]]></Value>
 		</String>
 		<RealNum Name="Shrift_razm">
 			<Description><![CDATA["Размер шрифта"]]></Description>
 			<Flags>
 				<ParFlg_Child/>
 			</Flags>
-			<Value>2.5</Value>
+			<Value>0</Value>
 		</RealNum>
 		<Integer Name="Shrift_tip">
 			<Description><![CDATA["Тип (обычный, курсив, жирный)"]]></Description>

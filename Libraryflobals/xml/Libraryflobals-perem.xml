@@ -28,6 +28,7 @@
 <![CDATA[
 FILE_DEPENDENCE "перемычки фибробетон.txt"
 FILE_DEPENDENCE "перемычки.txt"
+FILE_DEPENDENCE "перемычки уголки.txt"
 
 EPS = 0.0001
 dim t_type_perem[]
@@ -136,6 +137,27 @@ sy = sy + 25: UI_OUTFIELD	`Информация в ведомости`,	sx,	sy,	
 sy = sy + 25: UI_OUTFIELD	`Текст в отметке`,	sx,	sy,	145,	20
 			  UI_INFIELD	"otm_txt_",	sx+150,	sy-3, 120,	20
 
+! =============================================================================
+! Настройки шрифта
+sy = sy + 30
+ui_outfield `Шрифт размеров в каталогах`, sx, sy, 200, 18
+sy = sy + 20
+
+UI_INFIELD	"Shrift_from_as", sx, sy, 20, 18
+ui_outfield `Брать настройки из АС_Общие параметры`, sx+25, sy, 240, 18
+
+sy = sy + 20
+UI_INFIELD	"Shrift", sx, sy, 270, 18
+sy = sy + 30
+	ui_outfield `Текст отметки`, sx, sy, 80, 18
+	UI_INFIELD	"Shrift_otm_tip", sx+90, sy, 120, 18
+	UI_INFIELD	"Shrift_otm_razm", sx+90+130, sy, 50, 18
+sy = sy + 30
+	ui_outfield `Текст размеров`, sx, sy, 85, 18
+	UI_INFIELD	"Shrift_razm_tip", sx+90, sy, 120, 18
+	UI_INFIELD	"Shrift_razm_razm", sx+90+130, sy, 50, 18
+! =============================================================================
+
 !
 !sy = sy + 25: UI_OUTFIELD	`Перо сечения стен`,	sx,	sy,	180,	20
 !			  UI_INFIELD	"perem_ved_wall_pen",	sx+180,	sy-3, 40,	20
@@ -193,6 +215,30 @@ sy = sy + 25: UI_OUTFIELD	`Перо фона штриховки`,	sx,	sy,	180,	2
 
 <Script_VL SectVersion="20" SectionFlags="0" SubIdent="0">
 <![CDATA[
+dim ttype_shrift_tip[]
+dim itype_shrift_tip[] : i=0
+i=i+1 : itype_shrift_tip[i]=0 : ttype_shrift_tip[i] = "Обычный"
+i=i+1 : itype_shrift_tip[i]=1 : ttype_shrift_tip[i] = "Жирный(Ж)"
+i=i+1 : itype_shrift_tip[i]=2 : ttype_shrift_tip[i] = "Курсив(К)"
+i=i+1 : itype_shrift_tip[i]=4 : ttype_shrift_tip[i] = "Подчеркнутый(П)"
+i=i+1 : itype_shrift_tip[i]=3 : ttype_shrift_tip[i] = "Ж+К"
+i=i+1 : itype_shrift_tip[i]=5 : ttype_shrift_tip[i] = "Ж+П"
+i=i+1 : itype_shrift_tip[i]=6 : ttype_shrift_tip[i] = "К+П"
+i=i+1 : itype_shrift_tip[i]=7 : ttype_shrift_tip[i] = "Ж+К+П"
+
+values{2} "Shrift_otm_tip" itype_shrift_tip, ttype_shrift_tip
+values{2} "Shrift_razm_tip" itype_shrift_tip, ttype_shrift_tip
+
+values "Shrift_otm_razm" range[2,]
+values "Shrift_razm_razm" range[2,]
+
+dim fontnames[]
+n = REQUEST ("FONTNAMES_LIST", "", fontnames)
+values "Shrift" fontnames, CUSTOM
+
+if Shrift_from_as then LOCK "Shrift_otm_tip", "Shrift_razm_tip", "Shrift_otm_razm", "Shrift_razm_razm", "Shrift"
+
+
 PARAMETERS type_perem = t_type_perem
 values{2} "show_perem_2d" ishow_perem, tshow_perem
 values{2} "show_perem_3d" ishow_perem, tshow_perem
@@ -250,6 +296,7 @@ endif
 	dim vis_m_br[]
 	dim nagr_m_br[]
 	dim ves_m_br[]
+	dim gost_m_br[] : gost_m_br[1] = ""
 	ch3=OPEN("TEXT","перемычки.txt","SEPARATOR='\t',MODE=RO,LIBRARY")
 	i = 1: n=1: j=1 : v0="" : v1=0 : v2=0 : v3=0 : v4=0 : v5=0
 	"nxt":
@@ -261,9 +308,10 @@ endif
 				dlin_m_br[j]=v1/1000
 				tolsh_m_br[j]=v2/1000
 				vis_m_br[j]=v3/1000
-				max_pr_m_br[j] = (v1-240)/1000
+				max_pr_m_br[j] = 0
 				nagr_m_br[j]=v4
 				ves_m_br[j]=v5
+				gost_m_br[j] = "ГОСТ 948-2016"
 				j = j + 1
 			endif
 		endif
@@ -280,10 +328,9 @@ endif
 		PARAMETERS nagr_m_br=nagr_m_br
 		PARAMETERS ves_m_br=ves_m_br
 		PARAMETERS max_pr_m_br=max_pr_m_br
+		PARAMETERS gost_m_br = gost_m_br
 	endif
-	PARAMETERS gost_br = "ГОСТ 948-2016"
 !--------------------------------------------
-
 
 !---- Чтение сортамента фибробетонных перемычек ----
 	dim naen_m_fb[] : naen_m_fb[1] = ""
@@ -293,6 +340,7 @@ endif
 	dim vis_m_fb[]
 	dim nagr_m_fb[]
 	dim ves_m_fb[]
+	dim gost_m_fb[] : gost_m_fb[1] = ""
 	ch3=OPEN("TEXT","перемычки фибробетон.txt","SEPARATOR='\t',MODE=RO,LIBRARY")
 	i = 1: n=1: j=1 : v0="" : v1=0 : v2=0 : v3=0 : v4=0 : v5=0 : v6=0
 	"nxt2":
@@ -306,6 +354,7 @@ endif
 			nagr_m_fb[j]=v4
 			ves_m_fb[j]=v5
 			max_pr_m_fb[j]=v6/1000
+			gost_m_fb[j]="ТУ 5828-002-80392712-2015"
 			j = j + 1
 		endif
 		i = i + 1
@@ -321,8 +370,8 @@ endif
 		PARAMETERS nagr_m_fb=nagr_m_fb
 		PARAMETERS ves_m_fb=ves_m_fb
 		PARAMETERS max_pr_m_fb=max_pr_m_fb
+		PARAMETERS gost_m_fb = gost_m_fb
 	endif
-	PARAMETERS gost_fb = "ТУ 5828-002-80392712-2015"
 !--------------------------------------------
 
 !---- Чтение сортамента уголков ----
@@ -362,8 +411,6 @@ endif
 	endif
 !--------------------------------------------
 
-
-
 dim mark_perem[]
 i=0
 i = i + 1 : mark_perem[i] = "Любая брусковая"
@@ -386,6 +433,56 @@ i = i + 1 : mark_perem[i] = "4ПБФ"
 i = i + 1 : mark_perem[i] = "5ПБФ"
 i = i + 1 : mark_perem[i] = "6ПБФ"
 i = i + 1 : mark_perem[i] = "7ПБФ"
+
+
+!---- Чтение пользовательского сортамента ----
+	dim naen_m_u[] : naen_m_u[1] = ""
+	dim dlin_m_u[]
+	dim max_pr_m_u[]
+	dim tolsh_m_u[]
+	dim vis_m_u[]
+	dim nagr_m_u[]
+	dim ves_m_u[]
+	dim gost_m_u[] : gost_m_u[1] = ""
+	ch5=OPEN("TEXT","перемычки custom.txt","SEPARATOR='\t',MODE=RO,LIBRARY")
+	if ch5>EPS then
+		i = 1: n=1: j=1 : v0="" : v1=0 : v2=0 : v3=0 : v4=0 : v5=0 : v6=0 : v7=""
+		"nxt5":
+		if n <> -1 then
+			n=INPUT(ch5,i,1,v0,v1,v2,v3,v4,v5,v6,v7)
+			if vartype(v0)=2 then
+				naen_m_u[j]=v0
+				dlin_m_u[j]=v1/1000
+				tolsh_m_u[j]=v2/1000
+				vis_m_u[j]=v3/1000
+				nagr_m_u[j]=v4
+				ves_m_u[j]=v5
+				max_pr_m_u[j] = v6/1000
+				gost_m_u[j] = v7
+				j = j + 1
+			endif
+			i = i + 1
+			goto "nxt5"
+		else
+			close (ch5)
+		endif
+		if j>1 then
+			PARAMETERS naen_m_u=naen_m_u
+			PARAMETERS dlin_m_u=dlin_m_u
+			PARAMETERS tolsh_m_u=tolsh_m_u
+			PARAMETERS vis_m_u=vis_m_u
+			PARAMETERS nagr_m_u=nagr_m_u
+			PARAMETERS ves_m_u=ves_m_u
+			PARAMETERS max_pr_m_u=max_pr_m_u
+			PARAMETERS gost_m_u = gost_m_u
+		endif
+		i = vardim1(mark_perem) + 1 : mark_perem[i] = "Любой пользовательский"
+		has_custom_perem = 1
+	else
+		has_custom_perem = 0
+	endif
+	PARAMETERS has_custom_perem = has_custom_perem
+!--------------------------------------------
 PARAMETERS mark_perem = mark_perem
 
 dim naen_m[] : naen_m[1] = ""
@@ -406,6 +503,8 @@ for i=1 to vardim1(naen_m_br)
 	nagr_m[j]=nagr_m_br[i]
 	ves_m[j]=ves_m_br[i]
 	max_pr_m[j]=max_pr_m_br[i]
+	gost_m[j] = gost_m_br[i]
+	type_perem_m[j] = 1
 next i
 
 for i=1 to vardim1(naen_m_fb)
@@ -417,7 +516,25 @@ for i=1 to vardim1(naen_m_fb)
 	nagr_m[j]=nagr_m_fb[i]
 	ves_m[j]=ves_m_fb[i]
 	max_pr_m[j]=max_pr_m_fb[i]
+	gost_m[j] = gost_m_fb[i]
+	type_perem_m[j] = 2
 next i
+
+if has_custom_perem then
+	for i=1 to vardim1(naen_m_u)
+		j = j + 1
+		naen_m[j]=naen_m_u[i]
+		dlin_m[j]=dlin_m_u[i]
+		tolsh_m[j]=tolsh_m_u[i]
+		vis_m[j]=vis_m_u[i]
+		nagr_m[j]=nagr_m_u[i]
+		ves_m[j]=ves_m_u[i]
+		max_pr_m[j]=max_pr_m_u[i]
+		gost_m[j] = gost_m_u[i]
+		type_perem_m[j] = 3
+	next i
+endif
+
 
 if j>1 then
 	PARAMETERS naen_m=naen_m
@@ -427,6 +544,8 @@ if j>1 then
 	PARAMETERS nagr_m=nagr_m
 	PARAMETERS ves_m=ves_m
 	PARAMETERS max_pr_m=max_pr_m
+	PARAMETERS gost_m=gost_m
+	PARAMETERS type_perem_m = type_perem_m
 endif
 
 end
@@ -715,7 +834,7 @@ return
 		</Integer>
 		<String Name="mark_perem">
 			<Description><![CDATA[""]]></Description>
-			<ArrayValues FirstDimension="20" SecondDimension="0">
+			<ArrayValues FirstDimension="21" SecondDimension="0">
 				<AVal Row="1"><![CDATA["Любая брусковая"]]></AVal>
 				<AVal Row="2"><![CDATA["Любая фибро"]]></AVal>
 				<AVal Row="3"><![CDATA["1ПБ"]]></AVal>
@@ -736,6 +855,7 @@ return
 				<AVal Row="18"><![CDATA["5ПБФ"]]></AVal>
 				<AVal Row="19"><![CDATA["6ПБФ"]]></AVal>
 				<AVal Row="20"><![CDATA["7ПБФ"]]></AVal>
+				<AVal Row="21"><![CDATA["Любой пользовательский"]]></AVal>
 			</ArrayValues>
 		</String>
 		<String Name="otm_txt_">
@@ -824,7 +944,7 @@ return
 		<Length Name="dlin_m_br">
 			<Description><![CDATA["Длина"]]></Description>
 			<ArrayValues FirstDimension="68" SecondDimension="0">
-				<AVal Row="1">1.33</AVal>
+				<AVal Row="1">1.03</AVal>
 				<AVal Row="2">1.29</AVal>
 				<AVal Row="3">1.55</AVal>
 				<AVal Row="4">1.03</AVal>
@@ -897,74 +1017,74 @@ return
 		<Length Name="max_pr_m_br">
 			<Description><![CDATA[""]]></Description>
 			<ArrayValues FirstDimension="68" SecondDimension="0">
-				<AVal Row="1">1.09</AVal>
-				<AVal Row="2">1.05</AVal>
-				<AVal Row="3">1.31</AVal>
-				<AVal Row="4">0.79</AVal>
-				<AVal Row="5">1.05</AVal>
-				<AVal Row="6">1.31</AVal>
-				<AVal Row="7">1.44</AVal>
-				<AVal Row="8">1.7</AVal>
-				<AVal Row="9">1.96</AVal>
-				<AVal Row="10">2.22</AVal>
-				<AVal Row="11">2.35</AVal>
-				<AVal Row="12">2.61</AVal>
-				<AVal Row="13">2.74</AVal>
-				<AVal Row="14">1.05</AVal>
-				<AVal Row="15">1.31</AVal>
-				<AVal Row="16">1.57</AVal>
-				<AVal Row="17">1.57</AVal>
-				<AVal Row="18">1.83</AVal>
-				<AVal Row="19">2.22</AVal>
-				<AVal Row="20">2.48</AVal>
-				<AVal Row="21">2.74</AVal>
-				<AVal Row="22">3.13</AVal>
-				<AVal Row="23">3.39</AVal>
-				<AVal Row="24">3.65</AVal>
-				<AVal Row="25">2.74</AVal>
-				<AVal Row="26">4.17</AVal>
-				<AVal Row="27">4.56</AVal>
-				<AVal Row="28">5.72</AVal>
-				<AVal Row="29">1.57</AVal>
-				<AVal Row="30">1.83</AVal>
-				<AVal Row="31">1.83</AVal>
-				<AVal Row="32">1.83</AVal>
-				<AVal Row="33">2.22</AVal>
-				<AVal Row="34">2.22</AVal>
-				<AVal Row="35">2.22</AVal>
-				<AVal Row="36">2.48</AVal>
-				<AVal Row="37">2.48</AVal>
-				<AVal Row="38">2.48</AVal>
-				<AVal Row="39">2.74</AVal>
-				<AVal Row="40">2.74</AVal>
-				<AVal Row="41">2.74</AVal>
-				<AVal Row="42">2.87</AVal>
-				<AVal Row="43">2.22</AVal>
-				<AVal Row="44">2.48</AVal>
-				<AVal Row="45">2.74</AVal>
-				<AVal Row="46">3.13</AVal>
-				<AVal Row="47">3.39</AVal>
-				<AVal Row="48">3.26</AVal>
-				<AVal Row="49">5.71</AVal>
-				<AVal Row="50">0.92</AVal>
-				<AVal Row="51">1.18</AVal>
-				<AVal Row="52">1.44</AVal>
-				<AVal Row="53">1.57</AVal>
-				<AVal Row="54">1.83</AVal>
-				<AVal Row="55">2.09</AVal>
-				<AVal Row="56">2.22</AVal>
-				<AVal Row="57">2.74</AVal>
-				<AVal Row="58">1.18</AVal>
-				<AVal Row="59">1.31</AVal>
-				<AVal Row="60">1.57</AVal>
-				<AVal Row="61">1.83</AVal>
-				<AVal Row="62">2.48</AVal>
-				<AVal Row="63">0.92</AVal>
-				<AVal Row="64">1.18</AVal>
-				<AVal Row="65">1.44</AVal>
-				<AVal Row="66">2.09</AVal>
-				<AVal Row="67">2.74</AVal>
-				<AVal Row="68">2.74</AVal>
+				<AVal Row="1">0</AVal>
+				<AVal Row="2">0</AVal>
+				<AVal Row="3">0</AVal>
+				<AVal Row="4">0</AVal>
+				<AVal Row="5">0</AVal>
+				<AVal Row="6">0</AVal>
+				<AVal Row="7">0</AVal>
+				<AVal Row="8">0</AVal>
+				<AVal Row="9">0</AVal>
+				<AVal Row="10">0</AVal>
+				<AVal Row="11">0</AVal>
+				<AVal Row="12">0</AVal>
+				<AVal Row="13">0</AVal>
+				<AVal Row="14">0</AVal>
+				<AVal Row="15">0</AVal>
+				<AVal Row="16">0</AVal>
+				<AVal Row="17">0</AVal>
+				<AVal Row="18">0</AVal>
+				<AVal Row="19">0</AVal>
+				<AVal Row="20">0</AVal>
+				<AVal Row="21">0</AVal>
+				<AVal Row="22">0</AVal>
+				<AVal Row="23">0</AVal>
+				<AVal Row="24">0</AVal>
+				<AVal Row="25">0</AVal>
+				<AVal Row="26">0</AVal>
+				<AVal Row="27">0</AVal>
+				<AVal Row="28">0</AVal>
+				<AVal Row="29">0</AVal>
+				<AVal Row="30">0</AVal>
+				<AVal Row="31">0</AVal>
+				<AVal Row="32">0</AVal>
+				<AVal Row="33">0</AVal>
+				<AVal Row="34">0</AVal>
+				<AVal Row="35">0</AVal>
+				<AVal Row="36">0</AVal>
+				<AVal Row="37">0</AVal>
+				<AVal Row="38">0</AVal>
+				<AVal Row="39">0</AVal>
+				<AVal Row="40">0</AVal>
+				<AVal Row="41">0</AVal>
+				<AVal Row="42">0</AVal>
+				<AVal Row="43">0</AVal>
+				<AVal Row="44">0</AVal>
+				<AVal Row="45">0</AVal>
+				<AVal Row="46">0</AVal>
+				<AVal Row="47">0</AVal>
+				<AVal Row="48">0</AVal>
+				<AVal Row="49">0</AVal>
+				<AVal Row="50">0</AVal>
+				<AVal Row="51">0</AVal>
+				<AVal Row="52">0</AVal>
+				<AVal Row="53">0</AVal>
+				<AVal Row="54">0</AVal>
+				<AVal Row="55">0</AVal>
+				<AVal Row="56">0</AVal>
+				<AVal Row="57">0</AVal>
+				<AVal Row="58">0</AVal>
+				<AVal Row="59">0</AVal>
+				<AVal Row="60">0</AVal>
+				<AVal Row="61">0</AVal>
+				<AVal Row="62">0</AVal>
+				<AVal Row="63">0</AVal>
+				<AVal Row="64">0</AVal>
+				<AVal Row="65">0</AVal>
+				<AVal Row="66">0</AVal>
+				<AVal Row="67">0</AVal>
+				<AVal Row="68">0</AVal>
 			</ArrayValues>
 		</Length>
 		<Length Name="tolsh_m_br">
@@ -1262,6 +1382,79 @@ return
 		<String Name="gost_br">
 			<Description><![CDATA[""]]></Description>
 			<Value><![CDATA["ГОСТ 948-2016"]]></Value>
+		</String>
+		<String Name="gost_m_br">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="68" SecondDimension="0">
+				<AVal Row="1"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="2"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="3"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="4"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="5"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="6"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="7"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="8"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="9"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="10"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="11"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="12"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="13"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="14"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="15"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="16"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="17"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="18"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="19"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="20"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="21"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="22"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="23"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="24"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="25"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="26"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="27"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="28"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="29"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="30"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="31"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="32"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="33"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="34"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="35"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="36"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="37"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="38"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="39"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="40"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="41"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="42"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="43"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="44"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="45"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="46"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="47"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="48"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="49"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="50"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="51"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="52"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="53"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="54"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="55"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="56"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="57"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="58"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="59"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="60"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="61"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="62"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="63"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="64"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="65"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="66"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="67"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="68"><![CDATA["ГОСТ 948-2016"]]></AVal>
+			</ArrayValues>
 		</String>
 
 		<!-- Libraryflo_B: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
@@ -1721,6 +1914,70 @@ return
 			<Description><![CDATA[""]]></Description>
 			<Value><![CDATA["ТУ 5828-002-80392712-2015"]]></Value>
 		</String>
+		<String Name="gost_m_fb">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="59" SecondDimension="0">
+				<AVal Row="1"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="2"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="3"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="4"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="5"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="6"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="7"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="8"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="9"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="10"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="11"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="12"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="13"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="14"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="15"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="16"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="17"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="18"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="19"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="20"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="21"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="22"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="23"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="24"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="25"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="26"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="27"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="28"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="29"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="30"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="31"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="32"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="33"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="34"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="35"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="36"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="37"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="38"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="39"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="40"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="41"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="42"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="43"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="44"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="45"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="46"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="47"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="48"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="49"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="50"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="51"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="52"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="53"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="54"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="55"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="56"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="57"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="58"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="59"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+			</ArrayValues>
+		</String>
 
 		<!-- Libraryflo_C: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
 
@@ -1729,7 +1986,7 @@ return
 		</Title>
 		<String Name="naen_m">
 			<Description><![CDATA[""]]></Description>
-			<ArrayValues FirstDimension="127" SecondDimension="0">
+			<ArrayValues FirstDimension="181" SecondDimension="0">
 				<AVal Row="1"><![CDATA["1ПБ10-1"]]></AVal>
 				<AVal Row="2"><![CDATA["1ПБ13-1"]]></AVal>
 				<AVal Row="3"><![CDATA["1ПБ16-1"]]></AVal>
@@ -1857,12 +2114,66 @@ return
 				<AVal Row="125"><![CDATA["7ПБФ27-4"]]></AVal>
 				<AVal Row="126"><![CDATA["7ПБФ30-4"]]></AVal>
 				<AVal Row="127"><![CDATA["7ПБФ30-4"]]></AVal>
+				<AVal Row="128"><![CDATA["ПП 12.4.2-ЗЯ"]]></AVal>
+				<AVal Row="129"><![CDATA["ПП 14.4.2-Зя"]]></AVal>
+				<AVal Row="130"><![CDATA["ПП 15.4.2-2я"]]></AVal>
+				<AVal Row="131"><![CDATA["ПП 17.4.2-2яу"]]></AVal>
+				<AVal Row="132"><![CDATA["ПП 17.4.2-2я"]]></AVal>
+				<AVal Row="133"><![CDATA["ПП 19.4.2-2я"]]></AVal>
+				<AVal Row="134"><![CDATA["ПП 20.4.2-1я"]]></AVal>
+				<AVal Row="135"><![CDATA["ПП 21.4.2-1я"]]></AVal>
+				<AVal Row="136"><![CDATA["ПП 22.4.2-1я"]]></AVal>
+				<AVal Row="137"><![CDATA["ПП 24.4.2-1я"]]></AVal>
+				<AVal Row="138"><![CDATA["ПП 25.4.2-1я"]]></AVal>
+				<AVal Row="139"><![CDATA["ПП 28.4.2-1я"]]></AVal>
+				<AVal Row="140"><![CDATA["ПП 30.4.2-1я"]]></AVal>
+				<AVal Row="141"><![CDATA["ЗПП 12-3я"]]></AVal>
+				<AVal Row="142"><![CDATA["ЗПП 14-Зя"]]></AVal>
+				<AVal Row="143"><![CDATA["ЗПП 17-2я"]]></AVal>
+				<AVal Row="144"><![CDATA["ЗПП 19-2я"]]></AVal>
+				<AVal Row="145"><![CDATA["ЗПП 22-1я"]]></AVal>
+				<AVal Row="146"><![CDATA["ЗПП 25-1я"]]></AVal>
+				<AVal Row="147"><![CDATA["ЗПП 28-1я"]]></AVal>
+				<AVal Row="148"><![CDATA["ЗПП 30-1я"]]></AVal>
+				<AVal Row="149"><![CDATA["ЗПП 12-0,2як"]]></AVal>
+				<AVal Row="150"><![CDATA["ЗПП 14-0,2як"]]></AVal>
+				<AVal Row="151"><![CDATA["ЗПП 15-0,2як"]]></AVal>
+				<AVal Row="152"><![CDATA["ЗПП 17-0.1як"]]></AVal>
+				<AVal Row="153"><![CDATA["ЗПП 19-0.1як"]]></AVal>
+				<AVal Row="154"><![CDATA["ЗПП 22-0.1як"]]></AVal>
+				<AVal Row="155"><![CDATA["ПБ 12.2.4-Зя"]]></AVal>
+				<AVal Row="156"><![CDATA["ПБ 14.2.4-Зя"]]></AVal>
+				<AVal Row="157"><![CDATA["ПБ 15.2.4-Зя"]]></AVal>
+				<AVal Row="158"><![CDATA["ПБ 17.2.4-Зяу"]]></AVal>
+				<AVal Row="159"><![CDATA["ПБ 17.2.4-Зя"]]></AVal>
+				<AVal Row="160"><![CDATA["ПБ 19.2.4- Зя"]]></AVal>
+				<AVal Row="161"><![CDATA["ПБ 20.2.4-2я"]]></AVal>
+				<AVal Row="162"><![CDATA["ПБ 21.2.4-2я"]]></AVal>
+				<AVal Row="163"><![CDATA["ПБ 22.2.4-2я"]]></AVal>
+				<AVal Row="164"><![CDATA["ПБ 24.2.4-2я"]]></AVal>
+				<AVal Row="165"><![CDATA["ПБ 25.2.4-2я"]]></AVal>
+				<AVal Row="166"><![CDATA["ПБ 28.2.4-2я"]]></AVal>
+				<AVal Row="167"><![CDATA["ПБ 30.2.4-2я"]]></AVal>
+				<AVal Row="168"><![CDATA["2ПБ 12-Зя"]]></AVal>
+				<AVal Row="169"><![CDATA["2ПБ 14-Зя"]]></AVal>
+				<AVal Row="170"><![CDATA["2ПБ 17-Зя"]]></AVal>
+				<AVal Row="171"><![CDATA["2ПБ 19-Зя"]]></AVal>
+				<AVal Row="172"><![CDATA["2ПБ 22-2я"]]></AVal>
+				<AVal Row="173"><![CDATA["2ПБ 25-2я"]]></AVal>
+				<AVal Row="174"><![CDATA["2ПБ 28-2я"]]></AVal>
+				<AVal Row="175"><![CDATA["2ПБ 30-2я"]]></AVal>
+				<AVal Row="176"><![CDATA["2ПБ 12-0,2як"]]></AVal>
+				<AVal Row="177"><![CDATA["2ПБ 14-0,2як"]]></AVal>
+				<AVal Row="178"><![CDATA["2ПБ 15-0,1як"]]></AVal>
+				<AVal Row="179"><![CDATA["2ПБ 17-0.1як"]]></AVal>
+				<AVal Row="180"><![CDATA["2ПБ 19-0,1як"]]></AVal>
+				<AVal Row="181"><![CDATA["2ПБ 22-0,1як"]]></AVal>
 			</ArrayValues>
 		</String>
 		<Length Name="dlin_m">
 			<Description><![CDATA[""]]></Description>
-			<ArrayValues FirstDimension="127" SecondDimension="0">
-				<AVal Row="1">1.33</AVal>
+			<ArrayValues FirstDimension="181" SecondDimension="0">
+				<AVal Row="1">1.03</AVal>
 				<AVal Row="2">1.29</AVal>
 				<AVal Row="3">1.55</AVal>
 				<AVal Row="4">1.03</AVal>
@@ -1989,79 +2300,133 @@ return
 				<AVal Row="125">2.7</AVal>
 				<AVal Row="126">3</AVal>
 				<AVal Row="127">3</AVal>
+				<AVal Row="128">1.21</AVal>
+				<AVal Row="129">1.41</AVal>
+				<AVal Row="130">1.5</AVal>
+				<AVal Row="131">1.67</AVal>
+				<AVal Row="132">1.71</AVal>
+				<AVal Row="133">1.91</AVal>
+				<AVal Row="134">2</AVal>
+				<AVal Row="135">2.11</AVal>
+				<AVal Row="136">2.21</AVal>
+				<AVal Row="137">2.41</AVal>
+				<AVal Row="138">2.51</AVal>
+				<AVal Row="139">2.81</AVal>
+				<AVal Row="140">3.01</AVal>
+				<AVal Row="141">1.21</AVal>
+				<AVal Row="142">1.41</AVal>
+				<AVal Row="143">1.71</AVal>
+				<AVal Row="144">1.91</AVal>
+				<AVal Row="145">2.21</AVal>
+				<AVal Row="146">2.51</AVal>
+				<AVal Row="147">2.81</AVal>
+				<AVal Row="148">3</AVal>
+				<AVal Row="149">1.21</AVal>
+				<AVal Row="150">1.41</AVal>
+				<AVal Row="151">1.51</AVal>
+				<AVal Row="152">1.71</AVal>
+				<AVal Row="153">1.91</AVal>
+				<AVal Row="154">2.21</AVal>
+				<AVal Row="155">1.21</AVal>
+				<AVal Row="156">1.41</AVal>
+				<AVal Row="157">1.5</AVal>
+				<AVal Row="158">1.67</AVal>
+				<AVal Row="159">1.71</AVal>
+				<AVal Row="160">1.91</AVal>
+				<AVal Row="161">2</AVal>
+				<AVal Row="162">2.11</AVal>
+				<AVal Row="163">2.21</AVal>
+				<AVal Row="164">2.41</AVal>
+				<AVal Row="165">2.51</AVal>
+				<AVal Row="166">2.81</AVal>
+				<AVal Row="167">3.01</AVal>
+				<AVal Row="168">1.21</AVal>
+				<AVal Row="169">1.41</AVal>
+				<AVal Row="170">1.71</AVal>
+				<AVal Row="171">1.91</AVal>
+				<AVal Row="172">2.21</AVal>
+				<AVal Row="173">2.51</AVal>
+				<AVal Row="174">2.81</AVal>
+				<AVal Row="175">3</AVal>
+				<AVal Row="176">1.21</AVal>
+				<AVal Row="177">1.41</AVal>
+				<AVal Row="178">1.51</AVal>
+				<AVal Row="179">1.71</AVal>
+				<AVal Row="180">1.91</AVal>
+				<AVal Row="181">2.21</AVal>
 			</ArrayValues>
 		</Length>
 		<Length Name="max_pr_m">
 			<Description><![CDATA[""]]></Description>
-			<ArrayValues FirstDimension="127" SecondDimension="0">
-				<AVal Row="1">1.09</AVal>
-				<AVal Row="2">1.05</AVal>
-				<AVal Row="3">1.31</AVal>
-				<AVal Row="4">0.79</AVal>
-				<AVal Row="5">1.05</AVal>
-				<AVal Row="6">1.31</AVal>
-				<AVal Row="7">1.44</AVal>
-				<AVal Row="8">1.7</AVal>
-				<AVal Row="9">1.96</AVal>
-				<AVal Row="10">2.22</AVal>
-				<AVal Row="11">2.35</AVal>
-				<AVal Row="12">2.61</AVal>
-				<AVal Row="13">2.74</AVal>
-				<AVal Row="14">1.05</AVal>
-				<AVal Row="15">1.31</AVal>
-				<AVal Row="16">1.57</AVal>
-				<AVal Row="17">1.57</AVal>
-				<AVal Row="18">1.83</AVal>
-				<AVal Row="19">2.22</AVal>
-				<AVal Row="20">2.48</AVal>
-				<AVal Row="21">2.74</AVal>
-				<AVal Row="22">3.13</AVal>
-				<AVal Row="23">3.39</AVal>
-				<AVal Row="24">3.65</AVal>
-				<AVal Row="25">2.74</AVal>
-				<AVal Row="26">4.17</AVal>
-				<AVal Row="27">4.56</AVal>
-				<AVal Row="28">5.72</AVal>
-				<AVal Row="29">1.57</AVal>
-				<AVal Row="30">1.83</AVal>
-				<AVal Row="31">1.83</AVal>
-				<AVal Row="32">1.83</AVal>
-				<AVal Row="33">2.22</AVal>
-				<AVal Row="34">2.22</AVal>
-				<AVal Row="35">2.22</AVal>
-				<AVal Row="36">2.48</AVal>
-				<AVal Row="37">2.48</AVal>
-				<AVal Row="38">2.48</AVal>
-				<AVal Row="39">2.74</AVal>
-				<AVal Row="40">2.74</AVal>
-				<AVal Row="41">2.74</AVal>
-				<AVal Row="42">2.87</AVal>
-				<AVal Row="43">2.22</AVal>
-				<AVal Row="44">2.48</AVal>
-				<AVal Row="45">2.74</AVal>
-				<AVal Row="46">3.13</AVal>
-				<AVal Row="47">3.39</AVal>
-				<AVal Row="48">3.26</AVal>
-				<AVal Row="49">5.71</AVal>
-				<AVal Row="50">0.92</AVal>
-				<AVal Row="51">1.18</AVal>
-				<AVal Row="52">1.44</AVal>
-				<AVal Row="53">1.57</AVal>
-				<AVal Row="54">1.83</AVal>
-				<AVal Row="55">2.09</AVal>
-				<AVal Row="56">2.22</AVal>
-				<AVal Row="57">2.74</AVal>
-				<AVal Row="58">1.18</AVal>
-				<AVal Row="59">1.31</AVal>
-				<AVal Row="60">1.57</AVal>
-				<AVal Row="61">1.83</AVal>
-				<AVal Row="62">2.48</AVal>
-				<AVal Row="63">0.92</AVal>
-				<AVal Row="64">1.18</AVal>
-				<AVal Row="65">1.44</AVal>
-				<AVal Row="66">2.09</AVal>
-				<AVal Row="67">2.74</AVal>
-				<AVal Row="68">2.74</AVal>
+			<ArrayValues FirstDimension="181" SecondDimension="0">
+				<AVal Row="1">0</AVal>
+				<AVal Row="2">0</AVal>
+				<AVal Row="3">0</AVal>
+				<AVal Row="4">0</AVal>
+				<AVal Row="5">0</AVal>
+				<AVal Row="6">0</AVal>
+				<AVal Row="7">0</AVal>
+				<AVal Row="8">0</AVal>
+				<AVal Row="9">0</AVal>
+				<AVal Row="10">0</AVal>
+				<AVal Row="11">0</AVal>
+				<AVal Row="12">0</AVal>
+				<AVal Row="13">0</AVal>
+				<AVal Row="14">0</AVal>
+				<AVal Row="15">0</AVal>
+				<AVal Row="16">0</AVal>
+				<AVal Row="17">0</AVal>
+				<AVal Row="18">0</AVal>
+				<AVal Row="19">0</AVal>
+				<AVal Row="20">0</AVal>
+				<AVal Row="21">0</AVal>
+				<AVal Row="22">0</AVal>
+				<AVal Row="23">0</AVal>
+				<AVal Row="24">0</AVal>
+				<AVal Row="25">0</AVal>
+				<AVal Row="26">0</AVal>
+				<AVal Row="27">0</AVal>
+				<AVal Row="28">0</AVal>
+				<AVal Row="29">0</AVal>
+				<AVal Row="30">0</AVal>
+				<AVal Row="31">0</AVal>
+				<AVal Row="32">0</AVal>
+				<AVal Row="33">0</AVal>
+				<AVal Row="34">0</AVal>
+				<AVal Row="35">0</AVal>
+				<AVal Row="36">0</AVal>
+				<AVal Row="37">0</AVal>
+				<AVal Row="38">0</AVal>
+				<AVal Row="39">0</AVal>
+				<AVal Row="40">0</AVal>
+				<AVal Row="41">0</AVal>
+				<AVal Row="42">0</AVal>
+				<AVal Row="43">0</AVal>
+				<AVal Row="44">0</AVal>
+				<AVal Row="45">0</AVal>
+				<AVal Row="46">0</AVal>
+				<AVal Row="47">0</AVal>
+				<AVal Row="48">0</AVal>
+				<AVal Row="49">0</AVal>
+				<AVal Row="50">0</AVal>
+				<AVal Row="51">0</AVal>
+				<AVal Row="52">0</AVal>
+				<AVal Row="53">0</AVal>
+				<AVal Row="54">0</AVal>
+				<AVal Row="55">0</AVal>
+				<AVal Row="56">0</AVal>
+				<AVal Row="57">0</AVal>
+				<AVal Row="58">0</AVal>
+				<AVal Row="59">0</AVal>
+				<AVal Row="60">0</AVal>
+				<AVal Row="61">0</AVal>
+				<AVal Row="62">0</AVal>
+				<AVal Row="63">0</AVal>
+				<AVal Row="64">0</AVal>
+				<AVal Row="65">0</AVal>
+				<AVal Row="66">0</AVal>
+				<AVal Row="67">0</AVal>
+				<AVal Row="68">0</AVal>
 				<AVal Row="69">0.7</AVal>
 				<AVal Row="70">0.9</AVal>
 				<AVal Row="71">1.2</AVal>
@@ -2121,11 +2486,65 @@ return
 				<AVal Row="125">2.1</AVal>
 				<AVal Row="126">2.4</AVal>
 				<AVal Row="127">2.4</AVal>
+				<AVal Row="128">0</AVal>
+				<AVal Row="129">0</AVal>
+				<AVal Row="130">0</AVal>
+				<AVal Row="131">0</AVal>
+				<AVal Row="132">0</AVal>
+				<AVal Row="133">0</AVal>
+				<AVal Row="134">0</AVal>
+				<AVal Row="135">0</AVal>
+				<AVal Row="136">0</AVal>
+				<AVal Row="137">0</AVal>
+				<AVal Row="138">0</AVal>
+				<AVal Row="139">0</AVal>
+				<AVal Row="140">0</AVal>
+				<AVal Row="141">0</AVal>
+				<AVal Row="142">0</AVal>
+				<AVal Row="143">0</AVal>
+				<AVal Row="144">0</AVal>
+				<AVal Row="145">0</AVal>
+				<AVal Row="146">0</AVal>
+				<AVal Row="147">0</AVal>
+				<AVal Row="148">0</AVal>
+				<AVal Row="149">0</AVal>
+				<AVal Row="150">0</AVal>
+				<AVal Row="151">0</AVal>
+				<AVal Row="152">0</AVal>
+				<AVal Row="153">0</AVal>
+				<AVal Row="154">0</AVal>
+				<AVal Row="155">0</AVal>
+				<AVal Row="156">0</AVal>
+				<AVal Row="157">0</AVal>
+				<AVal Row="158">0</AVal>
+				<AVal Row="159">0</AVal>
+				<AVal Row="160">0</AVal>
+				<AVal Row="161">0</AVal>
+				<AVal Row="162">0</AVal>
+				<AVal Row="163">0</AVal>
+				<AVal Row="164">0</AVal>
+				<AVal Row="165">0</AVal>
+				<AVal Row="166">0</AVal>
+				<AVal Row="167">0</AVal>
+				<AVal Row="168">0</AVal>
+				<AVal Row="169">0</AVal>
+				<AVal Row="170">0</AVal>
+				<AVal Row="171">0</AVal>
+				<AVal Row="172">0</AVal>
+				<AVal Row="173">0</AVal>
+				<AVal Row="174">0</AVal>
+				<AVal Row="175">0</AVal>
+				<AVal Row="176">0</AVal>
+				<AVal Row="177">0</AVal>
+				<AVal Row="178">0</AVal>
+				<AVal Row="179">0</AVal>
+				<AVal Row="180">0</AVal>
+				<AVal Row="181">0</AVal>
 			</ArrayValues>
 		</Length>
 		<Length Name="tolsh_m">
 			<Description><![CDATA[""]]></Description>
-			<ArrayValues FirstDimension="127" SecondDimension="0">
+			<ArrayValues FirstDimension="181" SecondDimension="0">
 				<AVal Row="1">0.12</AVal>
 				<AVal Row="2">0.12</AVal>
 				<AVal Row="3">0.12</AVal>
@@ -2253,11 +2672,65 @@ return
 				<AVal Row="125">0.17</AVal>
 				<AVal Row="126">0.17</AVal>
 				<AVal Row="127">0.17</AVal>
+				<AVal Row="128">0.188</AVal>
+				<AVal Row="129">0.188</AVal>
+				<AVal Row="130">0.188</AVal>
+				<AVal Row="131">0.188</AVal>
+				<AVal Row="132">0.188</AVal>
+				<AVal Row="133">0.188</AVal>
+				<AVal Row="134">0.188</AVal>
+				<AVal Row="135">0.188</AVal>
+				<AVal Row="136">0.188</AVal>
+				<AVal Row="137">0.188</AVal>
+				<AVal Row="138">0.188</AVal>
+				<AVal Row="139">0.188</AVal>
+				<AVal Row="140">0.188</AVal>
+				<AVal Row="141">0.188</AVal>
+				<AVal Row="142">0.188</AVal>
+				<AVal Row="143">0.188</AVal>
+				<AVal Row="144">0.188</AVal>
+				<AVal Row="145">0.188</AVal>
+				<AVal Row="146">0.188</AVal>
+				<AVal Row="147">0.188</AVal>
+				<AVal Row="148">0.188</AVal>
+				<AVal Row="149">0.188</AVal>
+				<AVal Row="150">0.188</AVal>
+				<AVal Row="151">0.188</AVal>
+				<AVal Row="152">0.188</AVal>
+				<AVal Row="153">0.188</AVal>
+				<AVal Row="154">0.188</AVal>
+				<AVal Row="155">0.4</AVal>
+				<AVal Row="156">0.4</AVal>
+				<AVal Row="157">0.4</AVal>
+				<AVal Row="158">0.4</AVal>
+				<AVal Row="159">0.4</AVal>
+				<AVal Row="160">0.4</AVal>
+				<AVal Row="161">0.4</AVal>
+				<AVal Row="162">0.4</AVal>
+				<AVal Row="163">0.4</AVal>
+				<AVal Row="164">0.4</AVal>
+				<AVal Row="165">0.4</AVal>
+				<AVal Row="166">0.4</AVal>
+				<AVal Row="167">0.4</AVal>
+				<AVal Row="168">0.3</AVal>
+				<AVal Row="169">0.3</AVal>
+				<AVal Row="170">0.3</AVal>
+				<AVal Row="171">0.3</AVal>
+				<AVal Row="172">0.3</AVal>
+				<AVal Row="173">0.3</AVal>
+				<AVal Row="174">0.3</AVal>
+				<AVal Row="175">0.3</AVal>
+				<AVal Row="176">0.3</AVal>
+				<AVal Row="177">0.19</AVal>
+				<AVal Row="178">0.19</AVal>
+				<AVal Row="179">0.19</AVal>
+				<AVal Row="180">0.19</AVal>
+				<AVal Row="181">0.19</AVal>
 			</ArrayValues>
 		</Length>
 		<Length Name="vis_m">
 			<Description><![CDATA[""]]></Description>
-			<ArrayValues FirstDimension="127" SecondDimension="0">
+			<ArrayValues FirstDimension="181" SecondDimension="0">
 				<AVal Row="1">0.065</AVal>
 				<AVal Row="2">0.065</AVal>
 				<AVal Row="3">0.065</AVal>
@@ -2385,11 +2858,65 @@ return
 				<AVal Row="125">0.25</AVal>
 				<AVal Row="126">0.25</AVal>
 				<AVal Row="127">0.25</AVal>
+				<AVal Row="128">0.4</AVal>
+				<AVal Row="129">0.4</AVal>
+				<AVal Row="130">0.4</AVal>
+				<AVal Row="131">0.4</AVal>
+				<AVal Row="132">0.4</AVal>
+				<AVal Row="133">0.4</AVal>
+				<AVal Row="134">0.4</AVal>
+				<AVal Row="135">0.4</AVal>
+				<AVal Row="136">0.4</AVal>
+				<AVal Row="137">0.4</AVal>
+				<AVal Row="138">0.4</AVal>
+				<AVal Row="139">0.4</AVal>
+				<AVal Row="140">0.4</AVal>
+				<AVal Row="141">0.3</AVal>
+				<AVal Row="142">0.3</AVal>
+				<AVal Row="143">0.3</AVal>
+				<AVal Row="144">0.3</AVal>
+				<AVal Row="145">0.3</AVal>
+				<AVal Row="146">0.3</AVal>
+				<AVal Row="147">0.3</AVal>
+				<AVal Row="148">0.3</AVal>
+				<AVal Row="149">0.19</AVal>
+				<AVal Row="150">0.19</AVal>
+				<AVal Row="151">0.19</AVal>
+				<AVal Row="152">0.19</AVal>
+				<AVal Row="153">0.19</AVal>
+				<AVal Row="154">0.19</AVal>
+				<AVal Row="155">0.188</AVal>
+				<AVal Row="156">0.188</AVal>
+				<AVal Row="157">0.188</AVal>
+				<AVal Row="158">0.188</AVal>
+				<AVal Row="159">0.188</AVal>
+				<AVal Row="160">0.188</AVal>
+				<AVal Row="161">0.188</AVal>
+				<AVal Row="162">0.188</AVal>
+				<AVal Row="163">0.188</AVal>
+				<AVal Row="164">0.188</AVal>
+				<AVal Row="165">0.188</AVal>
+				<AVal Row="166">0.188</AVal>
+				<AVal Row="167">0.188</AVal>
+				<AVal Row="168">0.188</AVal>
+				<AVal Row="169">0.188</AVal>
+				<AVal Row="170">0.188</AVal>
+				<AVal Row="171">0.188</AVal>
+				<AVal Row="172">0.188</AVal>
+				<AVal Row="173">0.188</AVal>
+				<AVal Row="174">0.188</AVal>
+				<AVal Row="175">0.188</AVal>
+				<AVal Row="176">0.188</AVal>
+				<AVal Row="177">0.188</AVal>
+				<AVal Row="178">0.188</AVal>
+				<AVal Row="179">0.188</AVal>
+				<AVal Row="180">0.188</AVal>
+				<AVal Row="181">0.188</AVal>
 			</ArrayValues>
 		</Length>
 		<RealNum Name="nagr_m">
 			<Description><![CDATA[""]]></Description>
-			<ArrayValues FirstDimension="127" SecondDimension="0">
+			<ArrayValues FirstDimension="181" SecondDimension="0">
 				<AVal Row="1">100</AVal>
 				<AVal Row="2">100</AVal>
 				<AVal Row="3">100</AVal>
@@ -2517,11 +3044,65 @@ return
 				<AVal Row="125">392</AVal>
 				<AVal Row="126">392</AVal>
 				<AVal Row="127">392</AVal>
+				<AVal Row="128">0</AVal>
+				<AVal Row="129">0</AVal>
+				<AVal Row="130">0</AVal>
+				<AVal Row="131">0</AVal>
+				<AVal Row="132">0</AVal>
+				<AVal Row="133">0</AVal>
+				<AVal Row="134">0</AVal>
+				<AVal Row="135">0</AVal>
+				<AVal Row="136">0</AVal>
+				<AVal Row="137">0</AVal>
+				<AVal Row="138">0</AVal>
+				<AVal Row="139">0</AVal>
+				<AVal Row="140">0</AVal>
+				<AVal Row="141">0</AVal>
+				<AVal Row="142">0</AVal>
+				<AVal Row="143">0</AVal>
+				<AVal Row="144">0</AVal>
+				<AVal Row="145">0</AVal>
+				<AVal Row="146">0</AVal>
+				<AVal Row="147">0</AVal>
+				<AVal Row="148">0</AVal>
+				<AVal Row="149">0</AVal>
+				<AVal Row="150">0</AVal>
+				<AVal Row="151">0</AVal>
+				<AVal Row="152">0</AVal>
+				<AVal Row="153">0</AVal>
+				<AVal Row="154">0</AVal>
+				<AVal Row="155">0</AVal>
+				<AVal Row="156">0</AVal>
+				<AVal Row="157">0</AVal>
+				<AVal Row="158">0</AVal>
+				<AVal Row="159">0</AVal>
+				<AVal Row="160">0</AVal>
+				<AVal Row="161">0</AVal>
+				<AVal Row="162">0</AVal>
+				<AVal Row="163">0</AVal>
+				<AVal Row="164">0</AVal>
+				<AVal Row="165">0</AVal>
+				<AVal Row="166">0</AVal>
+				<AVal Row="167">0</AVal>
+				<AVal Row="168">0</AVal>
+				<AVal Row="169">0</AVal>
+				<AVal Row="170">0</AVal>
+				<AVal Row="171">0</AVal>
+				<AVal Row="172">0</AVal>
+				<AVal Row="173">0</AVal>
+				<AVal Row="174">0</AVal>
+				<AVal Row="175">0</AVal>
+				<AVal Row="176">0</AVal>
+				<AVal Row="177">0</AVal>
+				<AVal Row="178">0</AVal>
+				<AVal Row="179">0</AVal>
+				<AVal Row="180">0</AVal>
+				<AVal Row="181">0</AVal>
 			</ArrayValues>
 		</RealNum>
 		<RealNum Name="ves_m">
 			<Description><![CDATA[""]]></Description>
-			<ArrayValues FirstDimension="127" SecondDimension="0">
+			<ArrayValues FirstDimension="181" SecondDimension="0">
 				<AVal Row="1">20</AVal>
 				<AVal Row="2">25</AVal>
 				<AVal Row="3">30</AVal>
@@ -2649,8 +3230,434 @@ return
 				<AVal Row="125">111</AVal>
 				<AVal Row="126">123</AVal>
 				<AVal Row="127">123</AVal>
+				<AVal Row="128">77</AVal>
+				<AVal Row="129">95</AVal>
+				<AVal Row="130">99</AVal>
+				<AVal Row="131">109</AVal>
+				<AVal Row="132">113</AVal>
+				<AVal Row="133">126</AVal>
+				<AVal Row="134">130</AVal>
+				<AVal Row="135">139</AVal>
+				<AVal Row="136">147</AVal>
+				<AVal Row="137">164</AVal>
+				<AVal Row="138">171</AVal>
+				<AVal Row="139">197</AVal>
+				<AVal Row="140">215</AVal>
+				<AVal Row="141">59</AVal>
+				<AVal Row="142">67</AVal>
+				<AVal Row="143">84</AVal>
+				<AVal Row="144">94</AVal>
+				<AVal Row="145">105</AVal>
+				<AVal Row="146">126</AVal>
+				<AVal Row="147">149</AVal>
+				<AVal Row="148">158</AVal>
+				<AVal Row="149">34</AVal>
+				<AVal Row="150">42</AVal>
+				<AVal Row="151">46</AVal>
+				<AVal Row="152">51</AVal>
+				<AVal Row="153">61</AVal>
+				<AVal Row="154">70</AVal>
+				<AVal Row="155">77</AVal>
+				<AVal Row="156">95</AVal>
+				<AVal Row="157">99</AVal>
+				<AVal Row="158">109</AVal>
+				<AVal Row="159">113</AVal>
+				<AVal Row="160">126</AVal>
+				<AVal Row="161">130</AVal>
+				<AVal Row="162">139</AVal>
+				<AVal Row="163">147</AVal>
+				<AVal Row="164">164</AVal>
+				<AVal Row="165">171</AVal>
+				<AVal Row="166">197</AVal>
+				<AVal Row="167">215</AVal>
+				<AVal Row="168">59</AVal>
+				<AVal Row="169">67</AVal>
+				<AVal Row="170">84</AVal>
+				<AVal Row="171">94</AVal>
+				<AVal Row="172">105</AVal>
+				<AVal Row="173">126</AVal>
+				<AVal Row="174">149</AVal>
+				<AVal Row="175">158</AVal>
+				<AVal Row="176">34</AVal>
+				<AVal Row="177">42</AVal>
+				<AVal Row="178">46</AVal>
+				<AVal Row="179">51</AVal>
+				<AVal Row="180">61</AVal>
+				<AVal Row="181">70</AVal>
 			</ArrayValues>
 		</RealNum>
+		<String Name="gost_m">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="181" SecondDimension="0">
+				<AVal Row="1"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="2"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="3"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="4"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="5"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="6"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="7"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="8"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="9"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="10"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="11"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="12"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="13"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="14"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="15"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="16"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="17"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="18"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="19"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="20"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="21"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="22"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="23"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="24"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="25"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="26"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="27"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="28"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="29"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="30"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="31"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="32"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="33"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="34"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="35"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="36"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="37"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="38"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="39"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="40"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="41"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="42"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="43"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="44"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="45"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="46"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="47"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="48"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="49"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="50"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="51"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="52"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="53"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="54"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="55"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="56"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="57"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="58"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="59"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="60"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="61"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="62"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="63"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="64"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="65"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="66"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="67"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="68"><![CDATA["ГОСТ 948-2016"]]></AVal>
+				<AVal Row="69"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="70"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="71"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="72"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="73"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="74"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="75"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="76"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="77"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="78"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="79"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="80"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="81"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="82"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="83"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="84"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="85"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="86"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="87"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="88"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="89"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="90"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="91"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="92"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="93"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="94"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="95"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="96"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="97"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="98"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="99"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="100"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="101"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="102"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="103"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="104"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="105"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="106"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="107"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="108"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="109"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="110"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="111"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="112"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="113"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="114"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="115"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="116"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="117"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="118"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="119"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="120"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="121"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="122"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="123"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="124"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="125"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="126"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="127"><![CDATA["ТУ 5828-002-80392712-2015"]]></AVal>
+				<AVal Row="128"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="129"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="130"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="131"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="132"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="133"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="134"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="135"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="136"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="137"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="138"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="139"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="140"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="141"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="142"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="143"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="144"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="145"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="146"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="147"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="148"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="149"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="150"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="151"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="152"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="153"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="154"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="155"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="156"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="157"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="158"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="159"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="160"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="161"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="162"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="163"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="164"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="165"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="166"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="167"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="168"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="169"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="170"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="171"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="172"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="173"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="174"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="175"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="176"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="177"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="178"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="179"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="180"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="181"><![CDATA["UJCN"]]></AVal>
+			</ArrayValues>
+		</String>
+		<Integer Name="type_perem_m">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="181" SecondDimension="0">
+				<AVal Row="1">1</AVal>
+				<AVal Row="2">1</AVal>
+				<AVal Row="3">1</AVal>
+				<AVal Row="4">1</AVal>
+				<AVal Row="5">1</AVal>
+				<AVal Row="6">1</AVal>
+				<AVal Row="7">1</AVal>
+				<AVal Row="8">1</AVal>
+				<AVal Row="9">1</AVal>
+				<AVal Row="10">1</AVal>
+				<AVal Row="11">1</AVal>
+				<AVal Row="12">1</AVal>
+				<AVal Row="13">1</AVal>
+				<AVal Row="14">1</AVal>
+				<AVal Row="15">1</AVal>
+				<AVal Row="16">1</AVal>
+				<AVal Row="17">1</AVal>
+				<AVal Row="18">1</AVal>
+				<AVal Row="19">1</AVal>
+				<AVal Row="20">1</AVal>
+				<AVal Row="21">1</AVal>
+				<AVal Row="22">1</AVal>
+				<AVal Row="23">1</AVal>
+				<AVal Row="24">1</AVal>
+				<AVal Row="25">1</AVal>
+				<AVal Row="26">1</AVal>
+				<AVal Row="27">1</AVal>
+				<AVal Row="28">1</AVal>
+				<AVal Row="29">1</AVal>
+				<AVal Row="30">1</AVal>
+				<AVal Row="31">1</AVal>
+				<AVal Row="32">1</AVal>
+				<AVal Row="33">1</AVal>
+				<AVal Row="34">1</AVal>
+				<AVal Row="35">1</AVal>
+				<AVal Row="36">1</AVal>
+				<AVal Row="37">1</AVal>
+				<AVal Row="38">1</AVal>
+				<AVal Row="39">1</AVal>
+				<AVal Row="40">1</AVal>
+				<AVal Row="41">1</AVal>
+				<AVal Row="42">1</AVal>
+				<AVal Row="43">1</AVal>
+				<AVal Row="44">1</AVal>
+				<AVal Row="45">1</AVal>
+				<AVal Row="46">1</AVal>
+				<AVal Row="47">1</AVal>
+				<AVal Row="48">1</AVal>
+				<AVal Row="49">1</AVal>
+				<AVal Row="50">1</AVal>
+				<AVal Row="51">1</AVal>
+				<AVal Row="52">1</AVal>
+				<AVal Row="53">1</AVal>
+				<AVal Row="54">1</AVal>
+				<AVal Row="55">1</AVal>
+				<AVal Row="56">1</AVal>
+				<AVal Row="57">1</AVal>
+				<AVal Row="58">1</AVal>
+				<AVal Row="59">1</AVal>
+				<AVal Row="60">1</AVal>
+				<AVal Row="61">1</AVal>
+				<AVal Row="62">1</AVal>
+				<AVal Row="63">1</AVal>
+				<AVal Row="64">1</AVal>
+				<AVal Row="65">1</AVal>
+				<AVal Row="66">1</AVal>
+				<AVal Row="67">1</AVal>
+				<AVal Row="68">1</AVal>
+				<AVal Row="69">2</AVal>
+				<AVal Row="70">2</AVal>
+				<AVal Row="71">2</AVal>
+				<AVal Row="72">2</AVal>
+				<AVal Row="73">2</AVal>
+				<AVal Row="74">2</AVal>
+				<AVal Row="75">2</AVal>
+				<AVal Row="76">2</AVal>
+				<AVal Row="77">2</AVal>
+				<AVal Row="78">2</AVal>
+				<AVal Row="79">2</AVal>
+				<AVal Row="80">2</AVal>
+				<AVal Row="81">2</AVal>
+				<AVal Row="82">2</AVal>
+				<AVal Row="83">2</AVal>
+				<AVal Row="84">2</AVal>
+				<AVal Row="85">2</AVal>
+				<AVal Row="86">2</AVal>
+				<AVal Row="87">2</AVal>
+				<AVal Row="88">2</AVal>
+				<AVal Row="89">2</AVal>
+				<AVal Row="90">2</AVal>
+				<AVal Row="91">2</AVal>
+				<AVal Row="92">2</AVal>
+				<AVal Row="93">2</AVal>
+				<AVal Row="94">2</AVal>
+				<AVal Row="95">2</AVal>
+				<AVal Row="96">2</AVal>
+				<AVal Row="97">2</AVal>
+				<AVal Row="98">2</AVal>
+				<AVal Row="99">2</AVal>
+				<AVal Row="100">2</AVal>
+				<AVal Row="101">2</AVal>
+				<AVal Row="102">2</AVal>
+				<AVal Row="103">2</AVal>
+				<AVal Row="104">2</AVal>
+				<AVal Row="105">2</AVal>
+				<AVal Row="106">2</AVal>
+				<AVal Row="107">2</AVal>
+				<AVal Row="108">2</AVal>
+				<AVal Row="109">2</AVal>
+				<AVal Row="110">2</AVal>
+				<AVal Row="111">2</AVal>
+				<AVal Row="112">2</AVal>
+				<AVal Row="113">2</AVal>
+				<AVal Row="114">2</AVal>
+				<AVal Row="115">2</AVal>
+				<AVal Row="116">2</AVal>
+				<AVal Row="117">2</AVal>
+				<AVal Row="118">2</AVal>
+				<AVal Row="119">2</AVal>
+				<AVal Row="120">2</AVal>
+				<AVal Row="121">2</AVal>
+				<AVal Row="122">2</AVal>
+				<AVal Row="123">2</AVal>
+				<AVal Row="124">2</AVal>
+				<AVal Row="125">2</AVal>
+				<AVal Row="126">2</AVal>
+				<AVal Row="127">2</AVal>
+				<AVal Row="128">3</AVal>
+				<AVal Row="129">3</AVal>
+				<AVal Row="130">3</AVal>
+				<AVal Row="131">3</AVal>
+				<AVal Row="132">3</AVal>
+				<AVal Row="133">3</AVal>
+				<AVal Row="134">3</AVal>
+				<AVal Row="135">3</AVal>
+				<AVal Row="136">3</AVal>
+				<AVal Row="137">3</AVal>
+				<AVal Row="138">3</AVal>
+				<AVal Row="139">3</AVal>
+				<AVal Row="140">3</AVal>
+				<AVal Row="141">3</AVal>
+				<AVal Row="142">3</AVal>
+				<AVal Row="143">3</AVal>
+				<AVal Row="144">3</AVal>
+				<AVal Row="145">3</AVal>
+				<AVal Row="146">3</AVal>
+				<AVal Row="147">3</AVal>
+				<AVal Row="148">3</AVal>
+				<AVal Row="149">3</AVal>
+				<AVal Row="150">3</AVal>
+				<AVal Row="151">3</AVal>
+				<AVal Row="152">3</AVal>
+				<AVal Row="153">3</AVal>
+				<AVal Row="154">3</AVal>
+				<AVal Row="155">3</AVal>
+				<AVal Row="156">3</AVal>
+				<AVal Row="157">3</AVal>
+				<AVal Row="158">3</AVal>
+				<AVal Row="159">3</AVal>
+				<AVal Row="160">3</AVal>
+				<AVal Row="161">3</AVal>
+				<AVal Row="162">3</AVal>
+				<AVal Row="163">3</AVal>
+				<AVal Row="164">3</AVal>
+				<AVal Row="165">3</AVal>
+				<AVal Row="166">3</AVal>
+				<AVal Row="167">3</AVal>
+				<AVal Row="168">3</AVal>
+				<AVal Row="169">3</AVal>
+				<AVal Row="170">3</AVal>
+				<AVal Row="171">3</AVal>
+				<AVal Row="172">3</AVal>
+				<AVal Row="173">3</AVal>
+				<AVal Row="174">3</AVal>
+				<AVal Row="175">3</AVal>
+				<AVal Row="176">3</AVal>
+				<AVal Row="177">3</AVal>
+				<AVal Row="178">3</AVal>
+				<AVal Row="179">3</AVal>
+				<AVal Row="180">3</AVal>
+				<AVal Row="181">3</AVal>
+			</ArrayValues>
+		</Integer>
 
 		<!-- Libraryflo_E: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
 
@@ -3904,6 +4911,512 @@ return
 				<AVal Row="202"><![CDATA["ГОСТ 19771-93"]]></AVal>
 				<AVal Row="203"><![CDATA["ГОСТ 19771-93"]]></AVal>
 			</ArrayValues>
+		</String>
+
+		<!-- Libraryflo_F: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="Libraryflo_F">
+			<Description><![CDATA["Пользовательский сортамент"]]></Description>
+		</Title>
+		<String Name="naen_m_u">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="54" SecondDimension="0">
+				<AVal Row="1"><![CDATA["ПП 12.4.2-ЗЯ"]]></AVal>
+				<AVal Row="2"><![CDATA["ПП 14.4.2-Зя"]]></AVal>
+				<AVal Row="3"><![CDATA["ПП 15.4.2-2я"]]></AVal>
+				<AVal Row="4"><![CDATA["ПП 17.4.2-2яу"]]></AVal>
+				<AVal Row="5"><![CDATA["ПП 17.4.2-2я"]]></AVal>
+				<AVal Row="6"><![CDATA["ПП 19.4.2-2я"]]></AVal>
+				<AVal Row="7"><![CDATA["ПП 20.4.2-1я"]]></AVal>
+				<AVal Row="8"><![CDATA["ПП 21.4.2-1я"]]></AVal>
+				<AVal Row="9"><![CDATA["ПП 22.4.2-1я"]]></AVal>
+				<AVal Row="10"><![CDATA["ПП 24.4.2-1я"]]></AVal>
+				<AVal Row="11"><![CDATA["ПП 25.4.2-1я"]]></AVal>
+				<AVal Row="12"><![CDATA["ПП 28.4.2-1я"]]></AVal>
+				<AVal Row="13"><![CDATA["ПП 30.4.2-1я"]]></AVal>
+				<AVal Row="14"><![CDATA["ЗПП 12-3я"]]></AVal>
+				<AVal Row="15"><![CDATA["ЗПП 14-Зя"]]></AVal>
+				<AVal Row="16"><![CDATA["ЗПП 17-2я"]]></AVal>
+				<AVal Row="17"><![CDATA["ЗПП 19-2я"]]></AVal>
+				<AVal Row="18"><![CDATA["ЗПП 22-1я"]]></AVal>
+				<AVal Row="19"><![CDATA["ЗПП 25-1я"]]></AVal>
+				<AVal Row="20"><![CDATA["ЗПП 28-1я"]]></AVal>
+				<AVal Row="21"><![CDATA["ЗПП 30-1я"]]></AVal>
+				<AVal Row="22"><![CDATA["ЗПП 12-0,2як"]]></AVal>
+				<AVal Row="23"><![CDATA["ЗПП 14-0,2як"]]></AVal>
+				<AVal Row="24"><![CDATA["ЗПП 15-0,2як"]]></AVal>
+				<AVal Row="25"><![CDATA["ЗПП 17-0.1як"]]></AVal>
+				<AVal Row="26"><![CDATA["ЗПП 19-0.1як"]]></AVal>
+				<AVal Row="27"><![CDATA["ЗПП 22-0.1як"]]></AVal>
+				<AVal Row="28"><![CDATA["ПБ 12.2.4-Зя"]]></AVal>
+				<AVal Row="29"><![CDATA["ПБ 14.2.4-Зя"]]></AVal>
+				<AVal Row="30"><![CDATA["ПБ 15.2.4-Зя"]]></AVal>
+				<AVal Row="31"><![CDATA["ПБ 17.2.4-Зяу"]]></AVal>
+				<AVal Row="32"><![CDATA["ПБ 17.2.4-Зя"]]></AVal>
+				<AVal Row="33"><![CDATA["ПБ 19.2.4- Зя"]]></AVal>
+				<AVal Row="34"><![CDATA["ПБ 20.2.4-2я"]]></AVal>
+				<AVal Row="35"><![CDATA["ПБ 21.2.4-2я"]]></AVal>
+				<AVal Row="36"><![CDATA["ПБ 22.2.4-2я"]]></AVal>
+				<AVal Row="37"><![CDATA["ПБ 24.2.4-2я"]]></AVal>
+				<AVal Row="38"><![CDATA["ПБ 25.2.4-2я"]]></AVal>
+				<AVal Row="39"><![CDATA["ПБ 28.2.4-2я"]]></AVal>
+				<AVal Row="40"><![CDATA["ПБ 30.2.4-2я"]]></AVal>
+				<AVal Row="41"><![CDATA["2ПБ 12-Зя"]]></AVal>
+				<AVal Row="42"><![CDATA["2ПБ 14-Зя"]]></AVal>
+				<AVal Row="43"><![CDATA["2ПБ 17-Зя"]]></AVal>
+				<AVal Row="44"><![CDATA["2ПБ 19-Зя"]]></AVal>
+				<AVal Row="45"><![CDATA["2ПБ 22-2я"]]></AVal>
+				<AVal Row="46"><![CDATA["2ПБ 25-2я"]]></AVal>
+				<AVal Row="47"><![CDATA["2ПБ 28-2я"]]></AVal>
+				<AVal Row="48"><![CDATA["2ПБ 30-2я"]]></AVal>
+				<AVal Row="49"><![CDATA["2ПБ 12-0,2як"]]></AVal>
+				<AVal Row="50"><![CDATA["2ПБ 14-0,2як"]]></AVal>
+				<AVal Row="51"><![CDATA["2ПБ 15-0,1як"]]></AVal>
+				<AVal Row="52"><![CDATA["2ПБ 17-0.1як"]]></AVal>
+				<AVal Row="53"><![CDATA["2ПБ 19-0,1як"]]></AVal>
+				<AVal Row="54"><![CDATA["2ПБ 22-0,1як"]]></AVal>
+			</ArrayValues>
+		</String>
+		<Length Name="dlin_m_u">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="54" SecondDimension="0">
+				<AVal Row="1">1.21</AVal>
+				<AVal Row="2">1.41</AVal>
+				<AVal Row="3">1.5</AVal>
+				<AVal Row="4">1.67</AVal>
+				<AVal Row="5">1.71</AVal>
+				<AVal Row="6">1.91</AVal>
+				<AVal Row="7">2</AVal>
+				<AVal Row="8">2.11</AVal>
+				<AVal Row="9">2.21</AVal>
+				<AVal Row="10">2.41</AVal>
+				<AVal Row="11">2.51</AVal>
+				<AVal Row="12">2.81</AVal>
+				<AVal Row="13">3.01</AVal>
+				<AVal Row="14">1.21</AVal>
+				<AVal Row="15">1.41</AVal>
+				<AVal Row="16">1.71</AVal>
+				<AVal Row="17">1.91</AVal>
+				<AVal Row="18">2.21</AVal>
+				<AVal Row="19">2.51</AVal>
+				<AVal Row="20">2.81</AVal>
+				<AVal Row="21">3</AVal>
+				<AVal Row="22">1.21</AVal>
+				<AVal Row="23">1.41</AVal>
+				<AVal Row="24">1.51</AVal>
+				<AVal Row="25">1.71</AVal>
+				<AVal Row="26">1.91</AVal>
+				<AVal Row="27">2.21</AVal>
+				<AVal Row="28">1.21</AVal>
+				<AVal Row="29">1.41</AVal>
+				<AVal Row="30">1.5</AVal>
+				<AVal Row="31">1.67</AVal>
+				<AVal Row="32">1.71</AVal>
+				<AVal Row="33">1.91</AVal>
+				<AVal Row="34">2</AVal>
+				<AVal Row="35">2.11</AVal>
+				<AVal Row="36">2.21</AVal>
+				<AVal Row="37">2.41</AVal>
+				<AVal Row="38">2.51</AVal>
+				<AVal Row="39">2.81</AVal>
+				<AVal Row="40">3.01</AVal>
+				<AVal Row="41">1.21</AVal>
+				<AVal Row="42">1.41</AVal>
+				<AVal Row="43">1.71</AVal>
+				<AVal Row="44">1.91</AVal>
+				<AVal Row="45">2.21</AVal>
+				<AVal Row="46">2.51</AVal>
+				<AVal Row="47">2.81</AVal>
+				<AVal Row="48">3</AVal>
+				<AVal Row="49">1.21</AVal>
+				<AVal Row="50">1.41</AVal>
+				<AVal Row="51">1.51</AVal>
+				<AVal Row="52">1.71</AVal>
+				<AVal Row="53">1.91</AVal>
+				<AVal Row="54">2.21</AVal>
+			</ArrayValues>
+		</Length>
+		<Length Name="tolsh_m_u">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="54" SecondDimension="0">
+				<AVal Row="1">0.188</AVal>
+				<AVal Row="2">0.188</AVal>
+				<AVal Row="3">0.188</AVal>
+				<AVal Row="4">0.188</AVal>
+				<AVal Row="5">0.188</AVal>
+				<AVal Row="6">0.188</AVal>
+				<AVal Row="7">0.188</AVal>
+				<AVal Row="8">0.188</AVal>
+				<AVal Row="9">0.188</AVal>
+				<AVal Row="10">0.188</AVal>
+				<AVal Row="11">0.188</AVal>
+				<AVal Row="12">0.188</AVal>
+				<AVal Row="13">0.188</AVal>
+				<AVal Row="14">0.188</AVal>
+				<AVal Row="15">0.188</AVal>
+				<AVal Row="16">0.188</AVal>
+				<AVal Row="17">0.188</AVal>
+				<AVal Row="18">0.188</AVal>
+				<AVal Row="19">0.188</AVal>
+				<AVal Row="20">0.188</AVal>
+				<AVal Row="21">0.188</AVal>
+				<AVal Row="22">0.188</AVal>
+				<AVal Row="23">0.188</AVal>
+				<AVal Row="24">0.188</AVal>
+				<AVal Row="25">0.188</AVal>
+				<AVal Row="26">0.188</AVal>
+				<AVal Row="27">0.188</AVal>
+				<AVal Row="28">0.4</AVal>
+				<AVal Row="29">0.4</AVal>
+				<AVal Row="30">0.4</AVal>
+				<AVal Row="31">0.4</AVal>
+				<AVal Row="32">0.4</AVal>
+				<AVal Row="33">0.4</AVal>
+				<AVal Row="34">0.4</AVal>
+				<AVal Row="35">0.4</AVal>
+				<AVal Row="36">0.4</AVal>
+				<AVal Row="37">0.4</AVal>
+				<AVal Row="38">0.4</AVal>
+				<AVal Row="39">0.4</AVal>
+				<AVal Row="40">0.4</AVal>
+				<AVal Row="41">0.3</AVal>
+				<AVal Row="42">0.3</AVal>
+				<AVal Row="43">0.3</AVal>
+				<AVal Row="44">0.3</AVal>
+				<AVal Row="45">0.3</AVal>
+				<AVal Row="46">0.3</AVal>
+				<AVal Row="47">0.3</AVal>
+				<AVal Row="48">0.3</AVal>
+				<AVal Row="49">0.3</AVal>
+				<AVal Row="50">0.19</AVal>
+				<AVal Row="51">0.19</AVal>
+				<AVal Row="52">0.19</AVal>
+				<AVal Row="53">0.19</AVal>
+				<AVal Row="54">0.19</AVal>
+			</ArrayValues>
+		</Length>
+		<Length Name="vis_m_u">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="54" SecondDimension="0">
+				<AVal Row="1">0.4</AVal>
+				<AVal Row="2">0.4</AVal>
+				<AVal Row="3">0.4</AVal>
+				<AVal Row="4">0.4</AVal>
+				<AVal Row="5">0.4</AVal>
+				<AVal Row="6">0.4</AVal>
+				<AVal Row="7">0.4</AVal>
+				<AVal Row="8">0.4</AVal>
+				<AVal Row="9">0.4</AVal>
+				<AVal Row="10">0.4</AVal>
+				<AVal Row="11">0.4</AVal>
+				<AVal Row="12">0.4</AVal>
+				<AVal Row="13">0.4</AVal>
+				<AVal Row="14">0.3</AVal>
+				<AVal Row="15">0.3</AVal>
+				<AVal Row="16">0.3</AVal>
+				<AVal Row="17">0.3</AVal>
+				<AVal Row="18">0.3</AVal>
+				<AVal Row="19">0.3</AVal>
+				<AVal Row="20">0.3</AVal>
+				<AVal Row="21">0.3</AVal>
+				<AVal Row="22">0.19</AVal>
+				<AVal Row="23">0.19</AVal>
+				<AVal Row="24">0.19</AVal>
+				<AVal Row="25">0.19</AVal>
+				<AVal Row="26">0.19</AVal>
+				<AVal Row="27">0.19</AVal>
+				<AVal Row="28">0.188</AVal>
+				<AVal Row="29">0.188</AVal>
+				<AVal Row="30">0.188</AVal>
+				<AVal Row="31">0.188</AVal>
+				<AVal Row="32">0.188</AVal>
+				<AVal Row="33">0.188</AVal>
+				<AVal Row="34">0.188</AVal>
+				<AVal Row="35">0.188</AVal>
+				<AVal Row="36">0.188</AVal>
+				<AVal Row="37">0.188</AVal>
+				<AVal Row="38">0.188</AVal>
+				<AVal Row="39">0.188</AVal>
+				<AVal Row="40">0.188</AVal>
+				<AVal Row="41">0.188</AVal>
+				<AVal Row="42">0.188</AVal>
+				<AVal Row="43">0.188</AVal>
+				<AVal Row="44">0.188</AVal>
+				<AVal Row="45">0.188</AVal>
+				<AVal Row="46">0.188</AVal>
+				<AVal Row="47">0.188</AVal>
+				<AVal Row="48">0.188</AVal>
+				<AVal Row="49">0.188</AVal>
+				<AVal Row="50">0.188</AVal>
+				<AVal Row="51">0.188</AVal>
+				<AVal Row="52">0.188</AVal>
+				<AVal Row="53">0.188</AVal>
+				<AVal Row="54">0.188</AVal>
+			</ArrayValues>
+		</Length>
+		<Length Name="nagr_m_u">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="54" SecondDimension="0">
+				<AVal Row="1">0</AVal>
+				<AVal Row="2">0</AVal>
+				<AVal Row="3">0</AVal>
+				<AVal Row="4">0</AVal>
+				<AVal Row="5">0</AVal>
+				<AVal Row="6">0</AVal>
+				<AVal Row="7">0</AVal>
+				<AVal Row="8">0</AVal>
+				<AVal Row="9">0</AVal>
+				<AVal Row="10">0</AVal>
+				<AVal Row="11">0</AVal>
+				<AVal Row="12">0</AVal>
+				<AVal Row="13">0</AVal>
+				<AVal Row="14">0</AVal>
+				<AVal Row="15">0</AVal>
+				<AVal Row="16">0</AVal>
+				<AVal Row="17">0</AVal>
+				<AVal Row="18">0</AVal>
+				<AVal Row="19">0</AVal>
+				<AVal Row="20">0</AVal>
+				<AVal Row="21">0</AVal>
+				<AVal Row="22">0</AVal>
+				<AVal Row="23">0</AVal>
+				<AVal Row="24">0</AVal>
+				<AVal Row="25">0</AVal>
+				<AVal Row="26">0</AVal>
+				<AVal Row="27">0</AVal>
+				<AVal Row="28">0</AVal>
+				<AVal Row="29">0</AVal>
+				<AVal Row="30">0</AVal>
+				<AVal Row="31">0</AVal>
+				<AVal Row="32">0</AVal>
+				<AVal Row="33">0</AVal>
+				<AVal Row="34">0</AVal>
+				<AVal Row="35">0</AVal>
+				<AVal Row="36">0</AVal>
+				<AVal Row="37">0</AVal>
+				<AVal Row="38">0</AVal>
+				<AVal Row="39">0</AVal>
+				<AVal Row="40">0</AVal>
+				<AVal Row="41">0</AVal>
+				<AVal Row="42">0</AVal>
+				<AVal Row="43">0</AVal>
+				<AVal Row="44">0</AVal>
+				<AVal Row="45">0</AVal>
+				<AVal Row="46">0</AVal>
+				<AVal Row="47">0</AVal>
+				<AVal Row="48">0</AVal>
+				<AVal Row="49">0</AVal>
+				<AVal Row="50">0</AVal>
+				<AVal Row="51">0</AVal>
+				<AVal Row="52">0</AVal>
+				<AVal Row="53">0</AVal>
+				<AVal Row="54">0</AVal>
+			</ArrayValues>
+		</Length>
+		<RealNum Name="ves_m_u">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="54" SecondDimension="0">
+				<AVal Row="1">77</AVal>
+				<AVal Row="2">95</AVal>
+				<AVal Row="3">99</AVal>
+				<AVal Row="4">109</AVal>
+				<AVal Row="5">113</AVal>
+				<AVal Row="6">126</AVal>
+				<AVal Row="7">130</AVal>
+				<AVal Row="8">139</AVal>
+				<AVal Row="9">147</AVal>
+				<AVal Row="10">164</AVal>
+				<AVal Row="11">171</AVal>
+				<AVal Row="12">197</AVal>
+				<AVal Row="13">215</AVal>
+				<AVal Row="14">59</AVal>
+				<AVal Row="15">67</AVal>
+				<AVal Row="16">84</AVal>
+				<AVal Row="17">94</AVal>
+				<AVal Row="18">105</AVal>
+				<AVal Row="19">126</AVal>
+				<AVal Row="20">149</AVal>
+				<AVal Row="21">158</AVal>
+				<AVal Row="22">34</AVal>
+				<AVal Row="23">42</AVal>
+				<AVal Row="24">46</AVal>
+				<AVal Row="25">51</AVal>
+				<AVal Row="26">61</AVal>
+				<AVal Row="27">70</AVal>
+				<AVal Row="28">77</AVal>
+				<AVal Row="29">95</AVal>
+				<AVal Row="30">99</AVal>
+				<AVal Row="31">109</AVal>
+				<AVal Row="32">113</AVal>
+				<AVal Row="33">126</AVal>
+				<AVal Row="34">130</AVal>
+				<AVal Row="35">139</AVal>
+				<AVal Row="36">147</AVal>
+				<AVal Row="37">164</AVal>
+				<AVal Row="38">171</AVal>
+				<AVal Row="39">197</AVal>
+				<AVal Row="40">215</AVal>
+				<AVal Row="41">59</AVal>
+				<AVal Row="42">67</AVal>
+				<AVal Row="43">84</AVal>
+				<AVal Row="44">94</AVal>
+				<AVal Row="45">105</AVal>
+				<AVal Row="46">126</AVal>
+				<AVal Row="47">149</AVal>
+				<AVal Row="48">158</AVal>
+				<AVal Row="49">34</AVal>
+				<AVal Row="50">42</AVal>
+				<AVal Row="51">46</AVal>
+				<AVal Row="52">51</AVal>
+				<AVal Row="53">61</AVal>
+				<AVal Row="54">70</AVal>
+			</ArrayValues>
+		</RealNum>
+		<RealNum Name="max_pr_m_u">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="54" SecondDimension="0">
+				<AVal Row="1">0</AVal>
+				<AVal Row="2">0</AVal>
+				<AVal Row="3">0</AVal>
+				<AVal Row="4">0</AVal>
+				<AVal Row="5">0</AVal>
+				<AVal Row="6">0</AVal>
+				<AVal Row="7">0</AVal>
+				<AVal Row="8">0</AVal>
+				<AVal Row="9">0</AVal>
+				<AVal Row="10">0</AVal>
+				<AVal Row="11">0</AVal>
+				<AVal Row="12">0</AVal>
+				<AVal Row="13">0</AVal>
+				<AVal Row="14">0</AVal>
+				<AVal Row="15">0</AVal>
+				<AVal Row="16">0</AVal>
+				<AVal Row="17">0</AVal>
+				<AVal Row="18">0</AVal>
+				<AVal Row="19">0</AVal>
+				<AVal Row="20">0</AVal>
+				<AVal Row="21">0</AVal>
+				<AVal Row="22">0</AVal>
+				<AVal Row="23">0</AVal>
+				<AVal Row="24">0</AVal>
+				<AVal Row="25">0</AVal>
+				<AVal Row="26">0</AVal>
+				<AVal Row="27">0</AVal>
+				<AVal Row="28">0</AVal>
+				<AVal Row="29">0</AVal>
+				<AVal Row="30">0</AVal>
+				<AVal Row="31">0</AVal>
+				<AVal Row="32">0</AVal>
+				<AVal Row="33">0</AVal>
+				<AVal Row="34">0</AVal>
+				<AVal Row="35">0</AVal>
+				<AVal Row="36">0</AVal>
+				<AVal Row="37">0</AVal>
+				<AVal Row="38">0</AVal>
+				<AVal Row="39">0</AVal>
+				<AVal Row="40">0</AVal>
+				<AVal Row="41">0</AVal>
+				<AVal Row="42">0</AVal>
+				<AVal Row="43">0</AVal>
+				<AVal Row="44">0</AVal>
+				<AVal Row="45">0</AVal>
+				<AVal Row="46">0</AVal>
+				<AVal Row="47">0</AVal>
+				<AVal Row="48">0</AVal>
+				<AVal Row="49">0</AVal>
+				<AVal Row="50">0</AVal>
+				<AVal Row="51">0</AVal>
+				<AVal Row="52">0</AVal>
+				<AVal Row="53">0</AVal>
+				<AVal Row="54">0</AVal>
+			</ArrayValues>
+		</RealNum>
+		<String Name="gost_m_u">
+			<Description><![CDATA[""]]></Description>
+			<ArrayValues FirstDimension="54" SecondDimension="0">
+				<AVal Row="1"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="2"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="3"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="4"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="5"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="6"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="7"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="8"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="9"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="10"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="11"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="12"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="13"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="14"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="15"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="16"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="17"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="18"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="19"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="20"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="21"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="22"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="23"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="24"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="25"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="26"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="27"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="28"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="29"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="30"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="31"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="32"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="33"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="34"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="35"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="36"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="37"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="38"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="39"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="40"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="41"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="42"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="43"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="44"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="45"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="46"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="47"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="48"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="49"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="50"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="51"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="52"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="53"><![CDATA["UJCN"]]></AVal>
+				<AVal Row="54"><![CDATA["UJCN"]]></AVal>
+			</ArrayValues>
+		</String>
+		<Boolean Name="has_custom_perem">
+			<Description><![CDATA[""]]></Description>
+			<Value>1</Value>
+		</Boolean>
+		<Boolean Name="Shrift_from_as">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Boolean>
+		<Integer Name="Shrift_otm_tip">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Integer>
+		<Integer Name="Shrift_razm_tip">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Integer>
+		<RealNum Name="Shrift_otm_razm">
+			<Description><![CDATA[""]]></Description>
+			<Value>3</Value>
+		</RealNum>
+		<RealNum Name="Shrift_razm_razm">
+			<Description><![CDATA[""]]></Description>
+			<Value>3</Value>
+		</RealNum>
+		<String Name="Shrift">
+			<Description><![CDATA[""]]></Description>
+			<Value><![CDATA["ISOCPEUR Кириллический"]]></Value>
 		</String>
 	</Parameters>
 </ParamSection>

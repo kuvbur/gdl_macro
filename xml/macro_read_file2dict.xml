@@ -37,6 +37,7 @@
 !!		mrf2d_readed_param.file[i_file].is_read - если файл не прочитан, возвращает 0. Если прочитан, возвращает количество строк
 !!			mrf2d_readed_param.file[i_file]._v1[] ... _v10[] - прочитанные массивы, помноженные на коэфф. пересчёта
 !!			mrf2d_readed_param.file[i_file].n_col - возвращает количество столбцов
+!!			mrf2d_readed_param.file[i_file].fname - возвращает имя файла
 
 !!!----------------------- Пример использования --------------------
 !!!dim read_file[]
@@ -86,6 +87,7 @@ for i_file=1 to vardim1(mrf2d_read_file)
 		gosub "get_n_var"
 		gosub "read_file"
 		mrf2d_readed_param.file[i_file] = read_array
+		mrf2d_readed_param.file[i_file].fname = fname
 		if in>1 then mrf2d_readed_param.is_read = 1
 	endif
 next i_file

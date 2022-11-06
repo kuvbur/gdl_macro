@@ -78,11 +78,17 @@ nazn = nazn_arr
 ui_dialog `Kuvbur_АС Общие параметры`, 550, 410
 ui_separator 280, 0, 280, 410
 sx = 5
-sy = 0
+
 sxe = 180
 
-sy = sy + 5: 
+name_page = "Общие настройки"
+UI_PAGE 1, -1, name_page
+UI_outFIELD	name_page, 100, 8,100,20
+ui_button ui_prev, " << ", 5,5, 32,20, gs_ui_current_page - 1
+ui_button ui_next, " >> ", 50,5, 32,20, gs_ui_current_page + 1
 
+sy = 25
+sy = sy + 5: 
 
 	UI_OUTFIELD	`Операторы`,	sx+20,	sy,	70,	20
 	UI_INFIELD	"show_op_otv",	sx,	sy-3, 15,	20
@@ -228,6 +234,37 @@ sy = sy + 22: UI_OUTFIELD	`Только огнестойкость дверей/
 sy = sy + 22: UI_OUTFIELD	`Только размер прохода в свету дверей`,	sx+20,	sy,	250,	20
 			  UI_INFIELD	"show_egress_winddoor",	sx,	sy-3, 20,	20
 
+name_page = "Настройки текста"
+UI_PAGE 2, -1, name_page
+UI_outFIELD	name_page, 100, 8,250,20
+ui_button ui_prev, " << ", 5,10, 32,21, gs_ui_current_page - 1
+ui_button ui_next, " >> ", 50,10, 32,21, gs_ui_current_page + 1
+
+! =============================================================================
+! Настройки шрифта
+! =============================================================================
+sx = 5
+sy = 20
+sy = sy + 30
+ui_outfield `Общие настройки шрифта`, sx, sy, 200, 18
+sy = sy + 20
+UI_INFIELD	"Shrift", sx, sy, 150, 18
+UI_INFIELD	"Shrift_razm", sx+155, sy, 50, 18
+UI_INFIELD	"Shrift_tip", sx+200, sy, 100, 18
+sy = sy + 30
+	ui_outfield `Текст отметок`, sx, sy, 80, 18
+	UI_INFIELD	"Shrift_otm_tip", sx+90, sy, 120, 18
+	UI_INFIELD	"Shrift_otm_razm", sx+90+130, sy, 50, 18
+sy = sy + 30
+	ui_outfield `Текст размеров`, sx, sy, 85, 18
+	UI_INFIELD	"Shrift_razm_tip", sx+90, sy, 120, 18
+	UI_INFIELD	"Shrift_razm_razm", sx+90+130, sy, 50, 18
+sy = sy + 30
+	ui_outfield `Текст позиций`, sx, sy, 85, 18
+	UI_INFIELD	"Shrift_pos_tip", sx+90, sy, 120, 18
+	UI_INFIELD	"Shrift_pos_razm", sx+90+130, sy, 50, 18
+! =============================================================================
+
 end
 
 "getPropertyName":
@@ -292,6 +329,32 @@ if not(show_prop_triang) then LOCK "prop_triang"
 if not(show_prop_text) then LOCK "prop_text"
 
 values{2} "gs_detlevel_3D_m" 2, `Детальный`, 1, `Простой`, 0, `Откл.`
+
+dim ttype_shrift_tip[]
+dim itype_shrift_tip[] : i=0
+i=i+1 : itype_shrift_tip[i]=0 : ttype_shrift_tip[i] = "Обычный"
+i=i+1 : itype_shrift_tip[i]=1 : ttype_shrift_tip[i] = "Жирный(Ж)"
+i=i+1 : itype_shrift_tip[i]=2 : ttype_shrift_tip[i] = "Курсив(К)"
+i=i+1 : itype_shrift_tip[i]=4 : ttype_shrift_tip[i] = "Подчеркнутый(П)"
+i=i+1 : itype_shrift_tip[i]=3 : ttype_shrift_tip[i] = "Ж+К"
+i=i+1 : itype_shrift_tip[i]=5 : ttype_shrift_tip[i] = "Ж+П"
+i=i+1 : itype_shrift_tip[i]=6 : ttype_shrift_tip[i] = "К+П"
+i=i+1 : itype_shrift_tip[i]=7 : ttype_shrift_tip[i] = "Ж+К+П"
+
+values{2} "Shrift_tip" itype_shrift_tip, ttype_shrift_tip
+values "Shrift_razm" range[2,]
+
+dim fontnames[]
+n = REQUEST ("FONTNAMES_LIST", "", fontnames)
+values "Shrift" fontnames, CUSTOM
+
+values{2} "Shrift_otm_tip" itype_shrift_tip, ttype_shrift_tip
+values{2} "Shrift_razm_tip" itype_shrift_tip, ttype_shrift_tip
+values{2} "Shrift_pos_tip" itype_shrift_tip, ttype_shrift_tip
+
+values "Shrift_otm_razm" range[2,]
+values "Shrift_razm_razm" range[2,]
+values "Shrift_pos_razm" range[2,]
 ]]>
 </Script_VL>
 
@@ -532,6 +595,42 @@ values{2} "gs_detlevel_3D_m" 2, `Детальный`, 1, `Простой`, 0, `�
 		<Integer Name="gs_detlevel_3D_m">
 			<Description><![CDATA["Детализация"]]></Description>
 			<Value>2</Value>
+		</Integer>
+		<String Name="Shrift">
+			<Description><![CDATA[""]]></Description>
+			<Value><![CDATA["ISOCPEUR Кириллический"]]></Value>
+		</String>
+		<RealNum Name="Shrift_razm">
+			<Description><![CDATA[""]]></Description>
+			<Value>3</Value>
+		</RealNum>
+		<Integer Name="Shrift_tip">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Integer>
+		<Integer Name="Shrift_otm_tip">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Integer>
+		<RealNum Name="Shrift_otm_razm">
+			<Description><![CDATA[""]]></Description>
+			<Value>3</Value>
+		</RealNum>
+		<Integer Name="Shrift_razm_tip">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
+		</Integer>
+		<RealNum Name="Shrift_razm_razm">
+			<Description><![CDATA[""]]></Description>
+			<Value>3</Value>
+		</RealNum>
+		<RealNum Name="Shrift_pos_razm">
+			<Description><![CDATA[""]]></Description>
+			<Value>3</Value>
+		</RealNum>
+		<Integer Name="Shrift_pos_tip">
+			<Description><![CDATA[""]]></Description>
+			<Value>0</Value>
 		</Integer>
 	</Parameters>
 </ParamSection>
