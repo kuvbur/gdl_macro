@@ -116,5 +116,21 @@
 			</Flags>
 			<Value>0</Value>
 		</Integer>
+		<Dictionary Name="macro_otm_dict">
+			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value/>
+		</Dictionary>
+		<Boolean Name="macro_otm_usedict">
+			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
 	</Parameters>
 </ParamSection>
+
+

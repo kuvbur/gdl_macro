@@ -15,7 +15,6 @@
 	Revert ... macro_polyline.gsm
 	Revert ... macro_rotate.gsm
 	Revert ... macro_spheric_coord.gsm
-	Copy ... README.md
 	Revert ... macro_get_param.gsm
 	Revert ... macro_line_break.gsm
 	Revert ... macro_replace_char.gsm
@@ -36,6 +35,11 @@
 	Revert ... macro_get_vert_sheet.gsm
 	Revert ... macro_place_profile.gsm
 	Revert ... macro_place_sheet.gsm
+	Revert ... Общий шаблон сталь.gsm
+	Revert ... Условный_болт.gsm
+	Revert ... Шаблон профиля.gsm
+	Revert ... Шаблон фасонки.gsm
+	Copy ... README.md
 	Revert ... BasicGeometricCalc_20.gsm
 	Revert ... BasicGeometry_25.gsm
 	Revert ... IFC Extruded Macro_mod.gsm

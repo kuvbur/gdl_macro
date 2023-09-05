@@ -54,11 +54,11 @@
 			<Value>0</Value>
 		</Length>
 		<Dictionary Name="coord">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Словарь с параметрами"]]></Description>
 			<Value/>
 		</Dictionary>
 		<Length Name="coord_arr">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Массив координат (вход/выход)"]]></Description>
 			<ArrayValues FirstDimension="1" SecondDimension="3">
 				<AVal Column="1" Row="1">0</AVal>
 				<AVal Column="2" Row="1">0</AVal>
@@ -66,15 +66,35 @@
 			</ArrayValues>
 		</Length>
 		<Angle Name="ang">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Угол поворота по одной очи"]]></Description>
 			<Value>0</Value>
 		</Angle>
 		<Integer Name="axis">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Номер оси для поворота"]]></Description>
 			<Value>0</Value>
 		</Integer>
+		<Angle Name="ang_pl">
+			<Description><![CDATA["Угол в плоскости"]]></Description>
+			<Value>0</Value>
+		</Angle>
+		<Angle Name="ang_axis">
+			<Description><![CDATA["Угол поворота по собственной оси Z"]]></Description>
+			<Value>0</Value>
+		</Angle>
+		<Angle Name="ang_x">
+			<Description><![CDATA["Наклон относительно глобальной вертикальной оси"]]></Description>
+			<Value>0</Value>
+		</Angle>
+		<Length Name="start_coord">
+			<Description><![CDATA["Начальная координата в глобальной системе координат"]]></Description>
+			<ArrayValues FirstDimension="1" SecondDimension="3">
+				<AVal Column="1" Row="1">0</AVal>
+				<AVal Column="2" Row="1">0</AVal>
+				<AVal Column="3" Row="1">0</AVal>
+			</ArrayValues>
+		</Length>
 		<Boolean Name="bDict">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Использовать словарь?"]]></Description>
 			<Value>1</Value>
 		</Boolean>
 	</Parameters>

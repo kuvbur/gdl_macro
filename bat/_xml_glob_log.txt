@@ -1,9 +1,1 @@
-	Revert ... Libraryflobals-as.gsm
-	Revert ... Libraryflobals-classfilter.gsm
-	Revert ... Libraryflobals-km.gsm
-	Revert ... Libraryflobals-kzh.gsm
-	Revert ... Libraryflobals-otd.gsm
-	Revert ... Libraryflobals-panel.gsm
-	Revert ... Libraryflobals-perem.gsm
-	Revert ... Libraryflobals-pokr.gsm
-	Revert ... Libraryflobals-subpos.gsm
+C:\Users\kuvbur\YandexDisk\sourse\gdl_macro\Libraryflobals\gdl(0) : error: folder is not found

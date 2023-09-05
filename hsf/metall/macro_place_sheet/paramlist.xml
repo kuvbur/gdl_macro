@@ -14,6 +14,24 @@
 		<WDWallInset>0</WDWallInset>
 	</ParamSectHeader>
 	<Parameters SectVersion="27" SectionFlags="0" SubIdent="0">
+		<Integer Name="inx_Profile">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>2</Value>
+		</Integer>
+		<Integer Name="inx_tip_p">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>1</Value>
+		</Integer>
 		<Length Name="kontur">
 			<Description><![CDATA[""]]></Description>
 			<Fix/>
@@ -671,6 +689,24 @@
 			<Fix/>
 			<Value><![CDATA[""]]></Value>
 		</String>
+		<String Name="FM_ProductName">
+			<Description><![CDATA["Наименование для ВОР"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<String Name="FM_ObjectWeightUnit">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
 		<String Name="tip_el">
 			<Description><![CDATA["Тип элемента"]]></Description>
 			<Fix/>
@@ -926,6 +962,15 @@
 				<ParFlg_Hidden/>
 			</Flags>
 			<Value>1</Value>
+		</Integer>
+		<Integer Name="inx_mater">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>3</Value>
 		</Integer>
 
 		<!-- uch_pokr: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
@@ -1260,6 +1305,15 @@
 			</Flags>
 			<Value><![CDATA["Лист"]]></Value>
 		</String>
+		<Integer Name="inx_name_prof">
+			<Description><![CDATA[""]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value>4</Value>
+		</Integer>
 		<String Name="f_name">
 			<Description><![CDATA["Информация"]]></Description>
 			<Fix/>
@@ -1562,6 +1616,7 @@
 		</Title>
 		<Dictionary Name="sort_data">
 			<Description><![CDATA[""]]></Description>
+			<Fix/>
 			<Value/>
 		</Dictionary>
 		<Dictionary Name="profile_data">
