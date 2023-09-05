@@ -9,7 +9,7 @@ set "lcf_dir=%cd%\lcf"
 RD /S /Q  "%hsf_dir%"
 MD "%hsf_dir%"
 cd "%hsf_dir%"
-"%converter%"   l2hsf -l UTF8 "%gdl_dir%" "%hsf_dir%" >"_hsf_log.txt"
+"%converter%"   l2hsf -l UTF8  -compatibility 25 "%gdl_dir%" "%hsf_dir%" >"_hsf_log.txt"
 
 
 RD /S /Q "%lcf_dir%"

@@ -1,1 +1,0 @@
-C:\Users\kuvbur\YandexDisk\sourse\gdl_macro\Libraryflobals\gdl(0) : error: folder is not found
