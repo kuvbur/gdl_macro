@@ -69,7 +69,7 @@
 		</Angle>
 		<Integer Name="show_type">
 			<Description><![CDATA[""]]></Description>
-			<Value>1</Value>
+			<Value>0</Value>
 		</Integer>
 		<Integer Name="bolt_type">
 			<Description><![CDATA[""]]></Description>
@@ -81,11 +81,11 @@
 		</Boolean>
 		<Boolean Name="show_hole">
 			<Description><![CDATA[""]]></Description>
-			<Value>1</Value>
+			<Value>0</Value>
 		</Boolean>
 		<Boolean Name="show_wash_list">
 			<Description><![CDATA[""]]></Description>
-			<Value>1</Value>
+			<Value>0</Value>
 		</Boolean>
 	</Parameters>
 </ParamSection>

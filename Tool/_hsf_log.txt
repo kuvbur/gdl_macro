@@ -10,6 +10,7 @@
 	Revert ... macro_dotbydr.gsm
 	Revert ... macro_getcentre_plate.gsm
 	Revert ... macro_get_polylinelength.gsm
+	Revert ... macro_local_ax.gsm
 	Revert ... macro_offset_poly.gsm
 	Revert ... macro_parse.gsm
 	Revert ... macro_polyline.gsm
@@ -45,4 +46,13 @@
 	Revert ... IFC Extruded Macro_mod.gsm
 	Revert ... PolygonOperations_mod.gsm
 	Revert ... ProfileConverter_mod.gsm
+	Copy ... include.json
+	Copy ... MASTER_GDL_ArchiBibl_BD.gdl
+	Copy ... _ArchiBibl_BD.lis
+	Copy ... _ArchiBibl_BD_COMP.txt
+	Copy ... _ArchiBibl_BD_CRIT.lic
+	Transcode ... _ArchiBibl_BD_DESC.txt
+	Copy ... _ArchiBibl_BD_KEY.txt
+	Copy ... _ArchiBibl_BD_UNIT.txt
+	Transcode ... Специфик_перем.txt
 	Revert ... Спецификатор.gsm

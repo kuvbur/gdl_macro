@@ -95,15 +95,15 @@
 		</Integer>
 		<String Name="mlb_out_str">
 			<Description><![CDATA["Строка с разбивкой \n"]]></Description>
-			<Value><![CDATA["Пример\nпример\nпример\nпример\n"]]></Value>
+			<Value><![CDATA["Пример пример  пример пример\nПример пример  пример пример\nПример пример  пример пример\nПример пример  пример пример\n"]]></Value>
 		</String>
 		<String Name="mlb_out_str_arr">
 			<Description><![CDATA["Массив строк"]]></Description>
 			<ArrayValues FirstDimension="4" SecondDimension="0">
-				<AVal Row="1"><![CDATA["Пример"]]></AVal>
-				<AVal Row="2"><![CDATA["пример"]]></AVal>
-				<AVal Row="3"><![CDATA["пример"]]></AVal>
-				<AVal Row="4"><![CDATA["пример"]]></AVal>
+				<AVal Row="1"><![CDATA["Пример пример  пример пример"]]></AVal>
+				<AVal Row="2"><![CDATA["Пример пример  пример пример"]]></AVal>
+				<AVal Row="3"><![CDATA["Пример пример  пример пример"]]></AVal>
+				<AVal Row="4"><![CDATA["Пример пример  пример пример"]]></AVal>
 			</ArrayValues>
 		</String>
 	</Parameters>

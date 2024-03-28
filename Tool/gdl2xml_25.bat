@@ -10,7 +10,7 @@ set "lcf_dir=%cd%\lcf"
 RD /S /Q  "%hsf_dir%"
 MD "%hsf_dir%"
 cd "%hsf_dir%"
-"%converter%"   l2hsf -compatibility 25 "%gdl_dir%" "%hsf_dir%" >"%tool_dir%\_hsf_log.txt"
+"%converter%"   l2hsf -l CYR -compatibility 25 "%gdl_dir%" "%hsf_dir%" >"%tool_dir%\_hsf_log.txt"
 
 
 RD /S /Q "%lcf_dir%"
@@ -20,3 +20,4 @@ cd "%lcf_dir%"
 TIMEOUT /T 10
 ROBOCOPY "%lcf_dir%" "C:\Users\kuvbur\YandexDisk\sourse\LCF24" /E
 ROBOCOPY "%lcf_dir%" "C:\Users\kuvbur\YandexDisk\sourse\gdl_bibl\lcf" /E
+ROBOCOPY "%hsf_dir%" "C:\Users\kuvbur\YandexDisk\sourse\gdl_bibl\hsf\common_macro" /E

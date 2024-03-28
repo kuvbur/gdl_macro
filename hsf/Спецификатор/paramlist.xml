@@ -15,6 +15,14 @@
 			<Description><![CDATA[""]]></Description>
 			<Value><![CDATA[""]]></Value>
 		</String>
+		<Boolean Name="isDict">
+			<Description><![CDATA["Передача значений через словарь?"]]></Description>
+			<Value>0</Value>
+		</Boolean>
+		<Boolean Name="use_spec">
+			<Description><![CDATA["Вывод в спецификацию Эксель"]]></Description>
+			<Value>1</Value>
+		</Boolean>
 
 		<!-- _sp0: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
 
@@ -55,6 +63,14 @@
 				<AVal Row="1">0</AVal>
 			</ArrayValues>
 		</Length>
+		<Dictionary Name="armspec">
+			<Description><![CDATA[""]]></Description>
+			<Value/>
+		</Dictionary>
+		<Dictionary Name="armconst">
+			<Description><![CDATA[""]]></Description>
+			<Value/>
+		</Dictionary>
 
 		<!-- _sp1: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
 
@@ -298,3 +314,7 @@
 		</String>
 	</Parameters>
 </ParamSection>
+
+
+
+
