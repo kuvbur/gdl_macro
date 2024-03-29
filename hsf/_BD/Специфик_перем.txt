@@ -1,12 +1,14 @@
 ﻿{
     VERSION		1.10
-    LISTFORMAT	Spreadsheet
-    LISTTYPE	COMPONENT
+    TITLE "Спецификация перемычек"
+    COMMENT "Спецификация перемычек"
+    LISTFORMAT BOOK
+    LISTTYPE COMPONENT
+    LAYOUTSCALE 100
     UNIT		mm
     ALWAYS
     PAGE		150, 250
     LINEGAP		0
-    Layoutscale		100
 
     HEADER { Frame 0, 203, 0, 31		Text 1, "GOST 2.304 type A", 10, plain, centered
         Columns {
