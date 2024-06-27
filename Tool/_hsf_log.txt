@@ -41,6 +41,7 @@
 	Revert ... Шаблон профиля.gsm
 	Revert ... Шаблон фасонки.gsm
 	Copy ... README.md
+	Revert ... Общий шаблон бетон.gsm
 	Revert ... BasicGeometricCalc_20.gsm
 	Revert ... BasicGeometry_25.gsm
 	Revert ... IFC Extruded Macro_mod.gsm
