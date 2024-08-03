@@ -11,7 +11,7 @@ RD /S /Q  "%hsf_dir%"
 MD "%hsf_dir%"
 cd "%hsf_dir%"
 "%converter%"   l2hsf -l CYR -compatibility 25 "%gdl_dir%" "%hsf_dir%" >"%tool_dir%\_hsf_log.txt"
-
+python "%tool_dir%\hsf2text.py"
 
 RD /S /Q "%lcf_dir%"
 MD "%lcf_dir%"

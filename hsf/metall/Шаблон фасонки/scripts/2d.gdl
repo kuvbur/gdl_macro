@@ -1,4 +1,4 @@
-﻿if GLOB_CONTEXT=6 then
+if GLOB_CONTEXT=6 then
 	k = 5
 	pen SYMB_SECT_PEN
 	MUL2 A_/1000, A_/1000 
