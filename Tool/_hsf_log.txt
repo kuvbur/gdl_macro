@@ -44,6 +44,10 @@
 	Revert ... Общий шаблон бетон.gsm
 	Revert ... Общий шаблон дерево.gsm
 	Revert ... Общий шаблон элемента.gsm
+	Transcode ... Гильзы_10704_91.txt
+	Revert ... Параметры сальника.gsm
+	Transcode ... Сальники набивные.txt
+	Transcode ... Сальники нажимные.txt
 	Revert ... BasicGeometricCalc_20.gsm
 	Revert ... BasicGeometry_25.gsm
 	Revert ... IFC Extruded Macro_mod.gsm
