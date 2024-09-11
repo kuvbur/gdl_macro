@@ -6,7 +6,6 @@ set "gdl_dir=%cd%\gdl"
 set "hsf_dir=%cd%\hsf"
 set "lcf_dir=%cd%\lcf"
 
-
 RD /S /Q  "%hsf_dir%"
 MD "%hsf_dir%"
 cd "%hsf_dir%"
@@ -18,6 +17,12 @@ MD "%lcf_dir%"
 cd "%lcf_dir%"
 "%converter%" createcontainer common.lcf -compress 9 "%gdl_dir%">"%tool_dir%\_lcf_log.txt"
 TIMEOUT /T 10
-ROBOCOPY "%lcf_dir%" "C:\Users\kuvbur\YandexDisk\sourse\LCF24" /E
-ROBOCOPY "%lcf_dir%" "C:\Users\kuvbur\YandexDisk\sourse\gdl_bibl\lcf" /E
-ROBOCOPY "%hsf_dir%" "C:\Users\kuvbur\YandexDisk\sourse\gdl_bibl\hsf\common_macro" /E
+
+cd ..
+cd ..
+
+ROBOCOPY "%lcf_dir%" "%cd%\LCF24" /E
+ROBOCOPY "%lcf_dir%" "%cd%\gdl_bibl\lcf" /E
+
+
+
