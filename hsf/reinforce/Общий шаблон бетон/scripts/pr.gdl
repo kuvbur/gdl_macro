@@ -81,7 +81,7 @@ endif
 if type_spec = "Изделие" or v_conc<EPS then
 	call "Спецификатор" parameters tip_el="40",
 									subpos = subpos, 
-									pos = "", 
+									pos = pos, 
 									obozn=obozn,
 									naen=naen,
 									ves=ves,
@@ -98,7 +98,8 @@ goto "prop_end"
 										mat_area=mat_area,
 										mat_thickness=mat_thickness,
 										mat_volume=mat_volume,
-										mat_length=mat_length
+										mat_length=mat_length,
+										mat_cost = "кв.м."
 	endif
 return
 "prop_end":

@@ -106,7 +106,7 @@
 			<Flags>
 				<ParFlg_Child/>
 			</Flags>
-			<Value>0</Value>
+			<Value>1</Value>
 		</Integer>
 		<BuildingMaterial Name="mat_in_1">
 			<Description><![CDATA["Внутренний слой 1"]]></Description>
@@ -595,6 +595,31 @@
 				<AVal Row="1">0</AVal>
 			</ArrayValues>
 		</Length>
+		<String Name="label_layers">
+			<Description><![CDATA["Текст флажка"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<String Name="label_layers_out">
+			<Description><![CDATA["Состав гидроизоляции снаружи"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<String Name="label_layers_in">
+			<Description><![CDATA["Состав гидроизоляции изнутри"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
 		<Integer Name="krat">
 			<Description><![CDATA[""]]></Description>
 			<Fix/>

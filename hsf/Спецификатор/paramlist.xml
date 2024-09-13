@@ -139,6 +139,10 @@
 			<Description><![CDATA["Длина, мм"]]></Description>
 			<Value>0</Value>
 		</Length>
+		<String Name="mat_cost">
+			<Description><![CDATA["Единица измерения (принудительно)"]]></Description>
+			<Value><![CDATA[""]]></Value>
+		</String>
 
 		<!-- _sp2: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
 
