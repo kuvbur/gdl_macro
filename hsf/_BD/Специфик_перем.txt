@@ -36,7 +36,7 @@
             { Frame 19, 37, 2 Format "#value[1]"	Text 1, "GOST 2.304 type A", 10, plain, centered, Multiline}
             { Frame 39, 96, 2 Format "#Value[2]"	Text 1, "GOST 2.304 type A", 10, plain, centered, Multiline}
             { Frame 100, 156, 2 Format "#Value[3] " Text 1, "GOST 2.304 type A", 10, plain, centered, Multiline }
-            { Frame 155, 168, 2 Format "#total[4]:5.0" Text 1, "GOST 2.304 type A", 10, plain,  centered, Multiline }
+            { Frame 155, 168, 2 Format "#total[4]:5.2" Text 1, "GOST 2.304 type A", 10, plain,  centered, Multiline }
             { Frame 170, 182, 2  Format "#value[5]"  Text 1, "GOST 2.304 type A", 10, plain, centered, Multiline	}
             { Frame 184, 202, 2  Format " "  Text 1, "GOST 2.304 type A", 10, plain, centered, Multiline	}
 
