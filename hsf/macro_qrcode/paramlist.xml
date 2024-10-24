@@ -53,32 +53,24 @@
 			</Flags>
 			<Value>0</Value>
 		</Length>
-		<Length Name="somestuff_spec_hrow">
-			<Description><![CDATA["Высота строки (мм модели)"]]></Description>
-			<Value>0.5</Value>
-		</Length>
-		<String Name="pos">
-			<Description><![CDATA["Позиция"]]></Description>
+		<String Name="macro_qr_txt">
+			<Description><![CDATA[""]]></Description>
 			<Value><![CDATA[""]]></Value>
 		</String>
-		<String Name="naen">
-			<Description><![CDATA["Наименование"]]></Description>
-			<Value><![CDATA["-"]]></Value>
-		</String>
-		<String Name="obozn">
-			<Description><![CDATA["Обозначение"]]></Description>
-			<Value><![CDATA["-"]]></Value>
-		</String>
-		<RealNum Name="ves">
-			<Description><![CDATA["Масса ед., кг"]]></Description>
+		<Length Name="macro_qr_A">
+			<Description><![CDATA["Общий размер (0=авто)"]]></Description>
 			<Value>0</Value>
-		</RealNum>
-		<RealNum Name="qty">
-			<Description><![CDATA["Кол-во"]]></Description>
+		</Length>
+		<Length Name="macro_qr_module_size">
+			<Description><![CDATA["Размер модуля (0=авто)"]]></Description>
 			<Value>0</Value>
-		</RealNum>
-		<String Name="subpos">
-			<Description><![CDATA[""]]></Description>
+		</Length>
+		<Boolean Name="is_show3d">
+			<Description><![CDATA["Показывать в 3D"]]></Description>
+			<Value>1</Value>
+		</Boolean>
+		<String Name="macro_qr_ifc_property_name">
+			<Description><![CDATA["Имя IFC свойства с кодом"]]></Description>
 			<Value><![CDATA[""]]></Value>
 		</String>
 	</Parameters>
