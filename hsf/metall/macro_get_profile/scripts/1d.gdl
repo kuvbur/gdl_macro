@@ -80,15 +80,6 @@ if prof_data.error<>"ok" then print(_dataprof.error)
 exit prof_data
 
 "set_data":
-	!!!i=i+1 : iname_prof[i]=1 : tname_prof[i] = "Круглая труба"
-	!!!i=i+1 : iname_prof[i]=2 : tname_prof[i] = "Квадратная труба"
-	!!!i=i+1 : iname_prof[i]=3 : tname_prof[i] = "Швеллер"
-	!!!i=i+1 : iname_prof[i]=4 : tname_prof[i] = "Двутавр"
-	!!!i=i+1 : iname_prof[i]=5 : tname_prof[i] = "Уголок"
-	!!!i=i+1 : iname_prof[i]=6 : tname_prof[i] = "Лист"
-	!!!i=i+1 : iname_prof[i]=8 : tname_prof[i] = "Уголок гнутый"
-	!!!i=i+1 : iname_prof[i]=9 : tname_prof[i] = "Швеллер гнутый"
-
 	_dataprof.obozn = sort_data.tip_p[_dataprof.name_prof].obozn[_dataprof.tip_p]
 	_dataprof.naen_t = sort_data.tip_p[_dataprof.name_prof].naen[_dataprof.tip_p]
 
@@ -127,9 +118,8 @@ return
 			tr = tr/1000
 			dbf = dbf/1000
 			ax_y = ax_y/1000
-			
 		else
-			_dataprof.error = _dataprof.error + " : Ошибка при чтении профиля_ " + num
+			_dataprof.error = _dataprof.error + f_name + " : Ошибка при чтении профиля в строке " + num
 			goto "m_end"
 		endif
 	else

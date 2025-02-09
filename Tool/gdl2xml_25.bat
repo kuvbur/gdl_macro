@@ -21,7 +21,7 @@ TIMEOUT /T 10
 cd ..
 cd ..
 
-ROBOCOPY "%lcf_dir%" "%cd%\LCF24" /E>"%tool_dir%\log\_lcf_log.txt"
+ROBOCOPY "%lcf_dir%" "%cd%\LCF25" /E>"%tool_dir%\log\_lcf_log.txt"
 ROBOCOPY "%lcf_dir%" "%cd%\gdl_bibl\lcf" /E>"%tool_dir%\log\_lcf_log.txt"
 
 

@@ -783,6 +783,48 @@
 					<Integer Index="7">8</Integer>
 					<Integer Index="8">9</Integer>
 				</Array>
+				<Dictionary Name="MVO">
+					<Array Name="COV_TYPE_ARR">
+						<String Index="1"><![CDATA["Нет"]]></String>
+						<String Index="2"><![CDATA["тип 1"]]></String>
+						<String Index="3"><![CDATA["тип 2"]]></String>
+						<String Index="4"><![CDATA["тип 3"]]></String>
+						<String Index="5"><![CDATA["тип 4"]]></String>
+					</Array>
+					<Array Name="FIRE_KEEP_TYPE_ARR">
+						<String Index="1"><![CDATA["Не требует защиты"]]></String>
+						<String Index="2"><![CDATA["Обеспечивается металлом"]]></String>
+						<String Index="3"><![CDATA["Тонкослойная огнезащита"]]></String>
+						<String Index="4"><![CDATA["Конструктивная огнезащита"]]></String>
+					</Array>
+					<Array Name="KONSTR_TYPE_ARR">
+						<String Index="1"><![CDATA["Балки"]]></String>
+						<String Index="2"><![CDATA["Колонны"]]></String>
+						<String Index="3"><![CDATA["Прогоны"]]></String>
+						<String Index="4"><![CDATA["Фермы"]]></String>
+						<String Index="5"><![CDATA["Емкости"]]></String>
+						<String Index="6"><![CDATA["Связи"]]></String>
+						<String Index="7"><![CDATA["Фахверки"]]></String>
+						<String Index="8"><![CDATA["Площадки"]]></String>
+						<String Index="9"><![CDATA["Лестницы"]]></String>
+						<String Index="10"><![CDATA["Подкрановые пути"]]></String>
+						<String Index="11"><![CDATA["Прочее"]]></String>
+					</Array>
+					<Array Name="FIRE_TYPE_ARR">
+						<String Index="1"><![CDATA["Несущие конструкции"]]></String>
+						<String Index="2"><![CDATA["Стены лестничных клеток"]]></String>
+						<String Index="3"><![CDATA["Стропильные конструкции бесчердачного покрытия"]]></String>
+						<String Index="4"><![CDATA["Настил бесчердачного покрытия"]]></String>
+						<String Index="5"><![CDATA["Межэтажные перекрытия"]]></String>
+						<String Index="6"><![CDATA["Марши и площадки лестниц"]]></String>
+						<String Index="7"><![CDATA["Не требует защиты"]]></String>
+					</Array>
+					<Array Name="TYPE_SPEC_TYPE_ARR">
+						<String Index="1"><![CDATA["Металл"]]></String>
+						<String Index="2"><![CDATA["Изделие"]]></String>
+						<String Index="3"><![CDATA["Не специфицировать"]]></String>
+					</Array>
+				</Dictionary>
 				<Dictionary Name="STAL">
 					<Array Name="VALUES">
 						<String Index="1"><![CDATA["С235"]]></String>
@@ -7547,7 +7589,9 @@
 						</Array>
 					</Dictionary>
 				</Array>
-				<Integer Name="VERSION">1</Integer>
+				<Integer Name="VERSION">2</Integer>
+				<String Name="DATE"><![CDATA["25/01/22 13:38"]]></String>
+				<Integer Name="ISREAD">1</Integer>
 			</Value>
 		</Dictionary>
 	</Parameters>

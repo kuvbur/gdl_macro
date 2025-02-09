@@ -1,11 +1,52 @@
+!profile_data.set.name_prof
+!profile_data.set.tip_p
+!profile_data.set.profile
+!profile_data.set.mater
+!
+!!Координаты полигона сечения
+!profile_data.set.coord[i].x
+!profile_data.set.coord[i].y
+!profile_data.set.coord[i].z
+!profile_data.set.coord[i].r
+!
+!profile_data.set.typesheet (VERT_SHEET = 1 GOR_SHEET = 2 POLY_SHEET = 3)
+!
+!!Координаты пути построения
+!profile_data.set.path[i].x
+!profile_data.set.path[i].y 
+!profile_data.set.path[i].z
+!profile_data.set.path[i].a
+!
+!!Координаты точки привязки
+!profile_data.read.cpoint.x
+!profile_data.read.cpoint.y
+!
+!!В какую сторону делать отступ толщины - внутрь 1, наружу -1
+!profile_data.set.cpoint.sgnth
+!
+!!Толщина
+!profile_data.set.thickness
+!
+!!Гнуть/не гнуть лист (скругление)
+!profile_data.set.fold
+!
+!!Отступ экземпляра
+!profile_data.set.start[i].x
+!profile_data.set.start[i].y
+!profile_data.set.start[i].z
+!
+!!Поворот экземпляра
+!profile_data.set.start[i].rx
+!profile_data.set.start[i].ry
+!profile_data.set.start[i].rz
+!
+!!Отражение экземпляра
+!profile_data.set.start[i].mx
+!profile_data.set.start[i].my
+!profile_data.set.start[i].mz
+
 EPS = 0.0001
 flag = 0
-
-tip_konstr = " "
-subpos = " "
-pos = " "
-upr = 0
-type_spec = "Металл"
 
 !Смещение оси
 dx = 0
@@ -36,6 +77,14 @@ else
 		if not(haskey(profile_data.set.coord[i].z)) then profile_data.set.coord[i].z = 0
 	next i
 endif
+
+
+if  haskey(profile_data.set.tip_konstr) then tip_konstr = profile_data.set.tip_konstr
+if  haskey(profile_data.set.mater) then mater = profile_data.set.mater
+if  haskey(profile_data.set.subpos) then subpos = profile_data.set.subpos
+if  haskey(profile_data.set.pos) then pos = profile_data.set.pos
+if  haskey(profile_data.set.upr) then upr = profile_data.set.upr
+if  haskey(profile_data.set.type_spec) then type_spec = profile_data.set.type_spec
 
 typesheet = 0
 if haskey(profile_data.set.typesheet) then 
@@ -68,7 +117,7 @@ if haskey(profile_data.set.cpoint) then
 endif
 
 thickness = 0.003
-if haskey(profile_data.set.thickness) then thickness = profile_data.set.thickness
+if haskey(profile_data.set.thickness) then thickness = abs(profile_data.set.thickness)
 
 if not(haskey(profile_data.set.start)) then profile_data.set.start[1].x = 0
 
@@ -84,6 +133,7 @@ if typesheet = VERT_SHEET then
 	call "macro_get_vert_sheet" parameters coord = coord, RETURNED_PARAMETERS coord
 	if coord.error = "ok" then
 		profile_data.read.dlin_prof = coord.length
+		parameters A = coord.length
 		profile_data.read.sum_length = coord.sum_length
 		profile_data.read._2d[1].unput = coord.out
 		profile_data.read._2d[2].unput = profile_data.read._2d[1].unput
@@ -127,3 +177,4 @@ goto "m_end"
 return
 
 "m_end":
+

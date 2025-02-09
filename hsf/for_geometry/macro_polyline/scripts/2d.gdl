@@ -1,3 +1,11 @@
+if haskey(poly_data.is2d) then
+	if not(poly_data.is2d) then end
+endif
+
+if abs((rx mod 360)-180)<EPS then mul2 1,-1
+if abs((ry mod 360)-180)<EPS then mul2 -1,1
+if abs(rx mod 360)<EPS and abs(ry mod 360)<EPS then rot2 rz
+
 uniID=6500 
 salta_punti_editabili = 0 
 FOR x = 1 TO poly_n -1+poly_closed
@@ -47,10 +55,21 @@ FOR x = 1 TO poly_n
 			ROT2 a1-90
 			IF salta_punti_editabili = 0 THEN
 				HOTSPOT2 0,0,uniID,poly_3point_d [x],1+128 : uniID=uniID+1
-				HOTSPOT2 poly_3point_d [x]-.06,0,uniID,poly_3point_d [x],2 : uniID=uniID+1
+				HOTSPOT2 poly_3point_d [x]-.02,0,uniID,poly_3point_d [x],2 : uniID=uniID+1
 				HOTSPOT2 -1,0,uniID,poly_3point_d [x],3 : uniID=uniID+1
 			ENDIF
 			DEL 2
+			if x>1 then
+			ADD2 poly_point_xy [x][1],poly_point_xy [x][2]
+			rot2 a1/2
+			add2 -0.01,0
+			IF salta_punti_editabili = 0 THEN
+			HOTSPOT2 0,0,uniID,poly_arc_r[x],1+128 : uniID=uniID+1
+			HOTSPOT2 -poly_arc_r[x],0,uniID,poly_arc_r[x],2 : uniID=uniID+1
+			HOTSPOT2 1,0,uniID,poly_arc_r[x],3 : uniID=uniID+1
+			ENDIF
+			DEL 3
+			endif
 		ENDIF
 	ENDIF
 NEXT x
@@ -67,3 +86,6 @@ if show_line then
 		ENDIF	
 	NEXT x
 endif
+
+if abs((rx mod 360)-180)<EPS then del 1
+if abs((ry mod 360)-180)<EPS then del 1

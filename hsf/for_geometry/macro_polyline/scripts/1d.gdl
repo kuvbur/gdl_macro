@@ -1,16 +1,47 @@
 EPS = 0.0001
-dict poly_data
-use_z = 0 : if haskey(poly_data.use_z) then use_z = poly_data.use_z
-poly_closed = 0 : if haskey(poly_data.poly_closed) then poly_closed = poly_data.poly_closed
-show_line = 1 : if haskey(poly_data.show_line) then show_line = poly_data.show_line
+if haskey(poly_data.use_z) then use_z = poly_data.use_z
+if haskey(poly_data.poly_closed) then poly_closed = poly_data.poly_closed
+if haskey(poly_data.show_line) then show_line = poly_data.show_line
 
-rot_x = 0 : if haskey(poly_data.rot_x) then rot_x = poly_data.rot_x
-rot_y = 0 : if haskey(poly_data.rot_y) then rot_y = poly_data.rot_y
-rot_z = 0 : if haskey(poly_data.rot_z) then rot_z = poly_data.rot_z
+if haskey(poly_data.rx) then rx = poly_data.rx
+if haskey(poly_data.ry) then ry = poly_data.ry
+if haskey(poly_data.rz) then rz = poly_data.rz
 if not(use_z) then
 	FOR x = 1 TO poly_n
 		if not(use_z) then poly_point_xy[x][3] = 0
 	next x
+endif
+
+!--------- Подготовка данных для сварки -------------------
+dim pos_weld[2][3]
+dim ttype_weld[]
+dim itype_weld[] : i=0
+i=i+1 : itype_weld[i]=0 : ttype_weld[i] = "Нет"
+i=i+1 : itype_weld[i]=1 : ttype_weld[i] = "Автоматический угловой"
+i=i+1 : itype_weld[i]=2 : ttype_weld[i] = "Автоматический стыковой"
+i=i+1 : itype_weld[i]=3 : ttype_weld[i] = "Ручной угловой"
+i=i+1 : itype_weld[i]=4 : ttype_weld[i] = "Ручной стыковой"
+
+show_weld_line = 1
+
+if vardim1(weld_side)<vardim1(poly_point_xy)+1 or vardim1(weld_side_up)<vardim1(poly_point_xy)+1 then
+	dim weld_side_[90]
+	dim weld_side_coord_[90][2]
+	for i=1 to 90
+		weld_side_[i] = 0
+		weld_side_coord_[i][1] = 0
+		weld_side_coord_[i][2] = 0
+	next i
+	parameters weld_side = weld_side_, weld_side_up = weld_side_
+	parameters weld_side_coord = weld_side_coord_
+endif
+
+if vardim1(weld_side_ang)<vardim1(poly_point_xy)+1 or vardim1(weld_side_ang_up)<vardim1(poly_point_xy)+1 then
+	dim weld_side_ang_[90]
+	for i=1 to 90
+		weld_side_ang_[i] = 0
+	next i
+	parameters weld_side_ang = weld_side_ang_, weld_side_ang_up = weld_side_ang_
 endif
 
 ! VERIFICA PUNTI COINCIDENTI PATH ==============================================================================
@@ -56,7 +87,7 @@ poly_vertex_max = 40
 !Parametri sub polilinea DATI
 DIM sub_poly_point_xy [40][3] 
 DIM sub_poly_3point_d [40]
-
+DIM sub_poly_arc_r [40]
 !Parametri sub polilinea
 DIM sub_poly_3point_xy [40][3]!.....COORDINATE CENTRO
 DIM sub_poly_3point_angle [40][2]!.....ANGOLO A e B
@@ -83,16 +114,23 @@ DIM poly_slope [40]
 !Parametri segmenti polilinea legati ai post
 DIM poly_element_res [10][40] !n. lati dei lati curvi in caso di risoluzione autonoma
 
-
 !INIZZIALIZZAZIONE VARIABILI========================
 FOR x = 1 TO poly_vertex_max
 	sub_poly_point_xy [x][1] = 0
 	sub_poly_point_xy [x][2] = 0 
 	sub_poly_point_xy [x][3] = 0 
 	sub_poly_3point_d [x] = 0
+	sub_poly_arc_r [x] = 0
+	sub_poly_slope [x] = 0
 	for y=1 to 10
-		poly_element_res[y][x] = 0
+		poly_element_res[y][x] = 4
 	next y
+	poly_3point_angle [x][1] = 0
+	poly_3point_angle [x][2] = 0
+	poly_3point_radius [x] = 0
+	poly_3point_xy [x][1] = 0
+	poly_3point_xy [x][2] = 0
+	poly_3point_xy [x][3] = 0
 NEXT x
 
 !SUB PER CALCOLARE VARIABILI PER DISEGNARE LA POLILINEA E DIVISIONE SEGMENTI================
@@ -110,7 +148,7 @@ sub_poly_res = poly_res
 
 sub_poly_point_xy = poly_point_xy
 sub_poly_3point_d = poly_3point_d
-
+sub_poly_arc_r = poly_arc_r
 
 GOSUB 400
 !riassegnazione variabili di ritorno
@@ -150,6 +188,7 @@ FOR x = 1 TO poly_n-1+poly_closed
 	IF ABS(poly_3point_d [x]) > EPS and abs(poly_element_res[1][x])>EPS THEN 
 		IF (ABS(poly_point_xy [x][1]-poly_point_xy [x+1][1]) > EPS) OR (ABS(poly_point_xy [x][2]-poly_point_xy [x+1][2]) > EPS) THEN
 			poly_res_temp = poly_element_res[1][x]
+			if abs(poly_res_temp)<EPS then poly_res_temp = 1
 			inc_temp = 0
 			punto_arco_ang = ((poly_3point_angle [x][2]-poly_3point_angle [x][1])/poly_res_temp)
 			punto_arco_dz = (poly_point_xy[x+1][3]-poly_point_xy[x][3])/poly_res_temp

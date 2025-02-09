@@ -4,6 +4,8 @@
 !if coord.error = "ok" then 
 !endif
 
+
+EPS=0.00001
 dict polyth
 coord.error = "-"
 
@@ -39,6 +41,7 @@ if coord.error = "ok" then
 	polyth.error = "-"
 	polyth.in = coord.out
 	polyth.thickness = coord.thickness*sgnth
+	polyth.isClosed = 1
 	call "macro_offset_poly" parameters mop_poly_dict = polyth, RETURNED_PARAMETERS polyth
 	if polyth.error = "ok" then
 		coord.out = polyth.out

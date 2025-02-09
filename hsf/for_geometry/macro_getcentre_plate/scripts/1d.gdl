@@ -7,7 +7,12 @@ PREPAREFUNCTION ch, "CreateContainer", "from_cont", ""
 PREPAREFUNCTION ch, "CreateContainer", "to_cont", ""
 PREPAREFUNCTION ch, "SetSourceContainer",		"from_cont", ""
 PREPAREFUNCTION ch, "SetDestinationContainer",	"to_cont", ""
-
+ch_x = 0
+ch_y = 0
+perim = 0
+s_plit_obsh = 0
+area_obsh = 0
+if k_otr_pl<1 then goto "m_end"
 l = 0
 max_l = 0
 vl_x = 0
@@ -133,5 +138,5 @@ if rezult<EPS then
 	ch_x = ssumx / (6 * s_plit_sgn)
 	ch_y = ssumy / (6 * s_plit_sgn)
 endif
-
+"m_end":
 end ch_x, ch_y, perim, s_plit_obsh, area_obsh

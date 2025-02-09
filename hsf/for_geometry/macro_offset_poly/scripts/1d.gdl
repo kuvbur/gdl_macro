@@ -35,6 +35,8 @@ else
 	if abs(mop_poly_dict.thickness)<ESP then mop_poly_dict.thickness = 0.001
 endif
 
+isClosed = 0 : if haskey(mop_poly_dict.isClosed) then isClosed = mop_poly_dict.isClosed
+
 dim poly_in[][3]
 for i=1 to vardim1(mop_poly_dict.in)
 	poly_in[i][1] = mop_poly_dict.in[i].x
@@ -102,9 +104,9 @@ if vardim1(resPolyIDArray)=1 then
 	length_1 = 0 : length_2 = 0
 	call "macro_get_polylinelength" parameters coord_arr = poly_out_1, bdict = 0, RETURNED_PARAMETERS length_1
 	call "macro_get_polylinelength" parameters coord_arr = poly_out_2, bdict = 0, RETURNED_PARAMETERS length_2
-	mop_poly_dict.length = max(length_1, length_2)
-	mop_poly_dict.sum_length = length_1+length_2
-
+	mop_poly_dict.length = min(length_1, length_2)
+	if length_1<EPS then mop_poly_dict.length = length_2
+	if length_2<EPS then mop_poly_dict.length = length_1
 	dim poly_out_3[][3]
 	dim _center[]
 	io = 0
@@ -152,8 +154,7 @@ if vardim1(resPolyIDArray)=1 then
 		mop_poly_dict.out[j].y = poly_out_3[i][2]
 		mop_poly_dict.out[j].s = poly_out_3[i][3]
 	next i
-
-	if polyindict.isClosed then
+	if polyindict.isClosed or isClosed then
 		j = j + 1
 		i=vardim1(poly_out_3)
 		mop_poly_dict.out[j].x = poly_out_3[i][1]
@@ -165,6 +166,16 @@ if vardim1(resPolyIDArray)=1 then
 		mop_poly_dict.out[j].y = poly_out_1[1][2]
 		mop_poly_dict.out[j].s = -1
 	endif
+
+	dim poly_out_4[][3]
+	for i=1 to vardim1(mop_poly_dict.out)
+		poly_out_4[i][1] = mop_poly_dict.out[i].x
+		poly_out_4[i][2] = mop_poly_dict.out[i].y
+		poly_out_4[i][3] = mop_poly_dict.out[i].s
+	next i
+	length_3 = 0
+	call "macro_get_polylinelength" parameters coord_arr = poly_out_4, bdict = 0, RETURNED_PARAMETERS length_3
+	mop_poly_dict.sum_length = length_3
 	mop_poly_dict.error = "ok"
 else
 	mop_poly_dict.error = mop_poly_dict.error + "; vardim1(resPolyIDArray)<>1"
