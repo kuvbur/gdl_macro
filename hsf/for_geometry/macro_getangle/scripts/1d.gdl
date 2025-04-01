@@ -1,0 +1,77 @@
+angle = -1
+EPS = 0.00001
+line2 coord[1][1], coord[1][2], coord[2][1], coord[2][2]
+line2 coord[3][1], coord[3][2], coord[4][1], coord[4][2]
+hotline2 coord[1][1], coord[1][2], coord[2][1], coord[2][2]
+hotline2 coord[3][1], coord[3][2], coord[4][1], coord[4][2]
+
+hotspot2 coord[1][1], coord[1][2]
+hotspot2 coord[2][1], coord[2][2]
+hotspot2 coord[3][1], coord[3][2]
+hotspot2 coord[4][1], coord[4][2]
+
+ax = coord[2][1]-coord[1][1]
+ay = coord[2][2]-coord[1][2]
+
+if abs(ax)<EPS and abs(ay)<EPS then goto "m_end"
+
+if abs(ax)<EPS then
+	if ay>EPS then
+		ang_a = 90
+	else
+		ang_a = 270
+	endif
+else
+	ang_a = atn(ay/ax)
+	if ax>EPS then
+		if ay>EPS then
+			ang_a = ang_a + 0
+		else
+			ang_a = ang_a + 360
+		endif
+	else
+		if ay>EPS then
+			ang_a = ang_a + 180
+		else
+			ang_a = ang_a + 180
+		endif
+	endif
+endif
+text2 0,0,ang_a
+ang_a = (ang_a+360) MOD 360
+
+
+bx = coord[4][1]-coord[3][1]
+by = coord[4][2]-coord[3][2]
+if abs(bx)<EPS and abs(by)<EPS then goto "m_end"
+
+if abs(bx)<EPS then
+	if by>EPS then
+		ang_b = 90
+	else
+		ang_b = 270
+	endif
+else
+	ang_b = atn(by/bx)
+	if bx>EPS then
+		if by>EPS then
+			ang_b = ang_b + 0
+		else
+			ang_b = ang_b + 360
+		endif
+	else
+		if by>EPS then
+			ang_b = ang_b + 180
+		else
+			ang_b = ang_b + 180
+		endif
+	endif
+endif
+ang_b = (ang_b+360) MOD 360
+text2 0,-0.3,ang_b
+
+angle = (ang_b - ang_a + 360) MOD 360
+text2 0,-0.7,angle
+
+"m_end":
+exit angle
