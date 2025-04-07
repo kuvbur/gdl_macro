@@ -1,49 +1,29 @@
 EPS = 0.0001
 if haskey(poly_data.use_z) then use_z = poly_data.use_z
+if haskey(poly_data.use_x) then use_x = poly_data.use_x
+if haskey(poly_data.use_y) then use_y = poly_data.use_y
+if haskey(poly_data.use_d) then use_d = poly_data.use_d
+if haskey(poly_data.use_arc) then use_arc = poly_data.use_arc
+if haskey(poly_data.edit_mode) then edit_mode = poly_data.edit_mode
+
 if haskey(poly_data.poly_closed) then poly_closed = poly_data.poly_closed
 if haskey(poly_data.show_line) then show_line = poly_data.show_line
 
 if haskey(poly_data.rx) then rx = poly_data.rx
 if haskey(poly_data.ry) then ry = poly_data.ry
 if haskey(poly_data.rz) then rz = poly_data.rz
-if not(use_z) then
+
+
+if not(use_z) or not(use_x) or not(use_y) or not(use_d) then
 	FOR x = 1 TO poly_n
 		if not(use_z) then poly_point_xy[x][3] = 0
+		if not(use_x) then poly_point_xy[x][1] = 0
+		if not(use_y) then poly_point_xy[x][2] = 0
+		if not(use_d) then poly_3point_d[x] = 0
 	next x
 endif
 
-!--------- Подготовка данных для сварки -------------------
-dim pos_weld[2][3]
-dim ttype_weld[]
-dim itype_weld[] : i=0
-i=i+1 : itype_weld[i]=0 : ttype_weld[i] = "Нет"
-i=i+1 : itype_weld[i]=1 : ttype_weld[i] = "Автоматический угловой"
-i=i+1 : itype_weld[i]=2 : ttype_weld[i] = "Автоматический стыковой"
-i=i+1 : itype_weld[i]=3 : ttype_weld[i] = "Ручной угловой"
-i=i+1 : itype_weld[i]=4 : ttype_weld[i] = "Ручной стыковой"
-
-show_weld_line = 1
-
-if vardim1(weld_side)<vardim1(poly_point_xy)+1 or vardim1(weld_side_up)<vardim1(poly_point_xy)+1 then
-	dim weld_side_[90]
-	dim weld_side_coord_[90][2]
-	for i=1 to 90
-		weld_side_[i] = 0
-		weld_side_coord_[i][1] = 0
-		weld_side_coord_[i][2] = 0
-	next i
-	parameters weld_side = weld_side_, weld_side_up = weld_side_
-	parameters weld_side_coord = weld_side_coord_
-endif
-
-if vardim1(weld_side_ang)<vardim1(poly_point_xy)+1 or vardim1(weld_side_ang_up)<vardim1(poly_point_xy)+1 then
-	dim weld_side_ang_[90]
-	for i=1 to 90
-		weld_side_ang_[i] = 0
-	next i
-	parameters weld_side_ang = weld_side_ang_, weld_side_ang_up = weld_side_ang_
-endif
-
+desc = ""
 ! VERIFICA PUNTI COINCIDENTI PATH ==============================================================================
 IF GLOB_MODPAR_NAME = "poly_point_xy" THEN
 	FOR x = 1 TO poly_n-1
@@ -61,6 +41,7 @@ IF GLOB_MODPAR_NAME = "poly_point_xy" THEN
 						poly_3point_d [y-1] = poly_3point_d [y]					
 					NEXT y
 					PARAMETERS poly_n = poly_n-1
+					PARAMETERS del_inx = x
 					poly_n = poly_n-1
 					GOTO 100
 				ENDIF 
@@ -71,6 +52,7 @@ IF GLOB_MODPAR_NAME = "poly_point_xy" THEN
 		IF poly_point_xy [poly_n][1] < poly_point_xy [1][1]+ EPS AND poly_point_xy [poly_n][1] > poly_point_xy [1][1]- EPS THEN
 			IF poly_point_xy [poly_n][2] < poly_point_xy [1][2]+ EPS AND poly_point_xy [poly_n][2] > poly_point_xy [1][2]- EPS THEN
 				IF (poly_point_xy [poly_n][3] < poly_point_xy [1][3]+ EPS AND poly_point_xy [poly_n][3] > poly_point_xy [1][3]- EPS) OR poly_escludi_z_verif_punti THEN
+					PARAMETERS new_inx = -poly_n
 					PARAMETERS poly_n = poly_n-1
 					poly_n = poly_n-1
 					GOTO 100

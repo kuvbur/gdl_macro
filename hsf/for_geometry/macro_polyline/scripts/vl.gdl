@@ -151,41 +151,6 @@ FOR x = 1 TO poly_n-1+poly_closed
 NEXT x
 poly_data.aproxn = i
 poly_data.error = "ok"
-k = 200
-values{2} "weld_side" itype_weld, ttype_weld
-values{2} "weld_side_up" itype_weld, ttype_weld
-values "weld_side_coord" 0,1/k, 2/k, 3/k, 4/k
-
-values "weld_side_ang" 0,90,180,270,360,-90,-180,-270,-360
-values "weld_side_ang_up" 0,90,180,270,360,-90,-180,-270,-360
-
-if GLOB_MODPAR_NAME = "weld_side_coord" then
-	for i=1 to vardim1(weld_side_coord)
-		weld_side[i] = int(weld_side_coord[i][1]*k)
-		weld_side_up[i] = int(weld_side_coord[i][2]*k)
-	next i
-	parameters weld_side = weld_side, weld_side_up = weld_side_up
-else
-	for i=1 to vardim1(weld_side)
-		weld_side_coord[i][1] = weld_side[i]/k
-		weld_side_coord[i][2] = weld_side_up[i]/k
-	next i
-	parameters weld_side_coord = weld_side_coord
-endif
-
-if GLOB_MODPAR_NAME = "reset_weld" then
-	for i=1 to vardim1(weld_side)
-		weld_side_coord[i][1] = 0
-		weld_side[i] = 0
-		weld_side_coord[i][2] = 0
-		weld_side_up[i] = 0
-	next i
-	parameters weld_side = weld_side, weld_side_up = weld_side_up, weld_side_coord = weld_side_coord, reset_weld = 0
-endif
-
-
-
-
 PARAMETERS poly_data = poly_data
 
 
@@ -216,7 +181,7 @@ END
 		NEXT x
 		PARAMETERS pointbis_da_spostare = pointbis_da_spostare
 		IF pointbis_da_spostare > 0 THEN
-	
+			PARAMETERS new_inx = pointbis_da_spostare
 			sub_poly_n = sub_poly_n+1
 			FOR x = sub_poly_n TO pointbis_da_spostare+2 STEP -1
 				sub_poly_point_xy [x][1] = sub_poly_point_xy [x-1][1]

@@ -14,55 +14,82 @@
 		<WDWallInset>0</WDWallInset>
 	</ParamSectHeader>
 	<Parameters SectVersion="27" SectionFlags="0" SubIdent="0">
+		<Length Name="ac_toplevel">
+			<Description><![CDATA["Top Level"]]></Description>
+			<Fix/>
+			<Value>0</Value>
+		</Length>
+		<Length Name="ac_bottomlevel">
+			<Description><![CDATA["Bottom Level"]]></Description>
+			<Fix/>
+			<Value>1</Value>
+		</Length>
+		<Boolean Name="AC_show2DHotspotsIn3D">
+			<Description><![CDATA["Show 2D Hotspots in 3D"]]></Description>
+			<Fix/>
+			<Value>0</Value>
+		</Boolean>
 		<Length Name="A">
 			<Description><![CDATA["Dimension 1"]]></Description>
 			<Fix/>
-			<Flags>
-				<ParFlg_Hidden/>
-			</Flags>
 			<Value>1</Value>
 		</Length>
 		<Length Name="B">
 			<Description><![CDATA["Dimension 2"]]></Description>
 			<Fix/>
-			<Flags>
-				<ParFlg_Hidden/>
-			</Flags>
 			<Value>1</Value>
 		</Length>
 		<Length Name="ZZYZX">
 			<Description><![CDATA["Height"]]></Description>
 			<Fix/>
-			<Flags>
-				<ParFlg_Hidden/>
-			</Flags>
 			<Value>0</Value>
 		</Length>
-		<Integer Name="pointbis_da_spostare">
+
+		<!-- poly_d: PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK ===== PARAMETER BLOCK -->
+
+		<Title Name="poly_d">
 			<Description><![CDATA[""]]></Description>
+		</Title>
+		<Integer Name="pointbis_da_spostare">
+			<Description><![CDATA["Индекс новой вершины (внутренний)"]]></Description>
 			<Flags>
-				<ParFlg_Hidden/>
+				<ParFlg_Child/>
 			</Flags>
 			<Value>0</Value>
 		</Integer>
 		<Integer Name="poly_n">
 			<Description><![CDATA["Количество вершин"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<Value>10</Value>
 		</Integer>
 		<Boolean Name="poly_closed">
 			<Description><![CDATA["Закрытая полилиния"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<Value>0</Value>
 		</Boolean>
 		<Integer Name="poly_res">
 			<Description><![CDATA["Разрешение"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<Value>36</Value>
 		</Integer>
 		<Boolean Name="poly_escludi_z_verif_punti">
 			<Description><![CDATA["Объединять совпадающие на плане точки с разной высотой"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<Value>1</Value>
 		</Boolean>
 		<Length Name="poly_point_xy">
 			<Description><![CDATA["Угол"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="3">
 				<AVal Column="1" Row="1">0</AVal>
 				<AVal Column="2" Row="1">0</AVal>
@@ -188,6 +215,9 @@
 		</Length>
 		<Length Name="poly_3point_d">
 			<Description><![CDATA["Скругление сегмента"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="0">
 				<AVal Row="1">0</AVal>
 				<AVal Row="2">0</AVal>
@@ -233,6 +263,9 @@
 		</Length>
 		<Length Name="poly_pointbis_x">
 			<Description><![CDATA["Новый угол - x"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="0">
 				<AVal Row="1">1</AVal>
 				<AVal Row="2">1.625</AVal>
@@ -278,6 +311,9 @@
 		</Length>
 		<Length Name="poly_pointbis_y">
 			<Description><![CDATA["Новый угол - y"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="0">
 				<AVal Row="1">0.5</AVal>
 				<AVal Row="2">1</AVal>
@@ -323,6 +359,9 @@
 		</Length>
 		<Length Name="poly_pointbis_z">
 			<Description><![CDATA["Новый угол - z"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="0">
 				<AVal Row="1">0</AVal>
 				<AVal Row="2">0</AVal>
@@ -368,6 +407,9 @@
 		</Length>
 		<Length Name="poly_pointbis_check_x">
 			<Description><![CDATA["Punti in più check x"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="0">
 				<AVal Row="1">1</AVal>
 				<AVal Row="2">1.625</AVal>
@@ -413,6 +455,9 @@
 		</Length>
 		<Length Name="poly_pointbis_check_y">
 			<Description><![CDATA["Punti in più check y"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="0">
 				<AVal Row="1">0.5</AVal>
 				<AVal Row="2">1</AVal>
@@ -458,6 +503,9 @@
 		</Length>
 		<Length Name="poly_pointbis_check_z">
 			<Description><![CDATA["Punti in più check z"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="0">
 				<AVal Row="1">0</AVal>
 				<AVal Row="2">0</AVal>
@@ -503,6 +551,9 @@
 		</Length>
 		<Length Name="poly_element_res">
 			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="10" SecondDimension="40">
 				<AVal Column="1" Row="1">1</AVal>
 				<AVal Column="2" Row="1">1</AVal>
@@ -908,6 +959,9 @@
 		</Length>
 		<Angle Name="poly_3point_angle">
 			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="2">
 				<AVal Column="1" Row="1">0</AVal>
 				<AVal Column="2" Row="1">0</AVal>
@@ -993,6 +1047,9 @@
 		</Angle>
 		<Length Name="poly_3point_radius">
 			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="0">
 				<AVal Row="1">0</AVal>
 				<AVal Row="2">0</AVal>
@@ -1038,6 +1095,9 @@
 		</Length>
 		<Length Name="poly_3point_xy">
 			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="3">
 				<AVal Column="1" Row="1">0</AVal>
 				<AVal Column="2" Row="1">0</AVal>
@@ -1163,6 +1223,9 @@
 		</Length>
 		<Length Name="poly_arc_r">
 			<Description><![CDATA[""]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<ArrayValues FirstDimension="40" SecondDimension="0">
 				<AVal Row="1">0</AVal>
 				<AVal Row="2">0</AVal>
@@ -1207,62 +1270,107 @@
 			</ArrayValues>
 		</Length>
 		<Boolean Name="show_line">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Показ линии между точками"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<Value>0</Value>
 		</Boolean>
 		<Integer Name="test">
 			<Description><![CDATA[""]]></Description>
-			<Value>2</Value>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>4</Value>
 		</Integer>
 		<Length Name="hotspot_addz">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Дублировать в 3д точки на расстоянии"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<Value>0</Value>
 		</Length>
 		<Angle Name="rx">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Угол поворота по x"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<Value>0</Value>
 		</Angle>
 		<Angle Name="ry">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Угол поворота по y"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<Value>0</Value>
 		</Angle>
 		<Angle Name="rz">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Угол поворота по z"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
 			<Value>0</Value>
 		</Angle>
 		<Boolean Name="use_z">
-			<Description><![CDATA[""]]></Description>
-			<Value>0</Value>
-		</Boolean>
-		<Boolean Name="AC_show2DHotspotsIn3D">
-			<Description><![CDATA["Show 2D Hotspots in 3D"]]></Description>
-			<Fix/>
-			<Flags>
-				<ParFlg_Hidden/>
-			</Flags>
-			<Value>0</Value>
-		</Boolean>
-		<Length Name="ac_bottomlevel">
-			<Description><![CDATA["Bottom Level"]]></Description>
-			<Fix/>
-			<Flags>
-				<ParFlg_Hidden/>
-			</Flags>
-			<Value>1</Value>
-		</Length>
-		<Length Name="ac_toplevel">
-			<Description><![CDATA["Top Level"]]></Description>
-			<Fix/>
-			<Flags>
-				<ParFlg_Hidden/>
-			</Flags>
-			<Value>0</Value>
-		</Length>
-		<Dictionary Name="poly_data">
-			<Description><![CDATA[""]]></Description>
+			<Description><![CDATA["Редактировать координаты z"]]></Description>
 			<Flags>
 				<ParFlg_Child/>
-				<ParFlg_Hidden/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Boolean Name="use_x">
+			<Description><![CDATA["Редактировать координаты x"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Boolean Name="use_y">
+			<Description><![CDATA["Редактировать координаты y"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Boolean Name="use_d">
+			<Description><![CDATA["Редактировать скруглени"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Boolean Name="use_arc">
+			<Description><![CDATA["Редактировать радиус"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</Boolean>
+		<Integer Name="new_inx">
+			<Description><![CDATA["Индекс новой вершины"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Integer>
+		<Integer Name="del_inx">
+			<Description><![CDATA["Индекс удалённой вершины"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Integer>
+		<Boolean Name="edit_mode">
+			<Description><![CDATA["Подсветка типов точек"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Dictionary Name="poly_data">
+			<Description><![CDATA["Словарь с данными"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
 			</Flags>
 			<Value>
 				<Integer Name="OTRN">10</Integer>
@@ -1602,575 +1710,6 @@
 				<String Name="ERROR"><![CDATA["ok"]]></String>
 			</Value>
 		</Dictionary>
-		<Boolean Name="reset_weld">
-			<Description><![CDATA["Сброс сварки"]]></Description>
-			<Value>0</Value>
-		</Boolean>
-		<Integer Name="weld_side">
-			<Description><![CDATA["Тип сварки снизу"]]></Description>
-			<ArrayValues FirstDimension="90" SecondDimension="0">
-				<AVal Row="1">0</AVal>
-				<AVal Row="2">0</AVal>
-				<AVal Row="3">0</AVal>
-				<AVal Row="4">0</AVal>
-				<AVal Row="5">0</AVal>
-				<AVal Row="6">0</AVal>
-				<AVal Row="7">0</AVal>
-				<AVal Row="8">0</AVal>
-				<AVal Row="9">0</AVal>
-				<AVal Row="10">0</AVal>
-				<AVal Row="11">0</AVal>
-				<AVal Row="12">0</AVal>
-				<AVal Row="13">0</AVal>
-				<AVal Row="14">0</AVal>
-				<AVal Row="15">0</AVal>
-				<AVal Row="16">0</AVal>
-				<AVal Row="17">0</AVal>
-				<AVal Row="18">0</AVal>
-				<AVal Row="19">0</AVal>
-				<AVal Row="20">0</AVal>
-				<AVal Row="21">0</AVal>
-				<AVal Row="22">0</AVal>
-				<AVal Row="23">0</AVal>
-				<AVal Row="24">0</AVal>
-				<AVal Row="25">0</AVal>
-				<AVal Row="26">0</AVal>
-				<AVal Row="27">0</AVal>
-				<AVal Row="28">0</AVal>
-				<AVal Row="29">0</AVal>
-				<AVal Row="30">0</AVal>
-				<AVal Row="31">0</AVal>
-				<AVal Row="32">0</AVal>
-				<AVal Row="33">0</AVal>
-				<AVal Row="34">0</AVal>
-				<AVal Row="35">0</AVal>
-				<AVal Row="36">0</AVal>
-				<AVal Row="37">0</AVal>
-				<AVal Row="38">0</AVal>
-				<AVal Row="39">0</AVal>
-				<AVal Row="40">0</AVal>
-				<AVal Row="41">0</AVal>
-				<AVal Row="42">0</AVal>
-				<AVal Row="43">0</AVal>
-				<AVal Row="44">0</AVal>
-				<AVal Row="45">0</AVal>
-				<AVal Row="46">0</AVal>
-				<AVal Row="47">0</AVal>
-				<AVal Row="48">0</AVal>
-				<AVal Row="49">0</AVal>
-				<AVal Row="50">0</AVal>
-				<AVal Row="51">0</AVal>
-				<AVal Row="52">0</AVal>
-				<AVal Row="53">0</AVal>
-				<AVal Row="54">0</AVal>
-				<AVal Row="55">0</AVal>
-				<AVal Row="56">0</AVal>
-				<AVal Row="57">0</AVal>
-				<AVal Row="58">0</AVal>
-				<AVal Row="59">0</AVal>
-				<AVal Row="60">0</AVal>
-				<AVal Row="61">0</AVal>
-				<AVal Row="62">0</AVal>
-				<AVal Row="63">0</AVal>
-				<AVal Row="64">0</AVal>
-				<AVal Row="65">0</AVal>
-				<AVal Row="66">0</AVal>
-				<AVal Row="67">0</AVal>
-				<AVal Row="68">0</AVal>
-				<AVal Row="69">0</AVal>
-				<AVal Row="70">0</AVal>
-				<AVal Row="71">0</AVal>
-				<AVal Row="72">0</AVal>
-				<AVal Row="73">0</AVal>
-				<AVal Row="74">0</AVal>
-				<AVal Row="75">0</AVal>
-				<AVal Row="76">0</AVal>
-				<AVal Row="77">0</AVal>
-				<AVal Row="78">0</AVal>
-				<AVal Row="79">0</AVal>
-				<AVal Row="80">0</AVal>
-				<AVal Row="81">0</AVal>
-				<AVal Row="82">0</AVal>
-				<AVal Row="83">0</AVal>
-				<AVal Row="84">0</AVal>
-				<AVal Row="85">0</AVal>
-				<AVal Row="86">0</AVal>
-				<AVal Row="87">0</AVal>
-				<AVal Row="88">0</AVal>
-				<AVal Row="89">0</AVal>
-				<AVal Row="90">0</AVal>
-			</ArrayValues>
-		</Integer>
-		<Integer Name="weld_side_up">
-			<Description><![CDATA["Тип сварки сверху"]]></Description>
-			<ArrayValues FirstDimension="90" SecondDimension="0">
-				<AVal Row="1">0</AVal>
-				<AVal Row="2">0</AVal>
-				<AVal Row="3">0</AVal>
-				<AVal Row="4">0</AVal>
-				<AVal Row="5">0</AVal>
-				<AVal Row="6">0</AVal>
-				<AVal Row="7">0</AVal>
-				<AVal Row="8">0</AVal>
-				<AVal Row="9">0</AVal>
-				<AVal Row="10">0</AVal>
-				<AVal Row="11">0</AVal>
-				<AVal Row="12">0</AVal>
-				<AVal Row="13">0</AVal>
-				<AVal Row="14">0</AVal>
-				<AVal Row="15">0</AVal>
-				<AVal Row="16">0</AVal>
-				<AVal Row="17">0</AVal>
-				<AVal Row="18">0</AVal>
-				<AVal Row="19">0</AVal>
-				<AVal Row="20">0</AVal>
-				<AVal Row="21">0</AVal>
-				<AVal Row="22">0</AVal>
-				<AVal Row="23">0</AVal>
-				<AVal Row="24">0</AVal>
-				<AVal Row="25">0</AVal>
-				<AVal Row="26">0</AVal>
-				<AVal Row="27">0</AVal>
-				<AVal Row="28">0</AVal>
-				<AVal Row="29">0</AVal>
-				<AVal Row="30">0</AVal>
-				<AVal Row="31">0</AVal>
-				<AVal Row="32">0</AVal>
-				<AVal Row="33">0</AVal>
-				<AVal Row="34">0</AVal>
-				<AVal Row="35">0</AVal>
-				<AVal Row="36">0</AVal>
-				<AVal Row="37">0</AVal>
-				<AVal Row="38">0</AVal>
-				<AVal Row="39">0</AVal>
-				<AVal Row="40">0</AVal>
-				<AVal Row="41">0</AVal>
-				<AVal Row="42">0</AVal>
-				<AVal Row="43">0</AVal>
-				<AVal Row="44">0</AVal>
-				<AVal Row="45">0</AVal>
-				<AVal Row="46">0</AVal>
-				<AVal Row="47">0</AVal>
-				<AVal Row="48">0</AVal>
-				<AVal Row="49">0</AVal>
-				<AVal Row="50">0</AVal>
-				<AVal Row="51">0</AVal>
-				<AVal Row="52">0</AVal>
-				<AVal Row="53">0</AVal>
-				<AVal Row="54">0</AVal>
-				<AVal Row="55">0</AVal>
-				<AVal Row="56">0</AVal>
-				<AVal Row="57">0</AVal>
-				<AVal Row="58">0</AVal>
-				<AVal Row="59">0</AVal>
-				<AVal Row="60">0</AVal>
-				<AVal Row="61">0</AVal>
-				<AVal Row="62">0</AVal>
-				<AVal Row="63">0</AVal>
-				<AVal Row="64">0</AVal>
-				<AVal Row="65">0</AVal>
-				<AVal Row="66">0</AVal>
-				<AVal Row="67">0</AVal>
-				<AVal Row="68">0</AVal>
-				<AVal Row="69">0</AVal>
-				<AVal Row="70">0</AVal>
-				<AVal Row="71">0</AVal>
-				<AVal Row="72">0</AVal>
-				<AVal Row="73">0</AVal>
-				<AVal Row="74">0</AVal>
-				<AVal Row="75">0</AVal>
-				<AVal Row="76">0</AVal>
-				<AVal Row="77">0</AVal>
-				<AVal Row="78">0</AVal>
-				<AVal Row="79">0</AVal>
-				<AVal Row="80">0</AVal>
-				<AVal Row="81">0</AVal>
-				<AVal Row="82">0</AVal>
-				<AVal Row="83">0</AVal>
-				<AVal Row="84">0</AVal>
-				<AVal Row="85">0</AVal>
-				<AVal Row="86">0</AVal>
-				<AVal Row="87">0</AVal>
-				<AVal Row="88">0</AVal>
-				<AVal Row="89">0</AVal>
-				<AVal Row="90">0</AVal>
-			</ArrayValues>
-		</Integer>
-		<Length Name="weld_side_coord">
-			<Description><![CDATA["Координаты швов"]]></Description>
-			<ArrayValues FirstDimension="90" SecondDimension="2">
-				<AVal Column="1" Row="1">0</AVal>
-				<AVal Column="2" Row="1">0</AVal>
-				<AVal Column="1" Row="2">0</AVal>
-				<AVal Column="2" Row="2">0</AVal>
-				<AVal Column="1" Row="3">0</AVal>
-				<AVal Column="2" Row="3">0</AVal>
-				<AVal Column="1" Row="4">0</AVal>
-				<AVal Column="2" Row="4">0</AVal>
-				<AVal Column="1" Row="5">0</AVal>
-				<AVal Column="2" Row="5">0</AVal>
-				<AVal Column="1" Row="6">0</AVal>
-				<AVal Column="2" Row="6">0</AVal>
-				<AVal Column="1" Row="7">0</AVal>
-				<AVal Column="2" Row="7">0</AVal>
-				<AVal Column="1" Row="8">0</AVal>
-				<AVal Column="2" Row="8">0</AVal>
-				<AVal Column="1" Row="9">0</AVal>
-				<AVal Column="2" Row="9">0</AVal>
-				<AVal Column="1" Row="10">0</AVal>
-				<AVal Column="2" Row="10">0</AVal>
-				<AVal Column="1" Row="11">0</AVal>
-				<AVal Column="2" Row="11">0</AVal>
-				<AVal Column="1" Row="12">0</AVal>
-				<AVal Column="2" Row="12">0</AVal>
-				<AVal Column="1" Row="13">0</AVal>
-				<AVal Column="2" Row="13">0</AVal>
-				<AVal Column="1" Row="14">0</AVal>
-				<AVal Column="2" Row="14">0</AVal>
-				<AVal Column="1" Row="15">0</AVal>
-				<AVal Column="2" Row="15">0</AVal>
-				<AVal Column="1" Row="16">0</AVal>
-				<AVal Column="2" Row="16">0</AVal>
-				<AVal Column="1" Row="17">0</AVal>
-				<AVal Column="2" Row="17">0</AVal>
-				<AVal Column="1" Row="18">0</AVal>
-				<AVal Column="2" Row="18">0</AVal>
-				<AVal Column="1" Row="19">0</AVal>
-				<AVal Column="2" Row="19">0</AVal>
-				<AVal Column="1" Row="20">0</AVal>
-				<AVal Column="2" Row="20">0</AVal>
-				<AVal Column="1" Row="21">0</AVal>
-				<AVal Column="2" Row="21">0</AVal>
-				<AVal Column="1" Row="22">0</AVal>
-				<AVal Column="2" Row="22">0</AVal>
-				<AVal Column="1" Row="23">0</AVal>
-				<AVal Column="2" Row="23">0</AVal>
-				<AVal Column="1" Row="24">0</AVal>
-				<AVal Column="2" Row="24">0</AVal>
-				<AVal Column="1" Row="25">0</AVal>
-				<AVal Column="2" Row="25">0</AVal>
-				<AVal Column="1" Row="26">0</AVal>
-				<AVal Column="2" Row="26">0</AVal>
-				<AVal Column="1" Row="27">0</AVal>
-				<AVal Column="2" Row="27">0</AVal>
-				<AVal Column="1" Row="28">0</AVal>
-				<AVal Column="2" Row="28">0</AVal>
-				<AVal Column="1" Row="29">0</AVal>
-				<AVal Column="2" Row="29">0</AVal>
-				<AVal Column="1" Row="30">0</AVal>
-				<AVal Column="2" Row="30">0</AVal>
-				<AVal Column="1" Row="31">0</AVal>
-				<AVal Column="2" Row="31">0</AVal>
-				<AVal Column="1" Row="32">0</AVal>
-				<AVal Column="2" Row="32">0</AVal>
-				<AVal Column="1" Row="33">0</AVal>
-				<AVal Column="2" Row="33">0</AVal>
-				<AVal Column="1" Row="34">0</AVal>
-				<AVal Column="2" Row="34">0</AVal>
-				<AVal Column="1" Row="35">0</AVal>
-				<AVal Column="2" Row="35">0</AVal>
-				<AVal Column="1" Row="36">0</AVal>
-				<AVal Column="2" Row="36">0</AVal>
-				<AVal Column="1" Row="37">0</AVal>
-				<AVal Column="2" Row="37">0</AVal>
-				<AVal Column="1" Row="38">0</AVal>
-				<AVal Column="2" Row="38">0</AVal>
-				<AVal Column="1" Row="39">0</AVal>
-				<AVal Column="2" Row="39">0</AVal>
-				<AVal Column="1" Row="40">0</AVal>
-				<AVal Column="2" Row="40">0</AVal>
-				<AVal Column="1" Row="41">0</AVal>
-				<AVal Column="2" Row="41">0</AVal>
-				<AVal Column="1" Row="42">0</AVal>
-				<AVal Column="2" Row="42">0</AVal>
-				<AVal Column="1" Row="43">0</AVal>
-				<AVal Column="2" Row="43">0</AVal>
-				<AVal Column="1" Row="44">0</AVal>
-				<AVal Column="2" Row="44">0</AVal>
-				<AVal Column="1" Row="45">0</AVal>
-				<AVal Column="2" Row="45">0</AVal>
-				<AVal Column="1" Row="46">0</AVal>
-				<AVal Column="2" Row="46">0</AVal>
-				<AVal Column="1" Row="47">0</AVal>
-				<AVal Column="2" Row="47">0</AVal>
-				<AVal Column="1" Row="48">0</AVal>
-				<AVal Column="2" Row="48">0</AVal>
-				<AVal Column="1" Row="49">0</AVal>
-				<AVal Column="2" Row="49">0</AVal>
-				<AVal Column="1" Row="50">0</AVal>
-				<AVal Column="2" Row="50">0</AVal>
-				<AVal Column="1" Row="51">0</AVal>
-				<AVal Column="2" Row="51">0</AVal>
-				<AVal Column="1" Row="52">0</AVal>
-				<AVal Column="2" Row="52">0</AVal>
-				<AVal Column="1" Row="53">0</AVal>
-				<AVal Column="2" Row="53">0</AVal>
-				<AVal Column="1" Row="54">0</AVal>
-				<AVal Column="2" Row="54">0</AVal>
-				<AVal Column="1" Row="55">0</AVal>
-				<AVal Column="2" Row="55">0</AVal>
-				<AVal Column="1" Row="56">0</AVal>
-				<AVal Column="2" Row="56">0</AVal>
-				<AVal Column="1" Row="57">0</AVal>
-				<AVal Column="2" Row="57">0</AVal>
-				<AVal Column="1" Row="58">0</AVal>
-				<AVal Column="2" Row="58">0</AVal>
-				<AVal Column="1" Row="59">0</AVal>
-				<AVal Column="2" Row="59">0</AVal>
-				<AVal Column="1" Row="60">0</AVal>
-				<AVal Column="2" Row="60">0</AVal>
-				<AVal Column="1" Row="61">0</AVal>
-				<AVal Column="2" Row="61">0</AVal>
-				<AVal Column="1" Row="62">0</AVal>
-				<AVal Column="2" Row="62">0</AVal>
-				<AVal Column="1" Row="63">0</AVal>
-				<AVal Column="2" Row="63">0</AVal>
-				<AVal Column="1" Row="64">0</AVal>
-				<AVal Column="2" Row="64">0</AVal>
-				<AVal Column="1" Row="65">0</AVal>
-				<AVal Column="2" Row="65">0</AVal>
-				<AVal Column="1" Row="66">0</AVal>
-				<AVal Column="2" Row="66">0</AVal>
-				<AVal Column="1" Row="67">0</AVal>
-				<AVal Column="2" Row="67">0</AVal>
-				<AVal Column="1" Row="68">0</AVal>
-				<AVal Column="2" Row="68">0</AVal>
-				<AVal Column="1" Row="69">0</AVal>
-				<AVal Column="2" Row="69">0</AVal>
-				<AVal Column="1" Row="70">0</AVal>
-				<AVal Column="2" Row="70">0</AVal>
-				<AVal Column="1" Row="71">0</AVal>
-				<AVal Column="2" Row="71">0</AVal>
-				<AVal Column="1" Row="72">0</AVal>
-				<AVal Column="2" Row="72">0</AVal>
-				<AVal Column="1" Row="73">0</AVal>
-				<AVal Column="2" Row="73">0</AVal>
-				<AVal Column="1" Row="74">0</AVal>
-				<AVal Column="2" Row="74">0</AVal>
-				<AVal Column="1" Row="75">0</AVal>
-				<AVal Column="2" Row="75">0</AVal>
-				<AVal Column="1" Row="76">0</AVal>
-				<AVal Column="2" Row="76">0</AVal>
-				<AVal Column="1" Row="77">0</AVal>
-				<AVal Column="2" Row="77">0</AVal>
-				<AVal Column="1" Row="78">0</AVal>
-				<AVal Column="2" Row="78">0</AVal>
-				<AVal Column="1" Row="79">0</AVal>
-				<AVal Column="2" Row="79">0</AVal>
-				<AVal Column="1" Row="80">0</AVal>
-				<AVal Column="2" Row="80">0</AVal>
-				<AVal Column="1" Row="81">0</AVal>
-				<AVal Column="2" Row="81">0</AVal>
-				<AVal Column="1" Row="82">0</AVal>
-				<AVal Column="2" Row="82">0</AVal>
-				<AVal Column="1" Row="83">0</AVal>
-				<AVal Column="2" Row="83">0</AVal>
-				<AVal Column="1" Row="84">0</AVal>
-				<AVal Column="2" Row="84">0</AVal>
-				<AVal Column="1" Row="85">0</AVal>
-				<AVal Column="2" Row="85">0</AVal>
-				<AVal Column="1" Row="86">0</AVal>
-				<AVal Column="2" Row="86">0</AVal>
-				<AVal Column="1" Row="87">0</AVal>
-				<AVal Column="2" Row="87">0</AVal>
-				<AVal Column="1" Row="88">0</AVal>
-				<AVal Column="2" Row="88">0</AVal>
-				<AVal Column="1" Row="89">0</AVal>
-				<AVal Column="2" Row="89">0</AVal>
-				<AVal Column="1" Row="90">0</AVal>
-				<AVal Column="2" Row="90">0</AVal>
-			</ArrayValues>
-		</Length>
-		<Angle Name="weld_side_ang">
-			<Description><![CDATA["Поворот покруг оси шва снизу"]]></Description>
-			<ArrayValues FirstDimension="90" SecondDimension="0">
-				<AVal Row="1">0</AVal>
-				<AVal Row="2">0</AVal>
-				<AVal Row="3">0</AVal>
-				<AVal Row="4">0</AVal>
-				<AVal Row="5">0</AVal>
-				<AVal Row="6">0</AVal>
-				<AVal Row="7">0</AVal>
-				<AVal Row="8">0</AVal>
-				<AVal Row="9">0</AVal>
-				<AVal Row="10">0</AVal>
-				<AVal Row="11">0</AVal>
-				<AVal Row="12">0</AVal>
-				<AVal Row="13">0</AVal>
-				<AVal Row="14">0</AVal>
-				<AVal Row="15">0</AVal>
-				<AVal Row="16">0</AVal>
-				<AVal Row="17">0</AVal>
-				<AVal Row="18">0</AVal>
-				<AVal Row="19">0</AVal>
-				<AVal Row="20">0</AVal>
-				<AVal Row="21">0</AVal>
-				<AVal Row="22">0</AVal>
-				<AVal Row="23">0</AVal>
-				<AVal Row="24">0</AVal>
-				<AVal Row="25">0</AVal>
-				<AVal Row="26">0</AVal>
-				<AVal Row="27">0</AVal>
-				<AVal Row="28">0</AVal>
-				<AVal Row="29">0</AVal>
-				<AVal Row="30">0</AVal>
-				<AVal Row="31">0</AVal>
-				<AVal Row="32">0</AVal>
-				<AVal Row="33">0</AVal>
-				<AVal Row="34">0</AVal>
-				<AVal Row="35">0</AVal>
-				<AVal Row="36">0</AVal>
-				<AVal Row="37">0</AVal>
-				<AVal Row="38">0</AVal>
-				<AVal Row="39">0</AVal>
-				<AVal Row="40">0</AVal>
-				<AVal Row="41">0</AVal>
-				<AVal Row="42">0</AVal>
-				<AVal Row="43">0</AVal>
-				<AVal Row="44">0</AVal>
-				<AVal Row="45">0</AVal>
-				<AVal Row="46">0</AVal>
-				<AVal Row="47">0</AVal>
-				<AVal Row="48">0</AVal>
-				<AVal Row="49">0</AVal>
-				<AVal Row="50">0</AVal>
-				<AVal Row="51">0</AVal>
-				<AVal Row="52">0</AVal>
-				<AVal Row="53">0</AVal>
-				<AVal Row="54">0</AVal>
-				<AVal Row="55">0</AVal>
-				<AVal Row="56">0</AVal>
-				<AVal Row="57">0</AVal>
-				<AVal Row="58">0</AVal>
-				<AVal Row="59">0</AVal>
-				<AVal Row="60">0</AVal>
-				<AVal Row="61">0</AVal>
-				<AVal Row="62">0</AVal>
-				<AVal Row="63">0</AVal>
-				<AVal Row="64">0</AVal>
-				<AVal Row="65">0</AVal>
-				<AVal Row="66">0</AVal>
-				<AVal Row="67">0</AVal>
-				<AVal Row="68">0</AVal>
-				<AVal Row="69">0</AVal>
-				<AVal Row="70">0</AVal>
-				<AVal Row="71">0</AVal>
-				<AVal Row="72">0</AVal>
-				<AVal Row="73">0</AVal>
-				<AVal Row="74">0</AVal>
-				<AVal Row="75">0</AVal>
-				<AVal Row="76">0</AVal>
-				<AVal Row="77">0</AVal>
-				<AVal Row="78">0</AVal>
-				<AVal Row="79">0</AVal>
-				<AVal Row="80">0</AVal>
-				<AVal Row="81">0</AVal>
-				<AVal Row="82">0</AVal>
-				<AVal Row="83">0</AVal>
-				<AVal Row="84">0</AVal>
-				<AVal Row="85">0</AVal>
-				<AVal Row="86">0</AVal>
-				<AVal Row="87">0</AVal>
-				<AVal Row="88">0</AVal>
-				<AVal Row="89">0</AVal>
-				<AVal Row="90">0</AVal>
-			</ArrayValues>
-		</Angle>
-		<Angle Name="weld_side_ang_up">
-			<Description><![CDATA["Поворот вокруг оси шва сверху"]]></Description>
-			<ArrayValues FirstDimension="90" SecondDimension="0">
-				<AVal Row="1">0</AVal>
-				<AVal Row="2">0</AVal>
-				<AVal Row="3">0</AVal>
-				<AVal Row="4">0</AVal>
-				<AVal Row="5">0</AVal>
-				<AVal Row="6">0</AVal>
-				<AVal Row="7">0</AVal>
-				<AVal Row="8">0</AVal>
-				<AVal Row="9">0</AVal>
-				<AVal Row="10">0</AVal>
-				<AVal Row="11">0</AVal>
-				<AVal Row="12">0</AVal>
-				<AVal Row="13">0</AVal>
-				<AVal Row="14">0</AVal>
-				<AVal Row="15">0</AVal>
-				<AVal Row="16">0</AVal>
-				<AVal Row="17">0</AVal>
-				<AVal Row="18">0</AVal>
-				<AVal Row="19">0</AVal>
-				<AVal Row="20">0</AVal>
-				<AVal Row="21">0</AVal>
-				<AVal Row="22">0</AVal>
-				<AVal Row="23">0</AVal>
-				<AVal Row="24">0</AVal>
-				<AVal Row="25">0</AVal>
-				<AVal Row="26">0</AVal>
-				<AVal Row="27">0</AVal>
-				<AVal Row="28">0</AVal>
-				<AVal Row="29">0</AVal>
-				<AVal Row="30">0</AVal>
-				<AVal Row="31">0</AVal>
-				<AVal Row="32">0</AVal>
-				<AVal Row="33">0</AVal>
-				<AVal Row="34">0</AVal>
-				<AVal Row="35">0</AVal>
-				<AVal Row="36">0</AVal>
-				<AVal Row="37">0</AVal>
-				<AVal Row="38">0</AVal>
-				<AVal Row="39">0</AVal>
-				<AVal Row="40">0</AVal>
-				<AVal Row="41">0</AVal>
-				<AVal Row="42">0</AVal>
-				<AVal Row="43">0</AVal>
-				<AVal Row="44">0</AVal>
-				<AVal Row="45">0</AVal>
-				<AVal Row="46">0</AVal>
-				<AVal Row="47">0</AVal>
-				<AVal Row="48">0</AVal>
-				<AVal Row="49">0</AVal>
-				<AVal Row="50">0</AVal>
-				<AVal Row="51">0</AVal>
-				<AVal Row="52">0</AVal>
-				<AVal Row="53">0</AVal>
-				<AVal Row="54">0</AVal>
-				<AVal Row="55">0</AVal>
-				<AVal Row="56">0</AVal>
-				<AVal Row="57">0</AVal>
-				<AVal Row="58">0</AVal>
-				<AVal Row="59">0</AVal>
-				<AVal Row="60">0</AVal>
-				<AVal Row="61">0</AVal>
-				<AVal Row="62">0</AVal>
-				<AVal Row="63">0</AVal>
-				<AVal Row="64">0</AVal>
-				<AVal Row="65">0</AVal>
-				<AVal Row="66">0</AVal>
-				<AVal Row="67">0</AVal>
-				<AVal Row="68">0</AVal>
-				<AVal Row="69">0</AVal>
-				<AVal Row="70">0</AVal>
-				<AVal Row="71">0</AVal>
-				<AVal Row="72">0</AVal>
-				<AVal Row="73">0</AVal>
-				<AVal Row="74">0</AVal>
-				<AVal Row="75">0</AVal>
-				<AVal Row="76">0</AVal>
-				<AVal Row="77">0</AVal>
-				<AVal Row="78">0</AVal>
-				<AVal Row="79">0</AVal>
-				<AVal Row="80">0</AVal>
-				<AVal Row="81">0</AVal>
-				<AVal Row="82">0</AVal>
-				<AVal Row="83">0</AVal>
-				<AVal Row="84">0</AVal>
-				<AVal Row="85">0</AVal>
-				<AVal Row="86">0</AVal>
-				<AVal Row="87">0</AVal>
-				<AVal Row="88">0</AVal>
-				<AVal Row="89">0</AVal>
-				<AVal Row="90">0</AVal>
-			</ArrayValues>
-		</Angle>
 	</Parameters>
 </ParamSection>
 
