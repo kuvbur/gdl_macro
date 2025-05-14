@@ -78,7 +78,6 @@ else
 	next i
 endif
 
-
 if  haskey(profile_data.set.tip_konstr) then tip_konstr = profile_data.set.tip_konstr
 if  haskey(profile_data.set.mater) then mater = profile_data.set.mater
 if  haskey(profile_data.set.subpos) then subpos = profile_data.set.subpos
@@ -93,16 +92,18 @@ else
 	typesheet = VERT_SHEET
 endif
 
-if not(haskey(profile_data.set.path)) and typesheet = VERT_SHEET then 
-	text2 0,0,"mpl - not(haskey(profile_data.set.path))"
-	goto "m_end"
-else
-	for i=1 to vardim1(profile_data.set.path)
-		if not(haskey(profile_data.set.path[i].x)) then profile_data.set.path[i].x = 0
-		if not(haskey(profile_data.set.path[i].y)) then profile_data.set.path[i].y = 0
-		if not(haskey(profile_data.set.path[i].z)) then profile_data.set.path[i].z = 0
-		if not(haskey(profile_data.set.path[i].a)) then profile_data.set.path[i].a = 0
-	next i
+if typesheet = VERT_SHEET then
+	if not(haskey(profile_data.set.path)) then 
+		text2 0,0,"mpl - not(haskey(profile_data.set.path))"
+		goto "m_end"
+	else
+		for i=1 to vardim1(profile_data.set.path)
+			if not(haskey(profile_data.set.path[i].x)) then profile_data.set.path[i].x = 0
+			if not(haskey(profile_data.set.path[i].y)) then profile_data.set.path[i].y = 0
+			if not(haskey(profile_data.set.path[i].z)) then profile_data.set.path[i].z = 0
+			if not(haskey(profile_data.set.path[i].a)) then profile_data.set.path[i].a = 0
+		next i
+	endif
 endif
 
 !Если задана точка привязки - получим смещение сечения
