@@ -7,7 +7,8 @@ if haskey(poly_data.use_arc) then use_arc = poly_data.use_arc
 if haskey(poly_data.edit_mode) then edit_mode = poly_data.edit_mode
 
 if haskey(poly_data.poly_closed) then poly_closed = poly_data.poly_closed
-if haskey(poly_data.show_line) then show_line = poly_data.show_line
+if haskey(poly_data.show_line_2d) then show_line_2d = poly_data.show_line_2d
+if haskey(poly_data.show_line_3d) then show_line_3d = poly_data.show_line_3d
 
 if haskey(poly_data.rx) then rx = poly_data.rx
 if haskey(poly_data.ry) then ry = poly_data.ry

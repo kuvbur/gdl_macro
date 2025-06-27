@@ -16,7 +16,6 @@ if abs(hotspot_addz)>EPS then
 	del 1
 endif
 
-
 PUT poly_point_xy [1][1],poly_point_xy [1][2],poly_point_xy [1][3]
 FOR x = 1 TO poly_n-1+poly_closed
 	IF ABS(poly_3point_d [x]) < EPS  THEN 
@@ -45,7 +44,7 @@ FOR x = 1 TO poly_n-1+poly_closed
 		ENDIF
 	ENDIF
 NEXT x
-if show_line then
+if show_line_3d then
 	FOR x = 1 to NSP/3-1
 		LIN_ GET(3),USE(3)
 	NEXT x

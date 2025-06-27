@@ -87,7 +87,7 @@ FOR x = 1 TO poly_n
 	ENDIF
 NEXT x
 
-if show_line then
+if show_line_2d then
 	FOR x = 1 TO poly_n-1+poly_closed
 		IF (ABS(poly_point_xy [x][1]-poly_point_xy [x+1][1]) > EPS) OR (ABS(poly_point_xy [x][2]-poly_point_xy [x+1][2]) > EPS) THEN
 			IF poly_3point_d [x] < EPS AND poly_3point_d [x] > -EPS THEN 

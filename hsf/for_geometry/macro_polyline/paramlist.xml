@@ -1269,8 +1269,15 @@
 				<AVal Row="40">0</AVal>
 			</ArrayValues>
 		</Length>
-		<Boolean Name="show_line">
+		<Boolean Name="show_line_2d">
 			<Description><![CDATA["Показ линии между точками"]]></Description>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</Boolean>
+		<Boolean Name="show_line_3d">
+			<Description><![CDATA[""]]></Description>
 			<Flags>
 				<ParFlg_Child/>
 			</Flags>
