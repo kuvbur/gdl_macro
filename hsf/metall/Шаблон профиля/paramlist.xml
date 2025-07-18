@@ -271,7 +271,7 @@
 			<Flags>
 				<ParFlg_Child/>
 			</Flags>
-			<Value><![CDATA[" 10Б1 L=65000мм."]]></Value>
+			<Value><![CDATA[" 10Б1 L=65 000мм."]]></Value>
 		</String>
 		<String Name="obozn">
 			<Description><![CDATA["Обозначение"]]></Description>
@@ -1608,7 +1608,7 @@
 						</Array>
 						<Array Name="OBOZN">
 							<String Index="1"><![CDATA["ГОСТ 10704-91 "]]></String>
-							<String Index="2"><![CDATA["ГОСТ 54157-2010 "]]></String>
+							<String Index="2"><![CDATA["ГОСТ 32931-2015 "]]></String>
 							<String Index="3"><![CDATA["ГОСТ 2590-2006 "]]></String>
 						</Array>
 						<Array Name="NAEN">
@@ -4177,8 +4177,8 @@
 							<String Index="6"><![CDATA["тр_полоса_103.txt"]]></String>
 						</Array>
 						<Array Name="OBOZN">
-							<String Index="1"><![CDATA["ГОСТ 30245-2012 "]]></String>
-							<String Index="2"><![CDATA["ГОСТ 30245-2012 "]]></String>
+							<String Index="1"><![CDATA["ГОСТ 30245-2003 "]]></String>
+							<String Index="2"><![CDATA["ГОСТ 30245-2003 "]]></String>
 							<String Index="3"><![CDATA["ГОСТ 8639-82 "]]></String>
 							<String Index="4"><![CDATA["ГОСТ 8645-68 "]]></String>
 							<String Index="5"><![CDATA["ГОСТ 2591-2006 "]]></String>
@@ -6336,12 +6336,12 @@
 							<String Index="2"><![CDATA["СТО АСЧМ 20-93 "]]></String>
 							<String Index="3"><![CDATA["СТО АСЧМ 20-93 "]]></String>
 							<String Index="4"><![CDATA["СТО АСЧМ 20-93 "]]></String>
-							<String Index="5"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
-							<String Index="6"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
-							<String Index="7"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
-							<String Index="8"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
-							<String Index="9"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
-							<String Index="10"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
+							<String Index="5"><![CDATA["ГОСТ 35087-2024 "]]></String>
+							<String Index="6"><![CDATA["ГОСТ 35087-2024 "]]></String>
+							<String Index="7"><![CDATA["ГОСТ 35087-2024 "]]></String>
+							<String Index="8"><![CDATA["ГОСТ 35087-2024 "]]></String>
+							<String Index="9"><![CDATA["ГОСТ 35087-2024 "]]></String>
+							<String Index="10"><![CDATA["ГОСТ 35087-2024 "]]></String>
 						</Array>
 						<Array Name="NAEN">
 							<String Index="1"><![CDATA["Двутавр"]]></String>
@@ -8249,8 +8249,8 @@
 						</Array>
 					</Dictionary>
 				</Array>
-				<Integer Name="VERSION">2</Integer>
-				<String Name="DATE"><![CDATA["25/01/22 15:13"]]></String>
+				<Integer Name="VERSION">3</Integer>
+				<String Name="DATE"><![CDATA["25/07/12 16:30"]]></String>
 				<Integer Name="ISREAD">1</Integer>
 			</Value>
 		</Dictionary>
@@ -8268,7 +8268,7 @@
 				<ParFlg_Child/>
 				<ParFlg_Hidden/>
 			</Flags>
-			<Value><![CDATA[""]]></Value>
+			<Value><![CDATA["https://github.com/kuvbur/gdl_bibl/wiki/%D0%AD%D0%BB%D0%B5%D0%BC%D0%B5%D0%BD%D1%82%D1%8B-%D0%9A%D0%9C"]]></Value>
 		</String>
 		<Boolean Name="gs_shadow">
 			<Description><![CDATA["Показ теней"]]></Description>
