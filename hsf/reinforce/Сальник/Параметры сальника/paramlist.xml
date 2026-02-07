@@ -64,7 +64,7 @@
 		</Title>
 		<String Name="type_sal">
 			<Description><![CDATA["Тип прохода"]]></Description>
-			<Value><![CDATA["Гильза"]]></Value>
+			<Value><![CDATA["Сальник нажимной"]]></Value>
 		</String>
 		<Boolean Name="auto_dlin">
 			<Description><![CDATA["Длина по несущему слою"]]></Description>
@@ -76,19 +76,23 @@
 		</Length>
 		<Length Name="dy">
 			<Description><![CDATA["Условный диаметр пропускаемой трубы"]]></Description>
-			<Value>0.05</Value>
+			<Value>0.25</Value>
 		</Length>
 		<Length Name="dys">
 			<Description><![CDATA["Наружный диаметр пропускаемой труб"]]></Description>
-			<Value>0.057</Value>
+			<Value>0.273</Value>
 		</Length>
 		<Length Name="dns">
 			<Description><![CDATA["Наружный диаметр сальника"]]></Description>
-			<Value>0.114</Value>
+			<Value>0.306</Value>
 		</Length>
 		<Length Name="tst">
-			<Description><![CDATA["Толщина стенки гильзы"]]></Description>
-			<Value>0.0045</Value>
+			<Description><![CDATA["Минимальная толщина стенки гильзы"]]></Description>
+			<Value>0.006</Value>
+		</Length>
+		<Length Name="min_gap">
+			<Description><![CDATA["Минимальный зазор"]]></Description>
+			<Value>0</Value>
 		</Length>
 		<Length Name="max_t">
 			<Description><![CDATA[""]]></Description>
@@ -97,17 +101,17 @@
 		<String Name="obozn">
 			<Description><![CDATA[""]]></Description>
 			<Fix/>
-			<Value><![CDATA["ГОСТ 10704-91"]]></Value>
+			<Value><![CDATA["Серия 5.900-3"]]></Value>
 		</String>
 		<String Name="naen">
 			<Description><![CDATA[""]]></Description>
 			<Fix/>
-			<Value><![CDATA["Труба 114x4.5 L=200"]]></Value>
+			<Value><![CDATA["Сальник ТМ 93.00.00-06, Ду250"]]></Value>
 		</String>
 		<RealNum Name="ves">
 			<Description><![CDATA[""]]></Description>
 			<Fix/>
-			<Value>2.43</Value>
+			<Value>29</Value>
 		</RealNum>
 		<RealNum Name="kol_vo_spec">
 			<Description><![CDATA["Кол-во"]]></Description>
@@ -132,6 +136,62 @@
 				<ParFlg_Child/>
 			</Flags>
 			<Value><![CDATA[""]]></Value>
+		</String>
+		<RealNum Name="smstf_elem_vol">
+			<Description><![CDATA["Объём элемента, куб. м."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<RealNum Name="smstf_elem_s">
+			<Description><![CDATA["Площадь элемента, кв.м."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<RealNum Name="smstf_elem_qty">
+			<Description><![CDATA["Количество (согласно единиц измерения)"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<RealNum Name="smstf_elem_ves">
+			<Description><![CDATA["Масса ед., кг."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</RealNum>
+		<RealNum Name="smstf_elem_l">
+			<Description><![CDATA["Длина элемента, м"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<String Name="smstf_elem_edizm">
+			<Description><![CDATA["Единицы измерения"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<String Name="smstf_elem_fullname">
+			<Description><![CDATA["Полное имя"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA[" "]]></Value>
 		</String>
 		<String Name="FM_ProductName">
 			<Description><![CDATA["Наименование для ВОР"]]></Description>
@@ -478,5 +538,14 @@
 				<AVal Row="1">0</AVal>
 			</ArrayValues>
 		</Length>
+		<String Name="label_layers">
+			<Description><![CDATA["Текст флажка"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+				<ParFlg_Hidden/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
 	</Parameters>
 </ParamSection>

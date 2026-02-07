@@ -73,6 +73,62 @@
 			</Flags>
 			<Value><![CDATA["12Х18Н10Т"]]></Value>
 		</String>
+		<RealNum Name="smstf_elem_vol">
+			<Description><![CDATA["Объём элемента, куб. м."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<String Name="smstf_elem_edizm">
+			<Description><![CDATA["Единицы измерения"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA[""]]></Value>
+		</String>
+		<String Name="smstf_elem_fullname">
+			<Description><![CDATA["Полное имя"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value><![CDATA[" 20К1 L=65000мм."]]></Value>
+		</String>
+		<RealNum Name="smstf_elem_l">
+			<Description><![CDATA["Длина элемента, м"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<RealNum Name="smstf_elem_ves">
+			<Description><![CDATA["Масса ед., кг."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>1</Value>
+		</RealNum>
+		<RealNum Name="smstf_elem_s">
+			<Description><![CDATA["Площадь элемента, кв.м."]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
+		<RealNum Name="smstf_elem_qty">
+			<Description><![CDATA["Количество (согласно единиц измерения)"]]></Description>
+			<Fix/>
+			<Flags>
+				<ParFlg_Child/>
+			</Flags>
+			<Value>0</Value>
+		</RealNum>
 		<String Name="tip_konstr">
 			<Description><![CDATA["Тип конструкции"]]></Description>
 			<Flags>
@@ -948,7 +1004,7 @@
 						</Array>
 						<Array Name="OBOZN">
 							<String Index="1"><![CDATA["ГОСТ 10704-91 "]]></String>
-							<String Index="2"><![CDATA["ГОСТ 54157-2010 "]]></String>
+							<String Index="2"><![CDATA["ГОСТ 32931-2015 "]]></String>
 							<String Index="3"><![CDATA["ГОСТ 2590-2006 "]]></String>
 						</Array>
 						<Array Name="NAEN">
@@ -3517,8 +3573,8 @@
 							<String Index="6"><![CDATA["тр_полоса_103.txt"]]></String>
 						</Array>
 						<Array Name="OBOZN">
-							<String Index="1"><![CDATA["ГОСТ 30245-2012 "]]></String>
-							<String Index="2"><![CDATA["ГОСТ 30245-2012 "]]></String>
+							<String Index="1"><![CDATA["ГОСТ 30245-2003 "]]></String>
+							<String Index="2"><![CDATA["ГОСТ 30245-2003 "]]></String>
 							<String Index="3"><![CDATA["ГОСТ 8639-82 "]]></String>
 							<String Index="4"><![CDATA["ГОСТ 8645-68 "]]></String>
 							<String Index="5"><![CDATA["ГОСТ 2591-2006 "]]></String>
@@ -3959,11 +4015,6 @@
 									<String Index="422"><![CDATA["400x200x11"]]></String>
 									<String Index="423"><![CDATA["400x200x11.5"]]></String>
 									<String Index="424"><![CDATA["400x200x12"]]></String>
-									<String Index="425"><![CDATA["180х120х4"]]></String>
-									<String Index="426"><![CDATA["180х120х5"]]></String>
-									<String Index="427"><![CDATA["180х120х6"]]></String>
-									<String Index="428"><![CDATA["180х120х7"]]></String>
-									<String Index="429"><![CDATA["180х120х8"]]></String>
 								</Array>
 								<Array Name="INX_NAMES">
 									<Integer Index="1">2</Integer>
@@ -4390,11 +4441,6 @@
 									<Integer Index="422">423</Integer>
 									<Integer Index="423">424</Integer>
 									<Integer Index="424">425</Integer>
-									<Integer Index="425">426</Integer>
-									<Integer Index="426">427</Integer>
-									<Integer Index="427">428</Integer>
-									<Integer Index="428">429</Integer>
-									<Integer Index="429">430</Integer>
 								</Array>
 							</Dictionary>
 							<Dictionary Index="2">
@@ -5676,12 +5722,12 @@
 							<String Index="2"><![CDATA["СТО АСЧМ 20-93 "]]></String>
 							<String Index="3"><![CDATA["СТО АСЧМ 20-93 "]]></String>
 							<String Index="4"><![CDATA["СТО АСЧМ 20-93 "]]></String>
-							<String Index="5"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
-							<String Index="6"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
-							<String Index="7"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
-							<String Index="8"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
-							<String Index="9"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
-							<String Index="10"><![CDATA["ГОСТ Р 57837-2017 "]]></String>
+							<String Index="5"><![CDATA["ГОСТ 35087-2024 "]]></String>
+							<String Index="6"><![CDATA["ГОСТ 35087-2024 "]]></String>
+							<String Index="7"><![CDATA["ГОСТ 35087-2024 "]]></String>
+							<String Index="8"><![CDATA["ГОСТ 35087-2024 "]]></String>
+							<String Index="9"><![CDATA["ГОСТ 35087-2024 "]]></String>
+							<String Index="10"><![CDATA["ГОСТ 35087-2024 "]]></String>
 						</Array>
 						<Array Name="NAEN">
 							<String Index="1"><![CDATA["Двутавр"]]></String>
@@ -6468,34 +6514,43 @@
 							</Dictionary>
 							<Dictionary Index="10">
 								<Array Name="NAMES">
-									<String Index="1"><![CDATA["10ДК1"]]></String>
-									<String Index="2"><![CDATA["10ДК2"]]></String>
-									<String Index="3"><![CDATA["10ДК3"]]></String>
-									<String Index="4"><![CDATA["12ДК1"]]></String>
-									<String Index="5"><![CDATA["12ДК2"]]></String>
-									<String Index="6"><![CDATA["12ДК3"]]></String>
-									<String Index="7"><![CDATA["14ДК1"]]></String>
-									<String Index="8"><![CDATA["14ДК2"]]></String>
-									<String Index="9"><![CDATA["14ДК3"]]></String>
-									<String Index="10"><![CDATA["15ДК1"]]></String>
-									<String Index="11"><![CDATA["15ДК2"]]></String>
-									<String Index="12"><![CDATA["15ДК3"]]></String>
-									<String Index="13"><![CDATA["16ДК1"]]></String>
-									<String Index="14"><![CDATA["16ДК2"]]></String>
-									<String Index="15"><![CDATA["16ДК3"]]></String>
-									<String Index="16"><![CDATA["18ДК1"]]></String>
-									<String Index="17"><![CDATA["18ДК2"]]></String>
-									<String Index="18"><![CDATA["18ДК3"]]></String>
-									<String Index="19"><![CDATA["20ДК1"]]></String>
-									<String Index="20"><![CDATA["20ДК2"]]></String>
-									<String Index="21"><![CDATA["20ДК3"]]></String>
-									<String Index="22"><![CDATA["20ДК4"]]></String>
-									<String Index="23"><![CDATA["20ДК5"]]></String>
-									<String Index="24"><![CDATA["20ДК6"]]></String>
-									<String Index="25"><![CDATA["25ДК1"]]></String>
-									<String Index="26"><![CDATA["25ДК2"]]></String>
-									<String Index="27"><![CDATA["25ДК3"]]></String>
-									<String Index="28"><![CDATA["25ДК4"]]></String>
+									<String Index="1"><![CDATA["10ДК0"]]></String>
+									<String Index="2"><![CDATA["10ДК1"]]></String>
+									<String Index="3"><![CDATA["10ДК2"]]></String>
+									<String Index="4"><![CDATA["10ДК3"]]></String>
+									<String Index="5"><![CDATA["12ДК0"]]></String>
+									<String Index="6"><![CDATA["12ДК1"]]></String>
+									<String Index="7"><![CDATA["12ДК2"]]></String>
+									<String Index="8"><![CDATA["12ДК3"]]></String>
+									<String Index="9"><![CDATA["14ДК0"]]></String>
+									<String Index="10"><![CDATA["14ДК1"]]></String>
+									<String Index="11"><![CDATA["14ДК2"]]></String>
+									<String Index="12"><![CDATA["14ДК3"]]></String>
+									<String Index="13"><![CDATA["15ДК1"]]></String>
+									<String Index="14"><![CDATA["15ДК2"]]></String>
+									<String Index="15"><![CDATA["15ДК3"]]></String>
+									<String Index="16"><![CDATA["16ДК0"]]></String>
+									<String Index="17"><![CDATA["16ДК1"]]></String>
+									<String Index="18"><![CDATA["16ДК2"]]></String>
+									<String Index="19"><![CDATA["16ДК3"]]></String>
+									<String Index="20"><![CDATA["18ДК0"]]></String>
+									<String Index="21"><![CDATA["18ДК1"]]></String>
+									<String Index="22"><![CDATA["18ДК2"]]></String>
+									<String Index="23"><![CDATA["18ДК3"]]></String>
+									<String Index="24"><![CDATA["20ДК1"]]></String>
+									<String Index="25"><![CDATA["20ДК2"]]></String>
+									<String Index="26"><![CDATA["20ДК3"]]></String>
+									<String Index="27"><![CDATA["20ДК4"]]></String>
+									<String Index="28"><![CDATA["20ДК5"]]></String>
+									<String Index="29"><![CDATA["20ДК6"]]></String>
+									<String Index="30"><![CDATA["25ДК1"]]></String>
+									<String Index="31"><![CDATA["25ДК2"]]></String>
+									<String Index="32"><![CDATA["25ДК3"]]></String>
+									<String Index="33"><![CDATA["25ДК4"]]></String>
+									<String Index="34"><![CDATA["25ДК5"]]></String>
+									<String Index="35"><![CDATA["25ДК6"]]></String>
+									<String Index="36"><![CDATA["25ДК7"]]></String>
+									<String Index="37"><![CDATA["25ДК8"]]></String>
 								</Array>
 								<Array Name="INX_NAMES">
 									<Integer Index="1">2</Integer>
@@ -6526,6 +6581,15 @@
 									<Integer Index="26">27</Integer>
 									<Integer Index="27">28</Integer>
 									<Integer Index="28">29</Integer>
+									<Integer Index="29">30</Integer>
+									<Integer Index="30">31</Integer>
+									<Integer Index="31">32</Integer>
+									<Integer Index="32">33</Integer>
+									<Integer Index="33">34</Integer>
+									<Integer Index="34">35</Integer>
+									<Integer Index="35">36</Integer>
+									<Integer Index="36">37</Integer>
+									<Integer Index="37">38</Integer>
 								</Array>
 							</Dictionary>
 						</Array>
@@ -7589,8 +7653,8 @@
 						</Array>
 					</Dictionary>
 				</Array>
-				<Integer Name="VERSION">2</Integer>
-				<String Name="DATE"><![CDATA["25/01/22 13:38"]]></String>
+				<Integer Name="VERSION">5</Integer>
+				<String Name="DATE"><![CDATA["25/09/16 16:17"]]></String>
 				<Integer Name="ISREAD">1</Integer>
 			</Value>
 		</Dictionary>

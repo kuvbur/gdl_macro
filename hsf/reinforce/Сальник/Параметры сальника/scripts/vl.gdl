@@ -1,6 +1,75 @@
+dim temp_dn_arr[] ! Временный массив для заполнения списка dys
+
+if type_sal = "Гильза" then
+    
+    dim dg_file_arr[]
+    i_file = 0
+
+    ! Переменные для чтения (D, s, Вес, Имя)
+    tdg=0 : tsg=0 : tv=0 : tobozn_p = "" : tdn=0 : td2=0 : td5=0
+    
+    file_to_open = "Гильзы_10704_91.txt" 
+    ch1 = open("text", file_to_open, "separator='\t', mode=ro, LIBRARY") 
+    rw = 2
+    
+    "READ_DG_FOR_LIST":
+    n = input (ch1, rw, 1, tdg, tsg, tv, tobozn_p, tdn, td2, td5)
+    
+    if n <> -1 then
+        if vartype(tdg)=1 and tdg>EPS then
+            tdg = tdg/1000  !! Dg в метрах
+
+            found_idx = 0
+            for i = 1 to vardim1(dg_file_arr)
+                if abs(dg_file_arr[i] - tdg) < EPS then
+                    found_idx = i
+                    goto "DG_LIST_CHECKED"
+                endif
+            next i
+            "DG_LIST_CHECKED":
+
+            if found_idx = 0 then
+                i_file = i_file + 1
+                dg_file_arr[i_file] = tdg
+            endif
+        endif
+        rw = rw + 1
+        goto "READ_DG_FOR_LIST"
+    else
+        close ch1 
+        goto "DG_FILE_CLOSED" 
+    endif
+    
+    "DG_FILE_CLOSED":
+    ! Проверка: Сортируем, только если массив содержит элементы
+    if vardim1(dg_file_arr) > 0 then 
+        
+        arr_t = dg_file_arr ! Передаем массив в подпрограмму через arr_t
+        gosub "SORT_ARRAY"
+        dg_file_arr = arr_t ! Получаем отсортированный массив обратно
+        
+        ! Задаем список dys диаметрами гильз
+        temp_dn_arr = dg_file_arr
+    else
+        ! Если массив пуст, используем стандартные Dn
+        temp_dn_arr = dn_arr 
+    endif
+
+else
+    ! Если выбран Сальник или "Нет", используем стандартные Dn
+    temp_dn_arr = dn_arr
+endif
+
 values "dy" dy_arr
-values "dys" dn_arr
+
+values "dys" temp_dn_arr
+
 inx_dy = 0
+
+if type_sal = "Гильза" then
+    LOCK "dy"
+endif
+
 
 if GLOB_MODPAR_NAME="dy" then
 	var = dy : arr_t = dy_arr : gosub "get_inx" : inx_dy = inx
@@ -9,10 +78,13 @@ if GLOB_MODPAR_NAME="dy" then
 		parameters dys = dys
 	endif
 else
-	var = dys : arr_t = dn_arr : gosub "get_inx" : inx_dy = inx
+	var = dys : arr_t = temp_dn_arr : gosub "get_inx" : inx_dy = inx
 	if inx_dy>0 then
-		dy = dy_arr[inx_dy]
-		parameters dy = dy
+		!! Синхронизируем dy только если это не Гильза (dy заблокирован)
+        if type_sal <> "Гильза" then
+		    dy = dy_arr[inx_dy]
+		    parameters dy = dy
+        endif
 	endif
 endif
 
@@ -68,23 +140,134 @@ if type_sal <> "Гильза" then
 	else
 		values "dlin_sal" l_arr
 	endif
-else
+	lock "min_gap"
+else ! type_sal = "Гильза"
+
+    dim dg_file_arr[]
+    dim sg_file_arr[]
+    i_file = 0
+
+    !! tdg - диаметр гильзы (Dg), tsg - толщина стенки (Sg)
+    tdg=0 : tsg=0 : tv=0 : tobozn_p = "" : tdn=0 : td2=0 : td5=0
+    
+    
+    ch1 = open("text", fname, "separator='\t', mode=ro, LIBRARY") 
+    rw = 2
+    
+    "READ_DG_DATA":
+    n = input (ch1, rw, 1, tdg, tsg, tv, tobozn_p, tdn, td2, td5)
+    
+    if n <> -1 then
+        if vartype(tdg)=1 and vartype(tsg)=1 and tdg>EPS and tsg>EPS then
+            tdg = tdg/1000  !! Dg в метрах
+            tsg = tsg/1000  !! Sg в метрах
+
+            ! Поиск, есть ли уже этот диаметр в массиве
+            found_idx = 0
+            for i = 1 to vardim1(dg_file_arr)
+                if abs(dg_file_arr[i] - tdg) < EPS then
+                    found_idx = i
+                    goto "DG_CHECKED"
+                endif
+            next i
+            "DG_CHECKED":
+
+            if found_idx = 0 then
+                ! Если диаметр новый, добавляем его с этой толщиной
+                i_file = i_file + 1
+                dg_file_arr[i_file] = tdg
+                sg_file_arr[i_file] = tsg
+            else
+                ! Если диаметр уже есть, обновляем толщину, если текущая меньше (минимальный SG)
+                if tsg < sg_file_arr[found_idx] then
+                    sg_file_arr[found_idx] = tsg
+                endif
+            endif
+        endif
+        rw = rw + 1
+        goto "READ_DG_DATA"
+    else
+        goto "CLOSE_DG_FILE"
+    endif
+    "CLOSE_DG_FILE":
+    close ch1
+    
+
 	if auto_dlin and max_t>EPS then 
 		parameters dlin_sal = int(max_t*200)/200
 		LOCK "dlin_sal"
 	else
 		values "dlin_sal" range[0.05, 2] step 0.005, 0.005
 	endif
-	if inx_dy>0 then 
-		parameters dns = dg_arr[inx_dy]
-		print dg_arr[inx_dy], inx_dy
+	values "min_gap" range[0.01, 2]
+	if inx_dy > 0 and vardim1(dg_file_arr) > 0 then 
+		
+		!! A. Получаем Dн трубы и рассчитываем требуемый Dг
+		pipe_dn = dys  !! Используем dys, т.к. это актуальный Наружный Диаметр
+		required_dg = pipe_dn + min_gap*2
+		
+		!! B. Поиск ближайшего наименьшего подходящего DG
+		found_dg = 0
+		found_sg = 0
+        
+        !! Предполагаем, что массив dg_file_arr не отсортирован, 
+        !! поэтому перебираем весь массив
+		for i = 1 to vardim1(dg_file_arr)
+			current_dg = dg_file_arr[i]
+			
+			if current_dg > pipe_dn then !! Dg должен быть физически больше Dн трубы
+			
+				if current_dg >= required_dg - EPS then 
+					! Найден Dg, который удовлетворяет минимальному требованию по зазору.
+					found_dg = current_dg
+					found_sg = sg_file_arr[i] 
+                    ! Если файл не отсортирован, нам нужно найти *минимальный*
+                    ! из всех подходящих. Мы пока что берем первый.
+					goto "DG_FOUND_FILE" 
+				endif
+				
+			endif
+		next i
+		
+		"DG_FOUND_FILE":
+		if found_dg < EPS and vardim1(dg_file_arr) > 0 then
+            last_idx = vardim1(dg_file_arr)
+			found_dg = dg_file_arr[last_idx]
+            found_sg = sg_file_arr[last_idx]
+		endif
+		
+
+		if found_dg > EPS then
+            parameters dns = found_dg ! Dns - это Наружный Диаметр Гильзы
+            parameters tst = found_sg ! Tst - это Толщина Стенки Гильзы
+		else
+            parameters dns = 0.0
+            parameters tst = 0.0
+		endif
+		
 	endif
+	
 endif
-if inx_dy>0 then parameters tst = sg_arr[inx_dy]
+
+
+!else
+!	if auto_dlin and max_t>EPS then 
+!		parameters dlin_sal = int(max_t*200)/200
+!		LOCK "dlin_sal"
+!	else
+!		values "dlin_sal" range[0.05, 2] step 0.005, 0.005
+!	endif
+!	if inx_dy>0 then 
+!		parameters dns = dg_arr[inx_dy]
+!	endif
+!endif
+
+!if inx_dy>0 then parameters tst = sg_arr[inx_dy]
 
 if type_sal <> "Гильза" then
 	dyt = dy*1000
 	lt = dlin_sal*1000
+	if inx_dy>0 then parameters tst = sg_arr[inx_dy]
 else
 	dyt = dns*1000
 	lt = tst*1000
@@ -140,4 +323,28 @@ goto "m_end"
 		endif
 	next i
 return
+"SORT_ARRAY":
+	dim arr_to_sort[]
+    arr_to_sort = arr_t 
+    n_dim = vardim1(arr_to_sort)
+
+    if n_dim <= 1 then
+        return 
+    endif
+
+    for i_outer = 1 to n_dim - 1
+        for j_inner = 1 to n_dim - i_outer
+            if arr_to_sort[j_inner] > arr_to_sort[j_inner + 1] then
+
+                temp_val = arr_to_sort[j_inner]
+                arr_to_sort[j_inner] = arr_to_sort[j_inner + 1]
+                arr_to_sort[j_inner + 1] = temp_val
+            endif
+        next j_inner
+    next i_outer
+    
+    arr_t = arr_to_sort 
+return
 "m_end":
+
+

@@ -8,6 +8,7 @@ ui_listitem un, un_f, "dy", 1 : un = un + 1
 ui_listitem un, un_f, "dys", 1 : un = un + 1
 ui_listitem un, un_f, "dns", 1 : un = un + 1
 ui_listitem un, un_f, "tst", 1 : un = un + 1
+ui_listitem un, un_f, "min_gap", 1 : un = un + 1
 ui_listitem un, un_f, "auto_dlin", 1 : un = un + 1
 ui_listitem un, un_f, "dlin_sal", 1 : un = un + 1
 ui_listitem un, un_f, "", 0, "", "Спецификация сальников" : un = un + 1

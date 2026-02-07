@@ -86,7 +86,7 @@ if type_spec = "Изделие" or v_conc<EPS then
 									naen=naen,
 									ves=ves,
 									kol_vo_spec=kol_vo_spec,
-									komment=komment, otm_elem=ac_bottomlevel+SYMB_POS_Z	
+									komment=komment, otm_elem=ac_bottomlevel+SYMB_POS_Z, gid = GLOB_INTGUID
 endif
 
 goto "prop_end"
@@ -99,7 +99,7 @@ goto "prop_end"
 										mat_thickness=mat_thickness,
 										mat_volume=mat_volume,
 										mat_length=mat_length,
-										mat_cost = "кв.м."
+										mat_cost = "кв.м.", gid = GLOB_INTGUID
 	endif
 return
 "prop_end":
