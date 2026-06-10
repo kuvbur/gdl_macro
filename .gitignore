@@ -1,3 +1,7 @@
 
 desktop.ini
 /Tool/log
+.stignore
+/.stversions
+/.stfolder
+Tool/gdl_macro.code-workspace

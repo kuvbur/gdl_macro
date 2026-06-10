@@ -1638,6 +1638,11 @@
 						<String Index="3"><![CDATA["Не специфицировать"]]></String>
 					</Array>
 				</Dictionary>
+				<Array Name="MATNAME_SHEET">
+					<String Index="1"><![CDATA["Просечно-вытяжной"]]></String>
+					<String Index="2"><![CDATA["Рифлёный"]]></String>
+					<String Index="3"><![CDATA["Пресслист"]]></String>
+				</Array>
 				<Dictionary Name="STAL">
 					<Array Name="VALUES">
 						<String Index="1"><![CDATA["С235"]]></String>
@@ -7758,31 +7763,41 @@
 							<String Index="1"><![CDATA["Сплошной "]]></String>
 							<String Index="2"><![CDATA["Оцинкованный "]]></String>
 							<String Index="3"><![CDATA["Рифлёный "]]></String>
-							<String Index="4"><![CDATA["Пластина "]]></String>
+							<String Index="4"><![CDATA["Просечной "]]></String>
+							<String Index="5"><![CDATA["Пресснастил "]]></String>
+							<String Index="6"><![CDATA["Пластина "]]></String>
 						</Array>
 						<Array Name="INX_VALUES">
 							<Integer Index="1">1</Integer>
 							<Integer Index="2">2</Integer>
 							<Integer Index="3">3</Integer>
 							<Integer Index="4">4</Integer>
+							<Integer Index="5">5</Integer>
+							<Integer Index="6">6</Integer>
 						</Array>
 						<Array Name="F_NAME">
 							<String Index="1"><![CDATA["Лист_19903.txt"]]></String>
 							<String Index="2"><![CDATA["Лист_спл.txt"]]></String>
 							<String Index="3"><![CDATA["Лист_рифл.txt"]]></String>
-							<String Index="4"><![CDATA["Лист_пласт.txt"]]></String>
+							<String Index="4"><![CDATA["Лист_просеч.txt"]]></String>
+							<String Index="5"><![CDATA["Лист_пресс.txt"]]></String>
+							<String Index="6"><![CDATA["Лист_пласт.txt"]]></String>
 						</Array>
 						<Array Name="OBOZN">
 							<String Index="1"><![CDATA["ГОСТ 19903-2015 "]]></String>
 							<String Index="2"><![CDATA["ГОСТ 19904-90 "]]></String>
 							<String Index="3"><![CDATA["ГОСТ 8568-77 "]]></String>
-							<String Index="4"><![CDATA["ГОСТ 19903-2015 "]]></String>
+							<String Index="4"><![CDATA["ГОСТ 8568-77 "]]></String>
+							<String Index="5"><![CDATA["ГОСТ 8568-77 "]]></String>
+							<String Index="6"><![CDATA["ГОСТ 19903-2015 "]]></String>
 						</Array>
 						<Array Name="NAEN">
 							<String Index="1"><![CDATA["Лист"]]></String>
 							<String Index="2"><![CDATA["Лист"]]></String>
 							<String Index="3"><![CDATA["Лист"]]></String>
 							<String Index="4"><![CDATA["Лист"]]></String>
+							<String Index="5"><![CDATA["Лист"]]></String>
+							<String Index="6"><![CDATA["Лист"]]></String>
 						</Array>
 						<Array Name="PROFILES">
 							<Dictionary Index="1">
@@ -7906,6 +7921,26 @@
 								</Array>
 							</Dictionary>
 							<Dictionary Index="4">
+								<Array Name="NAMES">
+									<String Index="1"><![CDATA["Чечевичный"]]></String>
+									<String Index="2"><![CDATA["Ромбический"]]></String>
+								</Array>
+								<Array Name="INX_NAMES">
+									<Integer Index="1">2</Integer>
+									<Integer Index="2">3</Integer>
+								</Array>
+							</Dictionary>
+							<Dictionary Index="5">
+								<Array Name="NAMES">
+									<String Index="1"><![CDATA["Чечевичный"]]></String>
+									<String Index="2"><![CDATA["Ромбический"]]></String>
+								</Array>
+								<Array Name="INX_NAMES">
+									<Integer Index="1">2</Integer>
+									<Integer Index="2">3</Integer>
+								</Array>
+							</Dictionary>
+							<Dictionary Index="6">
 								<Array Name="NAMES">
 									<String Index="1"><![CDATA["-- 4"]]></String>
 									<String Index="2"><![CDATA["-- 5"]]></String>
@@ -8410,8 +8445,8 @@
 						</Array>
 					</Dictionary>
 				</Array>
-				<Integer Name="VERSION">5</Integer>
-				<String Name="DATE"><![CDATA["25/07/26 16:36"]]></String>
+				<Integer Name="VERSION">7</Integer>
+				<String Name="DATE"><![CDATA["26/06/03 14:55"]]></String>
 				<Integer Name="ISREAD">1</Integer>
 			</Value>
 		</Dictionary>

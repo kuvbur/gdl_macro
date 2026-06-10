@@ -1,0 +1,24 @@
+inputStr = "1111111111111111111111111111111111111" : gosub "hash" : text2 0,0,result
+inputStr = "2111111111111111111111111111111111112" : gosub "hash" : text2 0,1,result
+
+text2 0,-1,"!!!"
+end
+"hash":
+	alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ.,!?;:-_()[]{}/@#$%^&*+=<>"
+	bs = 31
+	MODUL = 2147483647
+	hash = 5381  ! djb2 инициализация
+	lenStr = STRLEN(inputStr)
+	result = 0
+	FOR i = 1 TO lenStr
+		currentChar = STRSUB(inputStr, i, 1)
+		pos = STRSTR(alphabet, currentChar, 1)
+		IF pos = 0 THEN
+			char_val = 1
+		ELSE
+			char_val = pos
+		ENDIF
+		hash = ((hash * bs) + char_val) MOD MODUL
+	NEXT i
+	result = ABS(hash)
+return

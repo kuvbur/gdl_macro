@@ -53,13 +53,5 @@
 			</Flags>
 			<Value>0</Value>
 		</Length>
-		<PenColor Name="gs_cont_pen">
-			<Description><![CDATA[""]]></Description>
-			<Value>0</Value>
-		</PenColor>
-		<String Name="txt">
-			<Description><![CDATA[""]]></Description>
-			<Value><![CDATA[""]]></Value>
-		</String>
 	</Parameters>
 </ParamSection>

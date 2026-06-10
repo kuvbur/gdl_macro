@@ -1472,252 +1472,294 @@
 						<RealNum Name="Y">1</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 					<Dictionary Index="3">
 						<RealNum Name="X">1.25</RealNum>
 						<RealNum Name="Y">1</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 					<Dictionary Index="4">
 						<RealNum Name="X">1</RealNum>
 						<RealNum Name="Y">1</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 					<Dictionary Index="5">
 						<RealNum Name="X">1</RealNum>
 						<RealNum Name="Y">1</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 					<Dictionary Index="6">
 						<RealNum Name="X">0.869763866749802</RealNum>
 						<RealNum Name="Y">1.01139418524084</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="7">
 						<RealNum Name="X">0.743484892505748</RealNum>
 						<RealNum Name="Y">1.04523053441057</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="8">
 						<RealNum Name="X">0.625</RealNum>
 						<RealNum Name="Y">1.10048094716167</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="9">
 						<RealNum Name="X">0.517909292735095</RealNum>
 						<RealNum Name="Y">1.17546666766077</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="10">
 						<RealNum Name="X">0.425466667660766</RealNum>
 						<RealNum Name="Y">1.2679092927351</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="11">
 						<RealNum Name="X">0.350480947161671</RealNum>
 						<RealNum Name="Y">1.375</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="12">
 						<RealNum Name="X">0.295230534410569</RealNum>
 						<RealNum Name="Y">1.49348489250575</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="13">
 						<RealNum Name="X">0.261394185240844</RealNum>
 						<RealNum Name="Y">1.6197638667498</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="14">
 						<RealNum Name="X">0.25</RealNum>
 						<RealNum Name="Y">1.75</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="15">
 						<RealNum Name="X">0.261394185240844</RealNum>
 						<RealNum Name="Y">1.8802361332502</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="16">
 						<RealNum Name="X">0.295230534410569</RealNum>
 						<RealNum Name="Y">2.00651510749425</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="17">
 						<RealNum Name="X">0.350480947161671</RealNum>
 						<RealNum Name="Y">2.125</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="18">
 						<RealNum Name="X">0.425466667660766</RealNum>
 						<RealNum Name="Y">2.2320907072649</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="19">
 						<RealNum Name="X">0.517909292735095</RealNum>
 						<RealNum Name="Y">2.32453333233923</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="20">
 						<RealNum Name="X">0.625</RealNum>
 						<RealNum Name="Y">2.39951905283833</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="21">
 						<RealNum Name="X">0.743484892505748</RealNum>
 						<RealNum Name="Y">2.45476946558943</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="22">
 						<RealNum Name="X">0.869763866749802</RealNum>
 						<RealNum Name="Y">2.48860581475916</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="23">
 						<RealNum Name="X">1</RealNum>
 						<RealNum Name="Y">2.5</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 					<Dictionary Index="24">
 						<RealNum Name="X">1.25</RealNum>
 						<RealNum Name="Y">2.5</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 					<Dictionary Index="25">
 						<RealNum Name="X">1.25</RealNum>
 						<RealNum Name="Y">2.5</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 					<Dictionary Index="26">
 						<RealNum Name="X">1.28525643963028</RealNum>
 						<RealNum Name="Y">2.60958076257842</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="27">
 						<RealNum Name="X">1.33955445072149</RealNum>
 						<RealNum Name="Y">2.71108291060599</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="28">
 						<RealNum Name="X">1.41114086540905</RealNum>
 						<RealNum Name="Y">2.80122915453692</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="29">
 						<RealNum Name="X">1.49770430986456</RealNum>
 						<RealNum Name="Y">2.8771088629356</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="30">
 						<RealNum Name="X">1.59644983366505</RealNum>
 						<RealNum Name="Y">2.93627204060583</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="31">
 						<RealNum Name="X">1.70418915282702</RealNum>
 						<RealNum Name="Y">2.97680843375059</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="32">
 						<RealNum Name="X">1.81744359274878</RealNum>
 						<RealNum Name="Y">2.99740920802441</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="33">
 						<RealNum Name="X">1.93255640725122</RealNum>
 						<RealNum Name="Y">2.99740920802441</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="34">
 						<RealNum Name="X">2.04581084717298</RealNum>
 						<RealNum Name="Y">2.97680843375059</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="35">
 						<RealNum Name="X">2.15355016633495</RealNum>
 						<RealNum Name="Y">2.93627204060583</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="36">
 						<RealNum Name="X">2.25229569013544</RealNum>
 						<RealNum Name="Y">2.8771088629356</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="37">
 						<RealNum Name="X">2.33885913459095</RealNum>
 						<RealNum Name="Y">2.80122915453692</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="38">
 						<RealNum Name="X">2.41044554927851</RealNum>
 						<RealNum Name="Y">2.71108291060599</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="39">
 						<RealNum Name="X">2.46474356036972</RealNum>
 						<RealNum Name="Y">2.60958076257842</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">1</Integer>
 					</Dictionary>
 					<Dictionary Index="40">
 						<RealNum Name="X">2.5</RealNum>
 						<RealNum Name="Y">2.5</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 					<Dictionary Index="41">
 						<RealNum Name="X">3</RealNum>
 						<RealNum Name="Y">2.5</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 					<Dictionary Index="42">
 						<RealNum Name="X">3</RealNum>
 						<RealNum Name="Y">2.25</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 					<Dictionary Index="43">
 						<RealNum Name="X">3</RealNum>
 						<RealNum Name="Y">1.5</RealNum>
 						<RealNum Name="R">0</RealNum>
 						<Integer Name="Z">0</Integer>
+						<Integer Name="IS_APROX">0</Integer>
 					</Dictionary>
 				</Array>
 				<Integer Name="APROXN">43</Integer>
